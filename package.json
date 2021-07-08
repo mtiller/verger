@@ -4,6 +4,8 @@
   "description": "Generation of AST types and helper functions",
   "main": "lib/index.js",
   "scripts": {
+    "sample": "ts-node scripts/astgen.ts samples/expr.yaml",
+    "build": "tsc",
     "test": "jest"
   },
   "keywords": [

@@ -1,0 +1,31 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Sample 1",
+        "type": "node",
+        "request": "launch",
+        "runtimeExecutable": "node",
+        "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+  
+        "args": ["scripts/astgen.ts", "samples", "expr.yaml"],
+        
+        "cwd": "${workspaceRoot}",
+        "internalConsoleOptions": "openOnSessionStart",
+        "skipFiles": ["<node_internals>/**", "node_modules/**"]
+      },
+        {
+          "name": "Launch TypeScript",
+          "type": "node",
+          "request": "launch",
+          "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+          "args": ["./scripts/astgen.ts"],
+          "cwd": "${workspaceFolder}",
+          "internalConsoleOptions": "openOnSessionStart",
+          "skipFiles": ["<node_internals>/**", "node_modules/**"],
+          "env": {
+            "TS_NODE_PROJECT": "${workspaceFolder}/tsconfig.json"
+          }
+        }
+      ]
+  }

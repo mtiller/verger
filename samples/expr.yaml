@@ -2,7 +2,7 @@ nodes:
   Expr:
     Literal:
       - value: number
-    BinaryOp:
+    ^BinaryOp:
       - left: Expr
       - right: Expr
     ArithmeticOp: 
