@@ -22,6 +22,7 @@ export function isBase(a: ASTTree): a is ASTBaseType {
 export interface ASTLeafType {
   type: "leaf";
   tag: string;
+  rootUnion: string;
   name: string;
   extends: string[];
   fields: Map<string, string | string[]>;
@@ -41,17 +42,17 @@ export interface ASTSpec {
 }
 
 export function createASTTree(spec: any): ASTSpec {
-  const types: ASTSpec = {
-      tagName: "tag",
-      names: new Set(),
-      unions: new Map(),
-      bases: new Map(),
-      leaves: new Map()
-  }
+    const types: ASTSpec = {
+        tagName: "tag",
+        names: new Set(),
+        unions: new Map(),
+        bases: new Map(),
+        leaves: new Map()
+    }
   if (spec.hasOwnProperty("nodes")) {
     const root = spec["nodes"];
-    for (const [name, content] of Object.entries(root)) {
-      processSpecNode(name, content, types);
+      for (const [name, content] of Object.entries(root)) {
+      processSpecNode(name, name, content, types);
     }
     return types;
   } else {
@@ -61,6 +62,7 @@ export function createASTTree(spec: any): ASTSpec {
 
 function processSpecNode(
   n: string,
+  rootUnion: string,
   content: any,
   types: ASTSpec,
 ): ASTTree {
@@ -77,6 +79,7 @@ function processSpecNode(
         type: "leaf",
         name: n,
         tag: n.toLowerCase(),
+        rootUnion: rootUnion,
         extends: [],
         fields: new Map<string, string>()
     };
@@ -125,15 +128,14 @@ function processSpecNode(
     else types.leaves.set(ret.name, ret);
     return ret;
   } else {
-    const subtypes = Object.keys(content);
     const ret: ASTUnionType = {
       type: "union",
       name: n,
-      subtypes,
+      subtypes: [],
     };
     for (const [subtype, contents] of Object.entries(content)) {
-      ret.subtypes.push(subtype);
-      processSpecNode(subtype, contents, types);
+        if (!subtype.startsWith("^")) ret.subtypes.push(subtype)
+      processSpecNode(subtype, rootUnion, contents, types);
     }
     if (types.names.has(ret.name)) {
       throw new Error(`Multiple definitions for type ${name}`);

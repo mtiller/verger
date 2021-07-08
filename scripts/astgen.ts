@@ -15,7 +15,6 @@ const cli = new Cli({
 class GenerateCommand extends Command {
     inputFile = Option.String();
     async execute() {
-        console.log("Run");
         const raw = await readFile(this.inputFile);
         const spec = yaml.parse(raw.toString());
         const types = createASTTree(spec);
