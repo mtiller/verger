@@ -15,8 +15,13 @@ export interface ASTBaseType {
   fields: Map<string, string | string[]>;
 }
 
+export function isBase(a: ASTTree): a is ASTBaseType {
+  return a.type === "base";
+}
+
 export interface ASTLeafType {
   type: "leaf";
+  tag: string;
   name: string;
   extends: string[];
   fields: Map<string, string | string[]>;
@@ -54,11 +59,17 @@ function processSpecNode(
     throw new Error(`Missing content for ${name}`);
   if (Array.isArray(content)) {
     const base = name.startsWith("^");
-    const ret: ASTLeafType | ASTBaseType = {
-      type: base ? "base" : "leaf",
-      name: base ? name.slice(1) : name,
-      extends: [],
-      fields: new Map<string, string>(),
+    const ret: ASTLeafType | ASTBaseType = base ? {
+        type: "base",
+        name: name.slice(1),
+        extends: [],
+        fields: new Map<string, string>()
+    } : {
+        type: "leaf",
+        name: name,
+        tag: name.toLowerCase(),
+        extends: [],
+        fields: new Map<string, string>()
     };
     for (const item of content) {
       const keys = Object.keys(item);
