@@ -32,17 +32,26 @@ export function isLeaf(a: ASTTree): a is ASTLeafType {
 }
 
 export type ASTTree = ASTUnionType | ASTBaseType | ASTLeafType;
-export type ASTSpec = Map<string, ASTTree>;
+export interface ASTSpec {
+    tagName: string;
+    names: Set<string>;
+    unions: Map<string, ASTUnionType>;
+    bases: Map<string, ASTBaseType>;
+    leaves: Map<string, ASTLeafType>;
+}
 
 export function createASTTree(spec: any): ASTSpec {
-  const types: ASTSpec = new Map();
+  const types: ASTSpec = {
+      tagName: "tag",
+      names: new Set(),
+      unions: new Map(),
+      bases: new Map(),
+      leaves: new Map()
+  }
   if (spec.hasOwnProperty("nodes")) {
     const root = spec["nodes"];
     for (const [name, content] of Object.entries(root)) {
       processSpecNode(name, content, types);
-    }
-    for (const [name, node] of types) {
-      console.log(`${name}: ${node.type}`);
     }
     return types;
   } else {
@@ -51,23 +60,23 @@ export function createASTTree(spec: any): ASTSpec {
 }
 
 function processSpecNode(
-  name: string,
+  n: string,
   content: any,
-  types: Map<string, ASTTree>
+  types: ASTSpec,
 ): ASTTree {
   if (content === null || content === undefined)
     throw new Error(`Missing content for ${name}`);
   if (Array.isArray(content)) {
-    const base = name.startsWith("^");
+    const base = n.startsWith("^");
     const ret: ASTLeafType | ASTBaseType = base ? {
         type: "base",
-        name: name.slice(1),
+        name: n.slice(1),
         extends: [],
         fields: new Map<string, string>()
     } : {
         type: "leaf",
-        name: name,
-        tag: name.toLowerCase(),
+        name: n,
+        tag: n.toLowerCase(),
         extends: [],
         fields: new Map<string, string>()
     };
@@ -82,7 +91,7 @@ function processSpecNode(
         const type = item[fieldName];
         if (typeof type === "string") {
           if (fieldName === "extends") {
-            const base = types.get(type);
+            const base = types.bases.get(type);
             if (base === undefined) {
               throw new Error(
                 `Type ${ret.name} cannot extend from unknown (not yet defined) base type ${type}`
@@ -108,26 +117,29 @@ function processSpecNode(
         }
       }
     }
-    if (types.has(name)) {
-      throw new Error(`Multiple definitions for type ${name}`);
+    if (types.names.has(ret.name)) {
+      throw new Error(`Multiple definitions for type ${ret.name}`);
     }
-    types.set(ret.name, ret);
+    types.names.add(ret.name);
+    if (ret.type==="base") types.bases.set(ret.name, ret);
+    else types.leaves.set(ret.name, ret);
     return ret;
   } else {
     const subtypes = Object.keys(content);
     const ret: ASTUnionType = {
       type: "union",
-      name: name,
+      name: n,
       subtypes,
     };
     for (const [subtype, contents] of Object.entries(content)) {
       ret.subtypes.push(subtype);
       processSpecNode(subtype, contents, types);
     }
-    if (types.has(name)) {
+    if (types.names.has(ret.name)) {
       throw new Error(`Multiple definitions for type ${name}`);
     }
-    types.set(ret.name, ret);
+    types.names.add(ret.name);
+    types.unions.set(ret.name, ret);
     return ret;
   }
 }

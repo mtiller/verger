@@ -18,7 +18,7 @@ function fieldType(
 ): string {
   if (typeof x === "string") {
     if (x[0] === x[0].toUpperCase()) {
-      if (spec.has(x)) {
+      if (spec.names.has(x)) {
         return x;
       } else {
         throw new Error(`Unknown node type '${x}'`);
@@ -48,8 +48,8 @@ function leafOrBaseCode(a: ASTLeafType | ASTBaseType, spec: ASTSpec): string {
   let decls = [...a.fields.entries()].map(
     (f) => `  ${f[0]}: ${fieldType(f[0], f[1], spec)};`
   );
-  if (a.type==="leaf") {
-    decls = [`  tag: "${a.tag}";`, ...decls]
+  if (a.type === "leaf") {
+    decls = [`  ${spec.tagName}: "${a.tag}";`, ...decls];
   }
   return lines(
     `export interface ${a.name} ${extendsClause(a.extends)} {`,
@@ -59,15 +59,13 @@ function leafOrBaseCode(a: ASTLeafType | ASTBaseType, spec: ASTSpec): string {
 }
 
 export function generate(spec: ASTSpec): string {
-  const entries = [...spec.entries()];
-  const leaves = entries.map((a) => a[1]).filter(isLeaf);
-  const bases = entries.map((a) => a[1]).filter(isBase);
-  const unions = entries.map((a) => a[1]).filter(isUnion);
+  const leaves = [...spec.leaves.values()];
+  const bases = [...spec.bases.values()];
+  const unions = [...spec.unions.values()];
   const baseDefs = bases.map((a) => leafOrBaseCode(a, spec));
   const leafDefs = leaves.map((a) => leafOrBaseCode(a, spec));
 
-  const stats = `// Types: ${entries.map((a) => a[0])}}
-//   Unions: ${unions.map((a) => a.name)}
+  const stats = `//   Unions: ${unions.map((a) => a.name)}
 //   Bases: ${bases.map((a) => a.name)}
 //   Leaves: ${leaves.map((a) => a.name)}
 `;
