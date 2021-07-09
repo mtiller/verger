@@ -95,3 +95,57 @@ export class RelOp {
 }
 export type Expr = Literal | ArithmeticOp | UnaryOp | RelOp;"
 `;
+
+exports[`Test sample AST specifications should generate proper output for repmin.yaml 1`] = `
+"// DO NOT EDIT
+// This file was automatically generated
+
+
+export interface Fork  {
+    tag: \\"fork\\";
+    left: Tree;
+    right: Tree;
+}
+export class Fork {
+    static is = (x: Tree): x is Fork => { return x.tag===\\"fork\\" }
+    static children = (x: Fork): [left: Tree, right: Tree] => { return [x.left, x.right] }
+    static tag = \\"fork\\"
+}
+export interface Leaf  {
+    tag: \\"leaf\\";
+    value: number;
+}
+export class Leaf {
+    static is = (x: Tree): x is Leaf => { return x.tag===\\"leaf\\" }
+    static children = (x: Leaf): [] => { return [] }
+    static tag = \\"leaf\\"
+}
+export type Tree = Fork | Leaf;"
+`;
+
+exports[`Test sample AST specifications should generate proper output for repmin.yaml using purify 1`] = `
+"// DO NOT EDIT
+// This file was automatically generated
+
+
+export interface Fork  {
+    tag: \\"fork\\";
+    left: Tree;
+    right: Tree;
+}
+export class Fork {
+    static is = (x: Tree): x is Fork => { return x.tag===\\"fork\\" }
+    static children = (x: Fork): [left: Tree, right: Tree] => { return [x.left, x.right] }
+    static tag = \\"fork\\"
+}
+export interface Leaf  {
+    tag: \\"leaf\\";
+    value: number;
+}
+export class Leaf {
+    static is = (x: Tree): x is Leaf => { return x.tag===\\"leaf\\" }
+    static children = (x: Leaf): [] => { return [] }
+    static tag = \\"leaf\\"
+}
+export type Tree = Fork | Leaf;"
+`;

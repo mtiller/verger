@@ -23,7 +23,7 @@ export function baseCode(
   spec: ASTSpec
 ): string {
   let decls = [...a.fields.entries()].map(
-    (f) => `    ${f[0]}: ${fieldType(f[0], f[1], spec)};`
+    (f) => `    ${f[0]}: ${fieldType(f[1], spec)};`
   );
   decls = tag
     .map((v) => [`    ${spec.tagName}: "${v}";`, ...decls])

@@ -90,7 +90,7 @@ function walkFields(
       if (typeof type === "string") {
         let optional = false;
         if (type.endsWith("?")) {
-          type = type.slice(0, type.length - 2);
+          type = type.slice(0, type.length - 1);
           optional = true;
         }
 

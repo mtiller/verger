@@ -1,0 +1,10 @@
+nodes:
+  Tree:
+    Fork:
+      - left: Tree
+      - right: Tree
+    Leaf:
+      - value: number
+
+options:
+  optional: undefined

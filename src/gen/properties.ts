@@ -14,11 +14,7 @@ import {
  * @param spec The AST specification
  * @returns
  */
-export function fieldType(
-  fieldName: string,
-  x: FieldType,
-  spec: ASTSpec
-): string {
+export function fieldType(x: FieldType, spec: ASTSpec): string {
   switch (x.type) {
     case "literals": {
       return x.tags.map((a) => `"${a}"`).join(" | ");
@@ -27,7 +23,7 @@ export function fieldType(
       if (spec.names.has(x.name)) {
         return x.name;
       } else {
-        throw new Error(`Unknown node type '${x}'`);
+        throw new Error(`Unknown node type '${x.name}'`);
       }
     }
     case "scalar": {

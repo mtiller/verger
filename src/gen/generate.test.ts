@@ -5,7 +5,7 @@ import { loadSpec } from "../specification";
 import { generate } from "./generate";
 
 describe("Test sample AST specifications", () => {
-  ["expr"].forEach((file) => {
+  ["expr", "repmin"].forEach((file) => {
     it(`should generate proper output for ${file}.yaml`, () => {
       const raw = fs.readFileSync(
         path.join(__dirname, "..", "..", "samples", `${file}.yaml`)
