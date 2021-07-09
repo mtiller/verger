@@ -1,3 +1,5 @@
+import { registerDynamic } from "clipanion/lib/core";
+import { Just, Maybe, Nothing } from "purify-ts/Maybe";
 import { scalarOptions } from "yaml";
 
 export interface ASTUnionType {
@@ -13,7 +15,7 @@ export function isUnion(a: ASTTree): a is ASTUnionType {
 export interface ASTBaseType {
   type: "base";
   name: string;
-  extends: string[];
+  extends: Maybe<string>;
   fields: Map<string, FieldType>;
 }
 
@@ -49,7 +51,7 @@ export interface ASTLeafType {
   tag: string;
   rootUnion: string;
   name: string;
-  extends: string[];
+  extends: Maybe<string>;
   fields: Map<string, FieldType>;
 }
 
@@ -99,7 +101,7 @@ function processSpecNode(
       ? {
           type: "base",
           name: n.slice(1),
-          extends: [],
+          extends: Nothing,
           fields: new Map<string, FieldType>(),
         }
       : {
@@ -107,7 +109,7 @@ function processSpecNode(
           name: n,
           tag: n.toLowerCase(),
           rootUnion: rootUnion,
-          extends: [],
+          extends: Nothing,
           fields: new Map<string, FieldType>(),
         };
     for (const item of content) {
@@ -132,7 +134,10 @@ function processSpecNode(
                 `Node ${ret.name} cannot extend from non-base type ${type}`
               );
             }
-            ret.extends.push(type);
+            ret.extends.caseOf({
+                Nothing: () => { ret.extends = Just(type) },
+                Just: (v) => { throw new Error(`Node ${ret.name} cannot extends from ${type}, it already extends from ${v}`) }
+            })
           } else {
             if (type === "string" || type === "number" || type === "boolean") {
               ret.fields.set(fieldName, { type: "scalar", name: type });

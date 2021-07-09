@@ -1,3 +1,4 @@
+import { Maybe } from "purify-ts/Maybe";
 import {
   ASTBaseType,
   ASTLeafType,
@@ -34,9 +35,11 @@ export interface Foo {
   x: number;
 }
 
-function extendsClause(a: string[]): string {
-  if (a.length === 0) return "";
-  return `extends ${a.join(", ")}`;
+function extendsClause(a: Maybe<string>): string {
+    return a.caseOf({
+        Nothing: () => "",
+        Just: (v) => `extends ${v}`
+    })
 }
 
 function unionCode(a: ASTUnionType, spec: ASTSpec): string {
@@ -45,12 +48,15 @@ function unionCode(a: ASTUnionType, spec: ASTSpec): string {
 
 function fieldEntries(a: ASTLeafType | ASTBaseType, spec: ASTSpec): Array<[string, NodeField]> {
     let ret: Array<[string, NodeField]> = [];
-    for(const baseName of a.extends) {
-        const base = spec.bases.get(baseName)
-        if (base===undefined) throw new Error(`Unknown base type ${baseName}`);
-        const entries = fieldEntries(base, spec);
-        ret = [...ret, ...entries];
-    }
+    a.extends.caseOf({
+        Nothing: () => {},
+        Just: (baseName) => {
+            const base = spec.bases.get(baseName)
+            if (base===undefined) throw new Error(`Unknown base type ${baseName}`);
+            const entries = fieldEntries(base, spec);
+            ret = [...ret, ...entries];    
+        }
+    })
     const entries = [...a.fields.entries()].filter(isNodeFieldEntry);
     const dup = entries.find(e => ret.some(r => r[0]===e[0]));
     if (dup!==undefined) {
@@ -58,6 +64,16 @@ function fieldEntries(a: ASTLeafType | ASTBaseType, spec: ASTSpec): Array<[strin
     }
     return [...ret, ...entries];
 }
+
+// function baseLeaves(a: ASTBaseType, spec: ASTSpec): ASTLeafType[] {
+
+// }
+
+// function unionLeaves(a: ASTUnionType, spec: ASTSpec): ASTLeafType[] {
+//     return a.subtypes.reduce<ASTLeafType[]>((p, c) => {
+
+//     }, [])
+// }
 
 function leafOrBaseCode(a: ASTLeafType | ASTBaseType, spec: ASTSpec): string {
   let decls = [...a.fields.entries()].map(

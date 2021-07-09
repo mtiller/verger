@@ -24,6 +24,7 @@
   "dependencies": {
     "clipanion": "^3.0.0-rc.12",
     "fs-extra": "^10.0.0",
+    "purify-ts": "^0.16.3",
     "yaml": "^1.10.2"
   }
 }
