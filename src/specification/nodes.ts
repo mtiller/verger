@@ -1,9 +1,9 @@
-import { FieldType } from "./fields";
+import { Field, FieldType } from "./fields";
 
 export interface ASTBaseType {
   name: string;
   extends: string[];
-  fields: Map<string, FieldType>;
+  fields: Map<string, Field>;
 }
 
 export interface ASTUnionType {
@@ -22,7 +22,7 @@ export interface ASTLeafType {
   rootUnion: string;
   name: string;
   extends: string[];
-  fields: Map<string, FieldType>;
+  fields: Map<string, Field>;
 }
 
 export function isLeaf(a: ASTTree): a is ASTLeafType {

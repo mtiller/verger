@@ -14,7 +14,7 @@ export interface Literal  {
 }
 export class Literal {
     static is = (x: Expr): x is Literal => { return x.tag===\\"literal\\" }
-    static children = (x: Literal): [] => { return [] }
+    static children = (x: Literal) => { return [] as const }
     static tag = \\"literal\\"
 }
 export interface ArithmeticOp extends BinaryOp {
@@ -23,7 +23,7 @@ export interface ArithmeticOp extends BinaryOp {
 }
 export class ArithmeticOp {
     static is = (x: Expr): x is ArithmeticOp => { return x.tag===\\"arithmeticop\\" }
-    static children = (x: ArithmeticOp): [left: Expr, right: Expr] => { return [x.left, x.right] }
+    static children = (x: ArithmeticOp) => { return [x.left, x.right] as const }
     static tag = \\"arithmeticop\\"
 }
 export interface UnaryOp  {
@@ -33,7 +33,7 @@ export interface UnaryOp  {
 }
 export class UnaryOp {
     static is = (x: Expr): x is UnaryOp => { return x.tag===\\"unaryop\\" }
-    static children = (x: UnaryOp): [expr: Expr] => { return [x.expr] }
+    static children = (x: UnaryOp) => { return [x.expr] as const }
     static tag = \\"unaryop\\"
 }
 export interface RelOp extends BinaryOp {
@@ -42,7 +42,7 @@ export interface RelOp extends BinaryOp {
 }
 export class RelOp {
     static is = (x: Expr): x is RelOp => { return x.tag===\\"relop\\" }
-    static children = (x: RelOp): [left: Expr, right: Expr] => { return [x.left, x.right] }
+    static children = (x: RelOp) => { return [x.left, x.right] as const }
     static tag = \\"relop\\"
 }
 export type Expr = Literal | ArithmeticOp | UnaryOp | RelOp;"
@@ -62,7 +62,7 @@ export interface Literal  {
 }
 export class Literal {
     static is = (x: Expr): x is Literal => { return x.tag===\\"literal\\" }
-    static children = (x: Literal): [] => { return [] }
+    static children = (x: Literal) => { return [] as const }
     static tag = \\"literal\\"
 }
 export interface ArithmeticOp extends BinaryOp {
@@ -71,7 +71,7 @@ export interface ArithmeticOp extends BinaryOp {
 }
 export class ArithmeticOp {
     static is = (x: Expr): x is ArithmeticOp => { return x.tag===\\"arithmeticop\\" }
-    static children = (x: ArithmeticOp): [left: Expr, right: Expr] => { return [x.left, x.right] }
+    static children = (x: ArithmeticOp) => { return [x.left, x.right] as const }
     static tag = \\"arithmeticop\\"
 }
 export interface UnaryOp  {
@@ -81,7 +81,7 @@ export interface UnaryOp  {
 }
 export class UnaryOp {
     static is = (x: Expr): x is UnaryOp => { return x.tag===\\"unaryop\\" }
-    static children = (x: UnaryOp): [expr: Expr] => { return [x.expr] }
+    static children = (x: UnaryOp) => { return [x.expr] as const }
     static tag = \\"unaryop\\"
 }
 export interface RelOp extends BinaryOp {
@@ -90,7 +90,7 @@ export interface RelOp extends BinaryOp {
 }
 export class RelOp {
     static is = (x: Expr): x is RelOp => { return x.tag===\\"relop\\" }
-    static children = (x: RelOp): [left: Expr, right: Expr] => { return [x.left, x.right] }
+    static children = (x: RelOp) => { return [x.left, x.right] as const }
     static tag = \\"relop\\"
 }
 export type Expr = Literal | ArithmeticOp | UnaryOp | RelOp;"
@@ -108,7 +108,7 @@ export interface Fork  {
 }
 export class Fork {
     static is = (x: Tree): x is Fork => { return x.tag===\\"fork\\" }
-    static children = (x: Fork): [left: Tree, right: Tree] => { return [x.left, x.right] }
+    static children = (x: Fork) => { return [x.left, x.right] as const }
     static tag = \\"fork\\"
 }
 export interface Leaf  {
@@ -117,7 +117,7 @@ export interface Leaf  {
 }
 export class Leaf {
     static is = (x: Tree): x is Leaf => { return x.tag===\\"leaf\\" }
-    static children = (x: Leaf): [] => { return [] }
+    static children = (x: Leaf) => { return [] as const }
     static tag = \\"leaf\\"
 }
 export type Tree = Fork | Leaf;"
@@ -135,7 +135,7 @@ export interface Fork  {
 }
 export class Fork {
     static is = (x: Tree): x is Fork => { return x.tag===\\"fork\\" }
-    static children = (x: Fork): [left: Tree, right: Tree] => { return [x.left, x.right] }
+    static children = (x: Fork) => { return [x.left, x.right] as const }
     static tag = \\"fork\\"
 }
 export interface Leaf  {
@@ -144,7 +144,7 @@ export interface Leaf  {
 }
 export class Leaf {
     static is = (x: Tree): x is Leaf => { return x.tag===\\"leaf\\" }
-    static children = (x: Leaf): [] => { return [] }
+    static children = (x: Leaf) => { return [] as const }
     static tag = \\"leaf\\"
 }
 export type Tree = Fork | Leaf;"

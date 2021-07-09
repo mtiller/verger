@@ -1,5 +1,5 @@
 import { ASTSpec } from "./specification";
-import { walkNode, walksBase } from "./walk";
+import { walkNames, walkNode, walksBase } from "./walk";
 
 export function loadSpec(spec: any): ASTSpec {
   const types: ASTSpec = {
@@ -9,26 +9,32 @@ export function loadSpec(spec: any): ASTSpec {
     bases: new Map(),
     leaves: new Map(),
     options: {
-      optional: "expnull",
+      optional: "json",
+      maps: "json",
     },
   };
   if (spec.hasOwnProperty("options")) {
     loadOptions(spec["options"], spec);
   }
-  if (spec.hasOwnProperty("bases")) {
-    const bases = spec["bases"];
-    for (const [name, content] of Object.entries(bases)) {
-      walksBase(name, content, types);
-    }
-  }
-  if (spec.hasOwnProperty("nodes")) {
-    const root = spec["nodes"];
-    for (const [name, content] of Object.entries(root)) {
-      walkNode(name, name, content, types);
-    }
-  } else {
+  const bases: any = spec["bases"] ?? {};
+  const root: any = spec["nodes"];
+
+  if (root === undefined) {
     throw new Error("Missing nodes field");
   }
+
+  /** First pass...just grab names */
+  walkNames(root, types);
+  walkNames(bases, types);
+
+  /** Second pass, extract structure of types */
+  for (const [name, content] of Object.entries(bases)) {
+    walksBase(name, content, types);
+  }
+  for (const [name, content] of Object.entries(root)) {
+    walkNode(name, name, content, types);
+  }
+
   return types;
 }
 
@@ -41,8 +47,10 @@ function assertOptions<K extends string>(
   actual: string
 ): K {
   if (possible.includes(actual as K)) return actual as K;
+  if (typeof actual !== "string")
+    throw new Error(`Expected string for option ${name}, got ${typeof actual}`);
   throw new Error(
-    `For option ${name} got '${actual}' but expected on of ${possible
+    `For option '${name}' got '${actual}' but expected on of ${possible
       .map((x) => `'${x}'`)
       .join(", ")}`
   );
@@ -64,10 +72,13 @@ export function loadOptions(options: any, spec: ASTSpec) {
       case "optional": {
         spec.options.optional = assertOptions(
           key,
-          ["undefined", "expnull", "purify"],
+          ["json", "expnull", "purify"],
           val
         );
         break;
+      }
+      case "maps": {
+        spec.options.maps = assertOptions(key, ["json", "map"], val);
       }
       default: {
         throw new Error(`Unknown option ${key}`);

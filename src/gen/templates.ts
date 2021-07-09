@@ -4,8 +4,9 @@ import {
   ASTLeafType,
   ASTSpec,
   ASTUnionType,
+  Field,
 } from "../specification";
-import { fieldType, fieldEntries } from "./properties";
+import { fieldType, childFieldEntries } from "./properties";
 import { lines } from "./text";
 
 export function unionCode(a: ASTUnionType, spec: ASTSpec): string {
@@ -39,18 +40,26 @@ export function baseCode(
 export function leafCode(a: ASTLeafType, spec: ASTSpec): string {
   const common = baseCode(a, Just(a.tag), spec);
 
-  const children = fieldEntries(a, spec);
+  const children = childFieldEntries(a, spec);
   const typeClass = [
     `export class ${a.name} {`,
     `    static is = (x: ${a.rootUnion}): x is ${a.name} => { return x.${spec.tagName}==="${a.tag}" }`,
-    `    static children = (x: ${a.name}): [${children
-      .map((x) => `${x[0]}: ${x[1].name}`)
-      .join(", ")}] => { return [${children
-      .map((x) => `x.${x[0]}`)
-      .join(", ")}] }`,
+    `    static children = (x: ${a.name}) => { return [${children
+      .map((x) => fieldChildren("x", x[0], x[1]))
+      .join(", ")}] as const }`,
     `    static tag = "${a.tag}"`,
     `}`,
   ];
 
   return lines(common, ...typeClass);
+}
+
+export function fieldChildren(v: string, field: string, f: Field): string {
+  switch (f.struct) {
+    case "scalar":
+      return `${v}.${field}`;
+    default: {
+      throw new Error(`Unkown data structure: '${f.struct}'`);
+    }
+  }
 }

@@ -1,7 +1,8 @@
 import { ASTBaseType, ASTLeafType, ASTUnionType } from "./nodes";
 
 export interface Options {
-  optional: "undefined" | "expnull" | "purify";
+  optional: "json" | "expnull" | "purify";
+  maps: "json" | "map";
 }
 
 export interface ASTSpec {

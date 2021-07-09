@@ -1,3 +1,4 @@
+- Prepare type names as a first pass
 - Add code generation options
 - Fix unionLeaves (ensure baseLeaves never matter)
 - Add array and map fields.
