@@ -966,7 +966,7 @@ Object {
   },
   "options": Object {
     "maps": "json",
-    "optional": "json",
+    "optional": "purify",
   },
   "tagName": "tag",
   "unions": Map {
@@ -1486,7 +1486,7 @@ Object {
   },
   "options": Object {
     "maps": "json",
-    "optional": "json",
+    "optional": "purify",
   },
   "tagName": "tag",
   "unions": Map {
@@ -1533,7 +1533,7 @@ export interface Declaration  {
     tag: \\"declaration\\";
     name: string;
     type: string;
-    init?: number;
+    init: Maybe<number>;
 }
 export class Declaration {
     static is = (x: Node): x is Declaration => { return x.tag===\\"declaration\\" }
@@ -1739,7 +1739,7 @@ Object {
   },
   "options": Object {
     "maps": "json",
-    "optional": "json",
+    "optional": "purify",
   },
   "tagName": "tag",
   "unions": Map {
