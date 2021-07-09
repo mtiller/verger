@@ -1,11 +1,6 @@
 import { FieldType } from "./fields";
-import {
-  ASTBaseType,
-  ASTLeafType,
-  ASTSpec,
-  ASTTree,
-  ASTUnionType,
-} from "./nodes";
+import { ASTBaseType, ASTLeafType, ASTTree, ASTUnionType } from "./nodes";
+import { ASTSpec } from "./specification";
 
 export function walkNode(
   n: string,
@@ -91,8 +86,14 @@ function walkFields(
       );
     } else {
       const fieldName = keys[0];
-      const type = item[fieldName];
+      let type = item[fieldName];
       if (typeof type === "string") {
+        let optional = false;
+        if (type.endsWith("?")) {
+          type = type.slice(0, type.length - 2);
+          optional = true;
+        }
+
         if (fieldName === "extends") {
           const base = bases.get(type);
           if (base === undefined) {
@@ -103,14 +104,18 @@ function walkFields(
           supers.push(type);
         } else {
           if (type === "string" || type === "number" || type === "boolean") {
-            fields.set(fieldName, { type: "scalar", name: type });
+            fields.set(fieldName, { type: "scalar", optional, name: type });
           } else {
-            fields.set(fieldName, { type: "node", name: type });
+            fields.set(fieldName, { type: "node", optional, name: type });
           }
         }
       } else if (Array.isArray(type)) {
         if (type.every((x) => typeof x === "string")) {
-          fields.set(fieldName, { type: "literals", tags: type });
+          fields.set(fieldName, {
+            type: "literals",
+            optional: false,
+            tags: type,
+          });
         }
       } else {
         throw new Error(

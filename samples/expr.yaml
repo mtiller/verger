@@ -16,3 +16,6 @@ bases:
   BinaryOp:
     - left: Expr
     - right: Expr
+
+options:
+  optional: undefined

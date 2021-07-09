@@ -1,4 +1,5 @@
-- Optional fields
+- Add code generation options
 - Fix unionLeaves (ensure baseLeaves never matter)
+- Add array and map fields.
 - Implement match(...)
 - Implement <class>.filter()

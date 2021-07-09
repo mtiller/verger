@@ -1,4 +1,3 @@
-import { Maybe } from "purify-ts/Maybe";
 import { FieldType } from "./fields";
 
 export interface ASTBaseType {
@@ -31,10 +30,3 @@ export function isLeaf(a: ASTTree): a is ASTLeafType {
 }
 
 export type ASTTree = ASTUnionType | ASTLeafType;
-export interface ASTSpec {
-  tagName: string;
-  names: Set<string>;
-  unions: Map<string, ASTUnionType>;
-  bases: Map<string, ASTBaseType>;
-  leaves: Map<string, ASTLeafType>;
-}
