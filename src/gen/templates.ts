@@ -5,6 +5,7 @@ import {
   ASTSpec,
   ASTUnionType,
   Field,
+  NodeField,
 } from "../specification";
 import { fieldType, childFieldEntries } from "./properties";
 import { lines } from "./text";
@@ -41,6 +42,7 @@ export function leafCode(a: ASTLeafType, spec: ASTSpec): string {
   const common = baseCode(a, Just(a.tag), spec);
 
   const children = childFieldEntries(a, spec);
+  children.sort(compareFields);
   const typeClass = [
     `export class ${a.name} {`,
     `    static is = (x: ${a.rootUnion}): x is ${a.name} => { return x.${spec.tagName}==="${a.tag}" }`,
@@ -54,12 +56,20 @@ export function leafCode(a: ASTLeafType, spec: ASTSpec): string {
   return lines(common, ...typeClass);
 }
 
+function compareFields(a: [string, NodeField], b: [string, NodeField]) {
+  const ascore = a[1].struct === "scalar" ? -1 : 0;
+  const bscore = b[1].struct === "scalar" ? -1 : 0;
+  return ascore - bscore;
+}
+
 export function fieldChildren(v: string, field: string, f: Field): string {
   switch (f.struct) {
     case "scalar":
       return `${v}.${field}`;
+    case "array":
+      return `...${v}.${field}`;
     default: {
-      throw new Error(`Unkown data structure: '${f.struct}'`);
+      throw new Error(`Unknown data structure: '${f.struct}'`);
     }
   }
 }

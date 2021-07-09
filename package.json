@@ -4,9 +4,10 @@
   "description": "Generation of AST types and helper functions",
   "main": "lib/index.js",
   "scripts": {
-    "sample": "yarn sample:expr && yarn sample:repmin",
+    "sample": "yarn sample:expr && yarn sample:repmin && yarn sample:kitchen",
     "sample:expr": "ts-node scripts/astgen.ts samples/expr.yaml | tee samples/expr.ts",
     "sample:repmin": "ts-node scripts/astgen.ts samples/repmin.yaml | tee samples/repmin.ts",
+    "sample:kitchen": "ts-node scripts/astgen.ts samples/kitchen.yaml | tee samples/kitchen.ts",
     "build": "tsc",
     "test": "jest"
   },

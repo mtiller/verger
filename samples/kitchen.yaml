@@ -1,0 +1,24 @@
+nodes:
+  Node:
+    Function:
+      - name: string
+      - args: Argument[]
+      - body: Body
+    Declaration:
+      - name: string
+      - type: string
+      - init: number?
+    Argument:
+      - name: string
+      - type: string
+    Body:
+      - statement: Statement
+    Statement:
+      AssignmentStatement:
+        - name: string
+        - init: number
+      DeclarationStatement:
+        - name: string
+
+options:
+  optional: purify

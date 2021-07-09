@@ -80,6 +80,13 @@ export function parseField(str: string, spec: ASTSpec): Field {
       type: parseType(type, spec),
     };
   }
+  if (str.endsWith("[]")) {
+    const type = str.slice(0, str.length - 2);
+    return {
+      struct: "array",
+      type: parseType(type, spec),
+    };
+  }
   return {
     struct: "scalar",
     type: parseType(str, spec),

@@ -5,12 +5,13 @@ import { loadSpec } from "../specification";
 import { generate } from "./generate";
 
 describe("Test sample AST specifications", () => {
-  ["expr", "repmin"].forEach((file) => {
-    it(`should generate proper output for ${file}.yaml`, () => {
+  ["expr", "repmin", "kitchen"].forEach((file) => {
+    it(`should generate proper output for ${file}.yaml using json`, () => {
       const raw = fs.readFileSync(
         path.join(__dirname, "..", "..", "samples", `${file}.yaml`)
       );
       const spec = yaml.parse(raw.toString());
+      spec.options.optional = "json";
       const types = loadSpec(spec);
       const output = generate(types);
 
