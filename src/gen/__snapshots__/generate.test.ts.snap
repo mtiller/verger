@@ -116,7 +116,7 @@ export interface Declaration  {
     tag: \\"declaration\\";
     name: string;
     type: string;
-    init: number;
+    init?: number;
 }
 export class Declaration {
     static is = (x: Node): x is Declaration => { return x.tag===\\"declaration\\" }
@@ -185,7 +185,7 @@ export interface Declaration  {
     tag: \\"declaration\\";
     name: string;
     type: string;
-    init: number;
+    init?: number;
 }
 export class Declaration {
     static is = (x: Node): x is Declaration => { return x.tag===\\"declaration\\" }
