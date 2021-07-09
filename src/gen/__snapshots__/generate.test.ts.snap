@@ -1,5 +1,639 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Test sample AST specifications should generate proper output for dogfood.yaml using json 1`] = `
+Object {
+  "bases": Map {},
+  "leaves": Map {
+    "BuiltinType" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "types" => Object {
+          "struct": "set",
+          "type": Object {
+            "kind": "enum",
+            "tags": Array [
+              "str",
+              "num",
+              "bool",
+            ],
+          },
+        },
+      },
+      "name": "BuiltinType",
+      "rootUnion": "FieldType",
+      "tag": "builtintype",
+      "type": "leaf",
+    },
+    "EnumType" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "tags" => Object {
+          "struct": "array",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+      },
+      "name": "EnumType",
+      "rootUnion": "FieldType",
+      "tag": "enumtype",
+      "type": "leaf",
+    },
+    "NodeType" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "types" => Object {
+          "struct": "array",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+      },
+      "name": "NodeType",
+      "rootUnion": "FieldType",
+      "tag": "nodetype",
+      "type": "leaf",
+    },
+    "Field" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "type" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "node",
+            "types": Array [
+              "FieldType",
+            ],
+          },
+        },
+        "struct" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "enum",
+            "tags": Array [
+              "scalar",
+              "optional",
+              "map",
+              "set",
+              "array",
+            ],
+          },
+        },
+      },
+      "name": "Field",
+      "rootUnion": "Field",
+      "tag": "field",
+      "type": "leaf",
+    },
+    "NodeField" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "type" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "node",
+            "types": Array [
+              "NodeType",
+            ],
+          },
+        },
+        "struct" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "enum",
+            "tags": Array [
+              "FieldStruct",
+            ],
+          },
+        },
+      },
+      "name": "NodeField",
+      "rootUnion": "NodeField",
+      "tag": "nodefield",
+      "type": "leaf",
+    },
+    "ASTUnionType" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "name" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+        "subtypes" => Object {
+          "struct": "array",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+      },
+      "name": "ASTUnionType",
+      "rootUnion": "ASTTree",
+      "tag": "astuniontype",
+      "type": "leaf",
+    },
+    "ASTLeafType" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "kind" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+        "rootUnion" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+        "name" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+        "bases" => Object {
+          "struct": "array",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+        "fields" => Object {
+          "struct": "map",
+          "type": Object {
+            "kind": "node",
+            "types": Array [
+              "Field",
+            ],
+          },
+        },
+      },
+      "name": "ASTLeafType",
+      "rootUnion": "ASTTree",
+      "tag": "astleaftype",
+      "type": "leaf",
+    },
+  },
+  "names": Set {
+    "FieldType",
+    "BuiltinType",
+    "EnumType",
+    "NodeType",
+    "Field",
+    "NodeField",
+    "ASTTree",
+    "ASTUnionType",
+    "ASTLeafType",
+  },
+  "options": Object {
+    "maps": "json",
+    "optional": "json",
+  },
+  "tagName": "tag",
+  "unions": Map {
+    "FieldType" => Object {
+      "name": "FieldType",
+      "subtypes": Array [
+        "BuiltinType",
+        "EnumType",
+        "NodeType",
+      ],
+      "type": "union",
+    },
+    "ASTTree" => Object {
+      "name": "ASTTree",
+      "subtypes": Array [
+        "ASTUnionType",
+        "ASTLeafType",
+      ],
+      "type": "union",
+    },
+  },
+}
+`;
+
+exports[`Test sample AST specifications should generate proper output for dogfood.yaml using json 2`] = `
+"// DO NOT EDIT
+// This file was automatically generated
+
+
+export interface BuiltinType  {
+    tag: \\"builtintype\\";
+    types: Set<\\"str\\" | \\"num\\" | \\"bool\\">;
+}
+export class BuiltinType {
+    static is = (x: FieldType): x is BuiltinType => { return x.tag===\\"builtintype\\" }
+    static children = (x: BuiltinType) => { return [] as const }
+    static tag = \\"builtintype\\"
+}
+export interface EnumType  {
+    tag: \\"enumtype\\";
+    tags: string[];
+}
+export class EnumType {
+    static is = (x: FieldType): x is EnumType => { return x.tag===\\"enumtype\\" }
+    static children = (x: EnumType) => { return [] as const }
+    static tag = \\"enumtype\\"
+}
+export interface NodeType  {
+    tag: \\"nodetype\\";
+    types: string[];
+}
+export class NodeType {
+    static is = (x: FieldType): x is NodeType => { return x.tag===\\"nodetype\\" }
+    static children = (x: NodeType) => { return [] as const }
+    static tag = \\"nodetype\\"
+}
+export interface Field  {
+    tag: \\"field\\";
+    type: FieldType;
+    struct: \\"scalar\\" | \\"optional\\" | \\"map\\" | \\"set\\" | \\"array\\";
+}
+export class Field {
+    static is = (x: Field): x is Field => { return x.tag===\\"field\\" }
+    static children = (x: Field) => { return [x.type] as const }
+    static tag = \\"field\\"
+}
+export interface NodeField  {
+    tag: \\"nodefield\\";
+    type: NodeType;
+    struct: \\"FieldStruct\\";
+}
+export class NodeField {
+    static is = (x: NodeField): x is NodeField => { return x.tag===\\"nodefield\\" }
+    static children = (x: NodeField) => { return [x.type] as const }
+    static tag = \\"nodefield\\"
+}
+export interface ASTUnionType  {
+    tag: \\"astuniontype\\";
+    name: string;
+    subtypes: string[];
+}
+export class ASTUnionType {
+    static is = (x: ASTTree): x is ASTUnionType => { return x.tag===\\"astuniontype\\" }
+    static children = (x: ASTUnionType) => { return [] as const }
+    static tag = \\"astuniontype\\"
+}
+export interface ASTLeafType  {
+    tag: \\"astleaftype\\";
+    kind: string;
+    rootUnion: string;
+    name: string;
+    bases: string[];
+    fields: Record<string,Field>;
+}
+export class ASTLeafType {
+    static is = (x: ASTTree): x is ASTLeafType => { return x.tag===\\"astleaftype\\" }
+    static children = (x: ASTLeafType) => { return [...Object.entries(x.fields).map(x => x[1])] as const }
+    static tag = \\"astleaftype\\"
+}
+export type FieldType = BuiltinType | EnumType | NodeType;
+export type ASTTree = ASTUnionType | ASTLeafType;"
+`;
+
+exports[`Test sample AST specifications should generate proper output for dogfood.yaml using purify 1`] = `
+Object {
+  "bases": Map {},
+  "leaves": Map {
+    "BuiltinType" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "types" => Object {
+          "struct": "set",
+          "type": Object {
+            "kind": "enum",
+            "tags": Array [
+              "str",
+              "num",
+              "bool",
+            ],
+          },
+        },
+      },
+      "name": "BuiltinType",
+      "rootUnion": "FieldType",
+      "tag": "builtintype",
+      "type": "leaf",
+    },
+    "EnumType" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "tags" => Object {
+          "struct": "array",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+      },
+      "name": "EnumType",
+      "rootUnion": "FieldType",
+      "tag": "enumtype",
+      "type": "leaf",
+    },
+    "NodeType" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "types" => Object {
+          "struct": "array",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+      },
+      "name": "NodeType",
+      "rootUnion": "FieldType",
+      "tag": "nodetype",
+      "type": "leaf",
+    },
+    "Field" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "type" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "node",
+            "types": Array [
+              "FieldType",
+            ],
+          },
+        },
+        "struct" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "enum",
+            "tags": Array [
+              "scalar",
+              "optional",
+              "map",
+              "set",
+              "array",
+            ],
+          },
+        },
+      },
+      "name": "Field",
+      "rootUnion": "Field",
+      "tag": "field",
+      "type": "leaf",
+    },
+    "NodeField" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "type" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "node",
+            "types": Array [
+              "NodeType",
+            ],
+          },
+        },
+        "struct" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "enum",
+            "tags": Array [
+              "FieldStruct",
+            ],
+          },
+        },
+      },
+      "name": "NodeField",
+      "rootUnion": "NodeField",
+      "tag": "nodefield",
+      "type": "leaf",
+    },
+    "ASTUnionType" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "name" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+        "subtypes" => Object {
+          "struct": "array",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+      },
+      "name": "ASTUnionType",
+      "rootUnion": "ASTTree",
+      "tag": "astuniontype",
+      "type": "leaf",
+    },
+    "ASTLeafType" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "kind" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+        "rootUnion" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+        "name" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+        "bases" => Object {
+          "struct": "array",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+        "fields" => Object {
+          "struct": "map",
+          "type": Object {
+            "kind": "node",
+            "types": Array [
+              "Field",
+            ],
+          },
+        },
+      },
+      "name": "ASTLeafType",
+      "rootUnion": "ASTTree",
+      "tag": "astleaftype",
+      "type": "leaf",
+    },
+  },
+  "names": Set {
+    "FieldType",
+    "BuiltinType",
+    "EnumType",
+    "NodeType",
+    "Field",
+    "NodeField",
+    "ASTTree",
+    "ASTUnionType",
+    "ASTLeafType",
+  },
+  "options": Object {
+    "maps": "json",
+    "optional": "purify",
+  },
+  "tagName": "tag",
+  "unions": Map {
+    "FieldType" => Object {
+      "name": "FieldType",
+      "subtypes": Array [
+        "BuiltinType",
+        "EnumType",
+        "NodeType",
+      ],
+      "type": "union",
+    },
+    "ASTTree" => Object {
+      "name": "ASTTree",
+      "subtypes": Array [
+        "ASTUnionType",
+        "ASTLeafType",
+      ],
+      "type": "union",
+    },
+  },
+}
+`;
+
+exports[`Test sample AST specifications should generate proper output for dogfood.yaml using purify 2`] = `
+"// DO NOT EDIT
+// This file was automatically generated
+
+
+export interface BuiltinType  {
+    tag: \\"builtintype\\";
+    types: Set<\\"str\\" | \\"num\\" | \\"bool\\">;
+}
+export class BuiltinType {
+    static is = (x: FieldType): x is BuiltinType => { return x.tag===\\"builtintype\\" }
+    static children = (x: BuiltinType) => { return [] as const }
+    static tag = \\"builtintype\\"
+}
+export interface EnumType  {
+    tag: \\"enumtype\\";
+    tags: string[];
+}
+export class EnumType {
+    static is = (x: FieldType): x is EnumType => { return x.tag===\\"enumtype\\" }
+    static children = (x: EnumType) => { return [] as const }
+    static tag = \\"enumtype\\"
+}
+export interface NodeType  {
+    tag: \\"nodetype\\";
+    types: string[];
+}
+export class NodeType {
+    static is = (x: FieldType): x is NodeType => { return x.tag===\\"nodetype\\" }
+    static children = (x: NodeType) => { return [] as const }
+    static tag = \\"nodetype\\"
+}
+export interface Field  {
+    tag: \\"field\\";
+    type: FieldType;
+    struct: \\"scalar\\" | \\"optional\\" | \\"map\\" | \\"set\\" | \\"array\\";
+}
+export class Field {
+    static is = (x: Field): x is Field => { return x.tag===\\"field\\" }
+    static children = (x: Field) => { return [x.type] as const }
+    static tag = \\"field\\"
+}
+export interface NodeField  {
+    tag: \\"nodefield\\";
+    type: NodeType;
+    struct: \\"FieldStruct\\";
+}
+export class NodeField {
+    static is = (x: NodeField): x is NodeField => { return x.tag===\\"nodefield\\" }
+    static children = (x: NodeField) => { return [x.type] as const }
+    static tag = \\"nodefield\\"
+}
+export interface ASTUnionType  {
+    tag: \\"astuniontype\\";
+    name: string;
+    subtypes: string[];
+}
+export class ASTUnionType {
+    static is = (x: ASTTree): x is ASTUnionType => { return x.tag===\\"astuniontype\\" }
+    static children = (x: ASTUnionType) => { return [] as const }
+    static tag = \\"astuniontype\\"
+}
+export interface ASTLeafType  {
+    tag: \\"astleaftype\\";
+    kind: string;
+    rootUnion: string;
+    name: string;
+    bases: string[];
+    fields: Record<string,Field>;
+}
+export class ASTLeafType {
+    static is = (x: ASTTree): x is ASTLeafType => { return x.tag===\\"astleaftype\\" }
+    static children = (x: ASTLeafType) => { return [...Object.entries(x.fields).map(x => x[1])] as const }
+    static tag = \\"astleaftype\\"
+}
+export type FieldType = BuiltinType | EnumType | NodeType;
+export type ASTTree = ASTUnionType | ASTLeafType;"
+`;
+
 exports[`Test sample AST specifications should generate proper output for expr.yaml using json 1`] = `
 Object {
   "bases": Map {
