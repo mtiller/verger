@@ -90,6 +90,8 @@ export function fieldChildren(v: string, field: string, f: Field): string {
       return `...${v}.${field}`;
     case "set":
       return `...${v}.${field}`;
+    case "map":
+      return `...Object.entries(${v}.${field}).map(x => x[1])`;
     // TODO: optional
     // TODO: map
     default: {

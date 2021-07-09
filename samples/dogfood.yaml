@@ -1,0 +1,24 @@
+nodes:
+  FieldType:
+    BuiltinType:
+      - types: <str|num|bool>
+    EnumType:
+      - tags: string[]
+    NodeType:
+      - types: string[]
+  Field:
+    - type: FieldType
+    - struct: ["scalar", "optional", "map", "set", "array"]
+  NodeField:
+    - type: NodeType
+    - struct: FieldStruct
+  ASTTree:
+    ASTUnionType:
+      - name: string
+      - subtypes: string[]
+    ASTLeafType:
+      - kind: string
+      - rootUnion: string
+      - name: string
+      - bases: string[]
+      - fields: Field{}

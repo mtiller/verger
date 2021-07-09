@@ -88,6 +88,13 @@ export function parseType(str: string, spec: ASTSpec): FieldType {
         types: types,
       };
     }
+    /** If there are no builtins or known types, assume these are string literals */
+    if (types.every((x) => !spec.names.has(x) && !isBuiltin(x))) {
+      return {
+        kind: "enum",
+        tags: types,
+      };
+    }
     throw new Error(`Unrecognized type name: '${str}'`);
   } else {
     throw new Error(`${str} is not a valid type name`);
@@ -115,6 +122,22 @@ export function parseField(str: string, spec: ASTSpec): Field {
     const type = str.slice(0, str.length - 2);
     return {
       struct: "array",
+      type: parseType(type, spec),
+    };
+  }
+  /** If it ends with "{}" then it is a map */
+  if (str.endsWith("{}")) {
+    const type = str.slice(0, str.length - 2);
+    return {
+      struct: "map",
+      type: parseType(type, spec),
+    };
+  }
+  /** Check if this is a set */
+  if (str.startsWith("<") && str.endsWith(">")) {
+    const type = str.slice(1, str.length - 1);
+    return {
+      struct: "set",
       type: parseType(type, spec),
     };
   }
