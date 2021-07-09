@@ -3,40 +3,30 @@ import {
   ASTLeafType,
   ASTSpec,
   ASTUnionType,
-  isBase,
-  isLeaf,
-  isUnion,
+  FieldType,
+  isNodeFieldEntry,
+  NodeField,
 } from "./specification";
 
 function lines(...lines: string[]): string {
   return lines.join("\n");
 }
 
-function fieldType(
-  fieldName: string,
-  x: string | string[],
-  spec: ASTSpec
-): string {
-  if (typeof x === "string") {
-    if (x[0] === x[0].toUpperCase()) {
-      if (spec.names.has(x)) {
-        return x;
+function fieldType(fieldName: string, x: FieldType, spec: ASTSpec): string {
+  switch (x.type) {
+    case "literals": {
+      return x.tags.map((a) => `"${a}"`).join(" | ");
+    }
+    case "node": {
+      if (spec.names.has(x.name)) {
+        return x.name;
       } else {
         throw new Error(`Unknown node type '${x}'`);
       }
-    } else {
-      switch (x) {
-        case "number":
-        case "string":
-        case "boolean":
-          return x;
-      }
-      throw new Error(
-        `Type of field ${fieldName} is unrecognized scalar type '${x[0]}'`
-      );
     }
-  } else {
-    return x.map((a) => `"${a}"`).join(" | ");
+    case "scalar": {
+        return x.name;
+    }
   }
 }
 
@@ -53,6 +43,22 @@ function unionCode(a: ASTUnionType, spec: ASTSpec): string {
   return `export type ${a.name} = ${a.subtypes.join(" | ")};`;
 }
 
+function fieldEntries(a: ASTLeafType | ASTBaseType, spec: ASTSpec): Array<[string, NodeField]> {
+    let ret: Array<[string, NodeField]> = [];
+    for(const baseName of a.extends) {
+        const base = spec.bases.get(baseName)
+        if (base===undefined) throw new Error(`Unknown base type ${baseName}`);
+        const entries = fieldEntries(base, spec);
+        ret = [...ret, ...entries];
+    }
+    const entries = [...a.fields.entries()].filter(isNodeFieldEntry);
+    const dup = entries.find(e => ret.some(r => r[0]===e[0]));
+    if (dup!==undefined) {
+        throw new Error('Field ${dup[0]} is no unique')
+    }
+    return [...ret, ...entries];
+}
+
 function leafOrBaseCode(a: ASTLeafType | ASTBaseType, spec: ASTSpec): string {
   let decls = [...a.fields.entries()].map(
     (f) => `    ${f[0]}: ${fieldType(f[0], f[1], spec)};`
@@ -61,11 +67,13 @@ function leafOrBaseCode(a: ASTLeafType | ASTBaseType, spec: ASTSpec): string {
     decls = [`    ${spec.tagName}: "${a.tag}";`, ...decls];
   }
 
+  const children = fieldEntries(a, spec);
   const typeClass =
     a.type === "leaf"
       ? [
           `export class ${a.name} {`,
           `    static is = (x: ${a.rootUnion}): x is ${a.name} => { return x.${spec.tagName}==="${a.tag}" }`,
+          `    static children = (x: ${a.name}): [${children.map(x => `${x[0]}: ${x[1].name}`).join(", ")}] => { return [${children.map(x => `x.${x[0]}`).join(", ")}] }`,
           `    static tag = "${a.tag}"`,
           `}`,
         ]
@@ -104,5 +112,10 @@ export function generate(spec: ASTSpec): string {
 ${stats}
 `;
 
-  return lines(preamble, lines(...baseDefs), lines(...leafDefs), lines(...unionDefs));
+  return lines(
+    preamble,
+    lines(...baseDefs),
+    lines(...leafDefs),
+    lines(...unionDefs)
+  );
 }
