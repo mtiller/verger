@@ -2,10 +2,7 @@ nodes:
   Expr:
     Literal:
       - value: number
-    ^BinaryOp:
-      - left: Expr
-      - right: Expr
-    ArithmeticOp: 
+    ArithmeticOp:
       - extends: BinaryOp
       - op: ["+", "-", "*", "/"]
     UnaryOp:
@@ -14,3 +11,8 @@ nodes:
     RelOp:
       - extends: BinaryOp
       - op: ["+", "-", "*", "/"]
+
+bases:
+  BinaryOp:
+    - left: Expr
+    - right: Expr

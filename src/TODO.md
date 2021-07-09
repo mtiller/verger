@@ -1,0 +1,4 @@
+- Optional fields
+- Fix unionLeaves (ensure baseLeaves never matter)
+- Implement match(...)
+- Implement <class>.filter()
