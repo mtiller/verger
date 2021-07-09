@@ -15,6 +15,7 @@ describe("Test sample AST specifications", () => {
       const types = loadSpec(spec);
       const output = generate(types);
 
+      expect(types).toMatchSnapshot();
       expect(output).toMatchSnapshot();
     });
     it(`should generate proper output for ${file}.yaml using purify`, () => {
@@ -26,6 +27,7 @@ describe("Test sample AST specifications", () => {
       const types = loadSpec(spec);
       const output = generate(types);
 
+      expect(types).toMatchSnapshot();
       expect(output).toMatchSnapshot();
     });
   });

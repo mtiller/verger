@@ -1,6 +1,157 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Test sample AST specifications should generate proper output for expr.yaml using json 1`] = `
+Object {
+  "bases": Map {
+    "BinaryOp" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "left" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "node",
+            "types": Array [
+              "Expr",
+            ],
+          },
+        },
+        "right" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "node",
+            "types": Array [
+              "Expr",
+            ],
+          },
+        },
+      },
+      "name": "BinaryOp",
+    },
+  },
+  "leaves": Map {
+    "Literal" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "value" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "number",
+            ],
+          },
+        },
+      },
+      "name": "Literal",
+      "rootUnion": "Expr",
+      "tag": "literal",
+      "type": "leaf",
+    },
+    "ArithmeticOp" => Object {
+      "extends": Array [
+        "BinaryOp",
+      ],
+      "fields": Map {
+        "op" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "enum",
+            "tags": Array [
+              "+",
+              "-",
+              "*",
+              "/",
+            ],
+          },
+        },
+      },
+      "name": "ArithmeticOp",
+      "rootUnion": "Expr",
+      "tag": "arithmeticop",
+      "type": "leaf",
+    },
+    "UnaryOp" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "expr" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "node",
+            "types": Array [
+              "Expr",
+            ],
+          },
+        },
+        "op" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "enum",
+            "tags": Array [
+              "()",
+              "+",
+              "-",
+            ],
+          },
+        },
+      },
+      "name": "UnaryOp",
+      "rootUnion": "Expr",
+      "tag": "unaryop",
+      "type": "leaf",
+    },
+    "RelOp" => Object {
+      "extends": Array [
+        "BinaryOp",
+      ],
+      "fields": Map {
+        "op" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "enum",
+            "tags": Array [
+              "+",
+              "-",
+              "*",
+              "/",
+            ],
+          },
+        },
+      },
+      "name": "RelOp",
+      "rootUnion": "Expr",
+      "tag": "relop",
+      "type": "leaf",
+    },
+  },
+  "names": Set {
+    "Expr",
+    "Literal",
+    "ArithmeticOp",
+    "UnaryOp",
+    "RelOp",
+    "BinaryOp",
+  },
+  "options": Object {
+    "maps": "json",
+    "optional": "json",
+  },
+  "tagName": "tag",
+  "unions": Map {
+    "Expr" => Object {
+      "name": "Expr",
+      "subtypes": Array [
+        "Literal",
+        "ArithmeticOp",
+        "UnaryOp",
+        "RelOp",
+      ],
+      "type": "union",
+    },
+  },
+}
+`;
+
+exports[`Test sample AST specifications should generate proper output for expr.yaml using json 2`] = `
 "// DO NOT EDIT
 // This file was automatically generated
 
@@ -49,6 +200,157 @@ export type Expr = Literal | ArithmeticOp | UnaryOp | RelOp;"
 `;
 
 exports[`Test sample AST specifications should generate proper output for expr.yaml using purify 1`] = `
+Object {
+  "bases": Map {
+    "BinaryOp" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "left" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "node",
+            "types": Array [
+              "Expr",
+            ],
+          },
+        },
+        "right" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "node",
+            "types": Array [
+              "Expr",
+            ],
+          },
+        },
+      },
+      "name": "BinaryOp",
+    },
+  },
+  "leaves": Map {
+    "Literal" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "value" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "number",
+            ],
+          },
+        },
+      },
+      "name": "Literal",
+      "rootUnion": "Expr",
+      "tag": "literal",
+      "type": "leaf",
+    },
+    "ArithmeticOp" => Object {
+      "extends": Array [
+        "BinaryOp",
+      ],
+      "fields": Map {
+        "op" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "enum",
+            "tags": Array [
+              "+",
+              "-",
+              "*",
+              "/",
+            ],
+          },
+        },
+      },
+      "name": "ArithmeticOp",
+      "rootUnion": "Expr",
+      "tag": "arithmeticop",
+      "type": "leaf",
+    },
+    "UnaryOp" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "expr" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "node",
+            "types": Array [
+              "Expr",
+            ],
+          },
+        },
+        "op" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "enum",
+            "tags": Array [
+              "()",
+              "+",
+              "-",
+            ],
+          },
+        },
+      },
+      "name": "UnaryOp",
+      "rootUnion": "Expr",
+      "tag": "unaryop",
+      "type": "leaf",
+    },
+    "RelOp" => Object {
+      "extends": Array [
+        "BinaryOp",
+      ],
+      "fields": Map {
+        "op" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "enum",
+            "tags": Array [
+              "+",
+              "-",
+              "*",
+              "/",
+            ],
+          },
+        },
+      },
+      "name": "RelOp",
+      "rootUnion": "Expr",
+      "tag": "relop",
+      "type": "leaf",
+    },
+  },
+  "names": Set {
+    "Expr",
+    "Literal",
+    "ArithmeticOp",
+    "UnaryOp",
+    "RelOp",
+    "BinaryOp",
+  },
+  "options": Object {
+    "maps": "json",
+    "optional": "json",
+  },
+  "tagName": "tag",
+  "unions": Map {
+    "Expr" => Object {
+      "name": "Expr",
+      "subtypes": Array [
+        "Literal",
+        "ArithmeticOp",
+        "UnaryOp",
+        "RelOp",
+      ],
+      "type": "union",
+    },
+  },
+}
+`;
+
+exports[`Test sample AST specifications should generate proper output for expr.yaml using purify 2`] = `
 "// DO NOT EDIT
 // This file was automatically generated
 
@@ -97,6 +399,212 @@ export type Expr = Literal | ArithmeticOp | UnaryOp | RelOp;"
 `;
 
 exports[`Test sample AST specifications should generate proper output for kitchen.yaml using json 1`] = `
+Object {
+  "bases": Map {},
+  "leaves": Map {
+    "Function" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "name" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+        "args" => Object {
+          "struct": "array",
+          "type": Object {
+            "kind": "node",
+            "types": Array [
+              "Argument",
+            ],
+          },
+        },
+        "body" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "node",
+            "types": Array [
+              "Body",
+            ],
+          },
+        },
+      },
+      "name": "Function",
+      "rootUnion": "Node",
+      "tag": "function",
+      "type": "leaf",
+    },
+    "Declaration" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "name" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+        "type" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+        "init" => Object {
+          "struct": "optional",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "number",
+            ],
+          },
+        },
+      },
+      "name": "Declaration",
+      "rootUnion": "Node",
+      "tag": "declaration",
+      "type": "leaf",
+    },
+    "Argument" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "name" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+        "type" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+      },
+      "name": "Argument",
+      "rootUnion": "Node",
+      "tag": "argument",
+      "type": "leaf",
+    },
+    "Body" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "statement" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "node",
+            "types": Array [
+              "Statement",
+            ],
+          },
+        },
+      },
+      "name": "Body",
+      "rootUnion": "Node",
+      "tag": "body",
+      "type": "leaf",
+    },
+    "AssignmentStatement" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "name" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+        "init" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "number",
+            ],
+          },
+        },
+      },
+      "name": "AssignmentStatement",
+      "rootUnion": "Node",
+      "tag": "assignmentstatement",
+      "type": "leaf",
+    },
+    "DeclarationStatement" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "name" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+      },
+      "name": "DeclarationStatement",
+      "rootUnion": "Node",
+      "tag": "declarationstatement",
+      "type": "leaf",
+    },
+  },
+  "names": Set {
+    "Node",
+    "Function",
+    "Declaration",
+    "Argument",
+    "Body",
+    "Statement",
+    "AssignmentStatement",
+    "DeclarationStatement",
+  },
+  "options": Object {
+    "maps": "json",
+    "optional": "json",
+  },
+  "tagName": "tag",
+  "unions": Map {
+    "Statement" => Object {
+      "name": "Statement",
+      "subtypes": Array [
+        "AssignmentStatement",
+        "DeclarationStatement",
+      ],
+      "type": "union",
+    },
+    "Node" => Object {
+      "name": "Node",
+      "subtypes": Array [
+        "Function",
+        "Declaration",
+        "Argument",
+        "Body",
+        "Statement",
+      ],
+      "type": "union",
+    },
+  },
+}
+`;
+
+exports[`Test sample AST specifications should generate proper output for kitchen.yaml using json 2`] = `
 "// DO NOT EDIT
 // This file was automatically generated
 
@@ -166,6 +674,212 @@ export type Node = Function | Declaration | Argument | Body | Statement;"
 `;
 
 exports[`Test sample AST specifications should generate proper output for kitchen.yaml using purify 1`] = `
+Object {
+  "bases": Map {},
+  "leaves": Map {
+    "Function" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "name" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+        "args" => Object {
+          "struct": "array",
+          "type": Object {
+            "kind": "node",
+            "types": Array [
+              "Argument",
+            ],
+          },
+        },
+        "body" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "node",
+            "types": Array [
+              "Body",
+            ],
+          },
+        },
+      },
+      "name": "Function",
+      "rootUnion": "Node",
+      "tag": "function",
+      "type": "leaf",
+    },
+    "Declaration" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "name" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+        "type" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+        "init" => Object {
+          "struct": "optional",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "number",
+            ],
+          },
+        },
+      },
+      "name": "Declaration",
+      "rootUnion": "Node",
+      "tag": "declaration",
+      "type": "leaf",
+    },
+    "Argument" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "name" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+        "type" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+      },
+      "name": "Argument",
+      "rootUnion": "Node",
+      "tag": "argument",
+      "type": "leaf",
+    },
+    "Body" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "statement" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "node",
+            "types": Array [
+              "Statement",
+            ],
+          },
+        },
+      },
+      "name": "Body",
+      "rootUnion": "Node",
+      "tag": "body",
+      "type": "leaf",
+    },
+    "AssignmentStatement" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "name" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+        "init" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "number",
+            ],
+          },
+        },
+      },
+      "name": "AssignmentStatement",
+      "rootUnion": "Node",
+      "tag": "assignmentstatement",
+      "type": "leaf",
+    },
+    "DeclarationStatement" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "name" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "string",
+            ],
+          },
+        },
+      },
+      "name": "DeclarationStatement",
+      "rootUnion": "Node",
+      "tag": "declarationstatement",
+      "type": "leaf",
+    },
+  },
+  "names": Set {
+    "Node",
+    "Function",
+    "Declaration",
+    "Argument",
+    "Body",
+    "Statement",
+    "AssignmentStatement",
+    "DeclarationStatement",
+  },
+  "options": Object {
+    "maps": "json",
+    "optional": "json",
+  },
+  "tagName": "tag",
+  "unions": Map {
+    "Statement" => Object {
+      "name": "Statement",
+      "subtypes": Array [
+        "AssignmentStatement",
+        "DeclarationStatement",
+      ],
+      "type": "union",
+    },
+    "Node" => Object {
+      "name": "Node",
+      "subtypes": Array [
+        "Function",
+        "Declaration",
+        "Argument",
+        "Body",
+        "Statement",
+      ],
+      "type": "union",
+    },
+  },
+}
+`;
+
+exports[`Test sample AST specifications should generate proper output for kitchen.yaml using purify 2`] = `
 "// DO NOT EDIT
 // This file was automatically generated
 
@@ -235,6 +949,79 @@ export type Node = Function | Declaration | Argument | Body | Statement;"
 `;
 
 exports[`Test sample AST specifications should generate proper output for repmin.yaml using json 1`] = `
+Object {
+  "bases": Map {},
+  "leaves": Map {
+    "Fork" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "left" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "node",
+            "types": Array [
+              "Tree",
+            ],
+          },
+        },
+        "right" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "node",
+            "types": Array [
+              "Tree",
+            ],
+          },
+        },
+      },
+      "name": "Fork",
+      "rootUnion": "Tree",
+      "tag": "fork",
+      "type": "leaf",
+    },
+    "Leaf" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "value" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "number",
+            ],
+          },
+        },
+      },
+      "name": "Leaf",
+      "rootUnion": "Tree",
+      "tag": "leaf",
+      "type": "leaf",
+    },
+  },
+  "names": Set {
+    "Tree",
+    "Fork",
+    "Leaf",
+  },
+  "options": Object {
+    "maps": "json",
+    "optional": "json",
+  },
+  "tagName": "tag",
+  "unions": Map {
+    "Tree" => Object {
+      "name": "Tree",
+      "subtypes": Array [
+        "Fork",
+        "Leaf",
+      ],
+      "type": "union",
+    },
+  },
+}
+`;
+
+exports[`Test sample AST specifications should generate proper output for repmin.yaml using json 2`] = `
 "// DO NOT EDIT
 // This file was automatically generated
 
@@ -262,6 +1049,79 @@ export type Tree = Fork | Leaf;"
 `;
 
 exports[`Test sample AST specifications should generate proper output for repmin.yaml using purify 1`] = `
+Object {
+  "bases": Map {},
+  "leaves": Map {
+    "Fork" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "left" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "node",
+            "types": Array [
+              "Tree",
+            ],
+          },
+        },
+        "right" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "node",
+            "types": Array [
+              "Tree",
+            ],
+          },
+        },
+      },
+      "name": "Fork",
+      "rootUnion": "Tree",
+      "tag": "fork",
+      "type": "leaf",
+    },
+    "Leaf" => Object {
+      "extends": Array [],
+      "fields": Map {
+        "value" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtin",
+            "types": Array [
+              "number",
+            ],
+          },
+        },
+      },
+      "name": "Leaf",
+      "rootUnion": "Tree",
+      "tag": "leaf",
+      "type": "leaf",
+    },
+  },
+  "names": Set {
+    "Tree",
+    "Fork",
+    "Leaf",
+  },
+  "options": Object {
+    "maps": "json",
+    "optional": "json",
+  },
+  "tagName": "tag",
+  "unions": Map {
+    "Tree" => Object {
+      "name": "Tree",
+      "subtypes": Array [
+        "Fork",
+        "Leaf",
+      ],
+      "type": "union",
+    },
+  },
+}
+`;
+
+exports[`Test sample AST specifications should generate proper output for repmin.yaml using purify 2`] = `
 "// DO NOT EDIT
 // This file was automatically generated
 
