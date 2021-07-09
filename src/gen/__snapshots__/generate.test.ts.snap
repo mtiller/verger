@@ -1,53 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test sample AST specifications should generate proper output for expr.yaml 1`] = `
-"// DO NOT EDIT
-// This file was automatically generated
-
-export interface BinaryOp  {
-    left: Expr;
-    right: Expr;
-}
-export interface Literal  {
-    tag: \\"literal\\";
-    value: number;
-}
-export class Literal {
-    static is = (x: Expr): x is Literal => { return x.tag===\\"literal\\" }
-    static children = (x: Literal) => { return [] as const }
-    static tag = \\"literal\\"
-}
-export interface ArithmeticOp extends BinaryOp {
-    tag: \\"arithmeticop\\";
-    op: \\"+\\" | \\"-\\" | \\"*\\" | \\"/\\";
-}
-export class ArithmeticOp {
-    static is = (x: Expr): x is ArithmeticOp => { return x.tag===\\"arithmeticop\\" }
-    static children = (x: ArithmeticOp) => { return [x.left, x.right] as const }
-    static tag = \\"arithmeticop\\"
-}
-export interface UnaryOp  {
-    tag: \\"unaryop\\";
-    expr: Expr;
-    op: \\"()\\" | \\"+\\" | \\"-\\";
-}
-export class UnaryOp {
-    static is = (x: Expr): x is UnaryOp => { return x.tag===\\"unaryop\\" }
-    static children = (x: UnaryOp) => { return [x.expr] as const }
-    static tag = \\"unaryop\\"
-}
-export interface RelOp extends BinaryOp {
-    tag: \\"relop\\";
-    op: \\"+\\" | \\"-\\" | \\"*\\" | \\"/\\";
-}
-export class RelOp {
-    static is = (x: Expr): x is RelOp => { return x.tag===\\"relop\\" }
-    static children = (x: RelOp) => { return [x.left, x.right] as const }
-    static tag = \\"relop\\"
-}
-export type Expr = Literal | ArithmeticOp | UnaryOp | RelOp;"
-`;
-
 exports[`Test sample AST specifications should generate proper output for expr.yaml using json 1`] = `
 "// DO NOT EDIT
 // This file was automatically generated
@@ -142,75 +94,6 @@ export class RelOp {
     static tag = \\"relop\\"
 }
 export type Expr = Literal | ArithmeticOp | UnaryOp | RelOp;"
-`;
-
-exports[`Test sample AST specifications should generate proper output for kitchen.yaml 1`] = `
-"// DO NOT EDIT
-// This file was automatically generated
-
-
-export interface Function  {
-    tag: \\"function\\";
-    name: string;
-    args: Argument[];
-    body: Body;
-}
-export class Function {
-    static is = (x: Node): x is Function => { return x.tag===\\"function\\" }
-    static children = (x: Function) => { return [x.body, ...x.args] as const }
-    static tag = \\"function\\"
-}
-export interface Declaration  {
-    tag: \\"declaration\\";
-    name: string;
-    type: string;
-    init: number;
-}
-export class Declaration {
-    static is = (x: Node): x is Declaration => { return x.tag===\\"declaration\\" }
-    static children = (x: Declaration) => { return [] as const }
-    static tag = \\"declaration\\"
-}
-export interface Argument  {
-    tag: \\"argument\\";
-    name: string;
-    type: string;
-}
-export class Argument {
-    static is = (x: Node): x is Argument => { return x.tag===\\"argument\\" }
-    static children = (x: Argument) => { return [] as const }
-    static tag = \\"argument\\"
-}
-export interface Body  {
-    tag: \\"body\\";
-    statement: Statement;
-}
-export class Body {
-    static is = (x: Node): x is Body => { return x.tag===\\"body\\" }
-    static children = (x: Body) => { return [x.statement] as const }
-    static tag = \\"body\\"
-}
-export interface AssignmentStatement  {
-    tag: \\"assignmentstatement\\";
-    name: string;
-    init: number;
-}
-export class AssignmentStatement {
-    static is = (x: Node): x is AssignmentStatement => { return x.tag===\\"assignmentstatement\\" }
-    static children = (x: AssignmentStatement) => { return [] as const }
-    static tag = \\"assignmentstatement\\"
-}
-export interface DeclarationStatement  {
-    tag: \\"declarationstatement\\";
-    name: string;
-}
-export class DeclarationStatement {
-    static is = (x: Node): x is DeclarationStatement => { return x.tag===\\"declarationstatement\\" }
-    static children = (x: DeclarationStatement) => { return [] as const }
-    static tag = \\"declarationstatement\\"
-}
-export type Statement = AssignmentStatement | DeclarationStatement;
-export type Node = Function | Declaration | Argument | Body | Statement;"
 `;
 
 exports[`Test sample AST specifications should generate proper output for kitchen.yaml using json 1`] = `
@@ -349,33 +232,6 @@ export class DeclarationStatement {
 }
 export type Statement = AssignmentStatement | DeclarationStatement;
 export type Node = Function | Declaration | Argument | Body | Statement;"
-`;
-
-exports[`Test sample AST specifications should generate proper output for repmin.yaml 1`] = `
-"// DO NOT EDIT
-// This file was automatically generated
-
-
-export interface Fork  {
-    tag: \\"fork\\";
-    left: Tree;
-    right: Tree;
-}
-export class Fork {
-    static is = (x: Tree): x is Fork => { return x.tag===\\"fork\\" }
-    static children = (x: Fork) => { return [x.left, x.right] as const }
-    static tag = \\"fork\\"
-}
-export interface Leaf  {
-    tag: \\"leaf\\";
-    value: number;
-}
-export class Leaf {
-    static is = (x: Tree): x is Leaf => { return x.tag===\\"leaf\\" }
-    static children = (x: Leaf) => { return [] as const }
-    static tag = \\"leaf\\"
-}
-export type Tree = Fork | Leaf;"
 `;
 
 exports[`Test sample AST specifications should generate proper output for repmin.yaml using json 1`] = `

@@ -1,7 +1,12 @@
 import { ASTSpec } from "./specification";
 import { walkNames, walkNode, walksBase } from "./walk";
 
+/**
+ * Load an AST specification by traversing data provided
+ * (generally from YAML).
+ */
 export function loadSpec(spec: any): ASTSpec {
+  /** Create the spec we will return. */
   const types: ASTSpec = {
     tagName: "tag",
     names: new Set(),
@@ -13,12 +18,17 @@ export function loadSpec(spec: any): ASTSpec {
       maps: "json",
     },
   };
+
+  /** Parse any options first. */
   if (spec.hasOwnProperty("options")) {
     loadOptions(spec["options"], spec);
   }
+
+  /** Create the nodes for bases (base class types) and nodes  */
   const bases: any = spec["bases"] ?? {};
   const root: any = spec["nodes"];
 
+  /** If no nodes are specified, this is an error */
   if (root === undefined) {
     throw new Error("Missing nodes field");
   }
@@ -35,12 +45,14 @@ export function loadSpec(spec: any): ASTSpec {
     walkNode(name, name, content, types);
   }
 
+  /** Return the resulting specification */
   return types;
 }
 
-type ArrayElement<ArrayType extends readonly unknown[]> =
-  ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
-
+/**
+ * A nice way to verify (in a type safe way) that a given
+ * string belongs to a set of possible values.
+ */
 function assertOptions<K extends string>(
   name: string,
   possible: K[],
@@ -56,6 +68,11 @@ function assertOptions<K extends string>(
   );
 }
 
+/**
+ * Read in a collection of key-value pairs and use them to initial options.
+ * @param options
+ * @param spec
+ */
 export function loadOptions(options: any, spec: ASTSpec) {
   const map = new Map<string, string>();
   for (const [name, content] of Object.entries(options)) {
@@ -83,15 +100,6 @@ export function loadOptions(options: any, spec: ASTSpec) {
       default: {
         throw new Error(`Unknown option ${key}`);
       }
-    }
-  }
-  if (map.has("optional")) {
-  }
-  if (options["optional"]) {
-    const val = options["optional"];
-    if (typeof val === "string") {
-    } else {
-      throw new Error(`Expected value of `);
     }
   }
 }
