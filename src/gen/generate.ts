@@ -1,8 +1,10 @@
 import { Nothing } from "purify-ts/Maybe";
 import { ASTSpec } from "../specification";
-import { baseCode, leafCode, unionCode } from "./templates";
-import { lines } from "./text";
+import { baseCode, leafCode, lines, unionCode } from "./templates";
 
+/**
+ * This is the top level function to generate Javascript code.
+ */
 export function generate(spec: ASTSpec): string {
   const leaves = [...spec.leaves.values()];
   const bases = [...spec.bases.values()];

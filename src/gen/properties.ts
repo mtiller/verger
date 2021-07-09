@@ -10,7 +10,7 @@ import {
 } from "../specification";
 
 /**
- * Determine the type associated with a given field
+ * Determine the Javascript type associated with a given field
  * @param fieldName The name of the field
  * @param x The `FieldType` instance
  * @param spec The AST specification
@@ -20,6 +20,44 @@ export function fieldType(x: Field, spec: ASTSpec): string {
   return fieldStruct(x.struct, fieldTypeName(x.type, spec), spec);
 }
 
+/**
+ * Determines how a given field's name should appear in the declaration.
+ *
+ * This is mainly handling the case of optional fields represnted in native
+ * JSON...in which case the field name needs to end with "?".
+ * @param name
+ * @param x
+ * @param spec
+ * @returns
+ */
+export function fieldName(name: string, x: Field, spec: ASTSpec): string {
+  switch (x.struct) {
+    case "optional": {
+      switch (spec.options.optional) {
+        case "json":
+          return `${name}?`;
+        case "expnull":
+        case "purify":
+          return name;
+        default: {
+          throw new Error(`Unknown optional type: ${spec.options.optional}`);
+        }
+      }
+    }
+    case "set":
+    case "map":
+    case "array":
+    case "scalar":
+      return name;
+  }
+}
+
+/**
+ * Determine the underlying type (independent of the structure)
+ * @param x
+ * @param spec
+ * @returns
+ */
 export function fieldTypeName(x: FieldType, spec: ASTSpec): string {
   switch (x.kind) {
     case "builtin":
@@ -33,6 +71,10 @@ export function fieldTypeName(x: FieldType, spec: ASTSpec): string {
   }
 }
 
+/**
+ * Generate code associated with the given structure (given the
+ * underlying type stored in the structure).
+ */
 export function fieldStruct(
   struct: FieldStruct,
   typename: string,
@@ -88,13 +130,17 @@ export function childFieldEntries(
   spec: ASTSpec
 ): Array<[string, NodeField]> {
   let ret: Array<[string, NodeField]> = [];
+  /** We start by expanding contents of the base classes */
   a.extends.forEach((baseName) => {
     const base = spec.bases.get(baseName);
     if (base === undefined) throw new Error(`Unknown base type ${baseName}`);
     const entries = childFieldEntries(base, spec);
     ret = [...ret, ...entries];
   });
+  /** Now we get the contents from the node description itself */
   const entries = [...a.fields.entries()].filter(isNodeFieldEntry);
+
+  /** Finally, we unsure that we don't end up with two fields with the same name. */
   const dup = entries.find((e) => ret.some((r) => r[0] === e[0]));
   if (dup !== undefined) {
     throw new Error("Field ${dup[0]} is no unique");

@@ -7,30 +7,35 @@ import {
   Field,
   NodeField,
 } from "../specification";
-import { fieldType, childFieldEntries } from "./properties";
-import { lines } from "./text";
+import { fieldType, childFieldEntries, fieldName } from "./properties";
 
+/** Generate code for each union node */
 export function unionCode(a: ASTUnionType, spec: ASTSpec): string {
   return `export type ${a.name} = ${a.subtypes.join(" | ")};`;
 }
 
+/** Formulate the extends clause for a leaf node */
 export function extendsClause(a: string[]): string {
   if (a.length === 0) return "";
   return `extends ${a.join(",")}`;
 }
 
+/** Generate code for a base or leaf node */
 export function baseCode(
   a: ASTBaseType | ASTLeafType,
-  tag: Maybe<string>,
+  tag: Maybe<string>, // Tag value if this is a leaf node
   spec: ASTSpec
 ): string {
+  /** Generate declarations for all fields. */
   let decls = [...a.fields.entries()].map(
-    (f) => `    ${f[0]}: ${fieldType(f[1], spec)};`
+    (f) => `    ${fieldName(f[0], f[1], spec)}: ${fieldType(f[1], spec)};`
   );
+  /** If a 'tag' is provided (for leaf nodes), add that. */
   decls = tag
     .map((v) => [`    ${spec.tagName}: "${v}";`, ...decls])
     .orDefault(decls);
 
+  /** Pull all this together into an interface definition. */
   return lines(
     `export interface ${a.name} ${extendsClause(a.extends)} {`,
     lines(...decls),
@@ -38,12 +43,24 @@ export function baseCode(
   );
 }
 
+/** Generate code for a leaf node */
 export function leafCode(a: ASTLeafType, spec: ASTSpec): string {
+  /** We start be generating the same interface we do for a base class */
   const common = baseCode(a, Just(a.tag), spec);
 
+  /** Now we write out a bunch of utility functions for leaf nodes */
+
+  /** We will need the complete list (including from base classes) of all fields */
   const children = childFieldEntries(a, spec);
+
+  /**
+   * We sort these so scalars are first (so that all 'variability'
+   * in the structure of the resulting return type is at the end)
+   **/
   children.sort(compareFields);
-  const typeClass = [
+
+  /** Now generate the class definition associated with this leaf node. */
+  const nodeClass = [
     `export class ${a.name} {`,
     `    static is = (x: ${a.rootUnion}): x is ${a.name} => { return x.${spec.tagName}==="${a.tag}" }`,
     `    static children = (x: ${a.name}) => { return [${children
@@ -53,23 +70,35 @@ export function leafCode(a: ASTLeafType, spec: ASTSpec): string {
     `}`,
   ];
 
-  return lines(common, ...typeClass);
+  /** Concatenate the common stuff and this special class */
+  return lines(common, ...nodeClass);
 }
 
+/** Used to ensure scalar fields are processed first */
 function compareFields(a: [string, NodeField], b: [string, NodeField]) {
   const ascore = a[1].struct === "scalar" ? -1 : 0;
   const bscore = b[1].struct === "scalar" ? -1 : 0;
   return ascore - bscore;
 }
 
+/** Generate an expression for all children resulting from a given field. */
 export function fieldChildren(v: string, field: string, f: Field): string {
   switch (f.struct) {
     case "scalar":
       return `${v}.${field}`;
     case "array":
       return `...${v}.${field}`;
+    case "set":
+      return `...${v}.${field}`;
+    // TODO: optional
+    // TODO: map
     default: {
       throw new Error(`Unknown data structure: '${f.struct}'`);
     }
   }
+}
+
+/** A help function for listing lines to be joined. */
+export function lines(...lines: string[]): string {
+  return lines.join("\n");
 }
