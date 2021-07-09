@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { readFile } from "fs-extra";
 import { Cli, Command, Option } from "clipanion";
 import yaml from "yaml";

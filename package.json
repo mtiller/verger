@@ -1,9 +1,10 @@
 {
-  "name": "astgen",
-  "version": "0.1.0",
+  "name": "verger",
+  "version": "0.1.1",
   "description": "Generation of AST types and helper functions",
-  "main": "lib/index.js",
+  "main": "lib/src/index.js",
   "scripts": {
+    "prepublish": "tsc",
     "sample": "yarn sample:expr && yarn sample:repmin && yarn sample:kitchen",
     "sample:expr": "ts-node scripts/astgen.ts samples/expr.yaml | tee samples/expr.ts",
     "sample:repmin": "ts-node scripts/astgen.ts samples/repmin.yaml | tee samples/repmin.ts",
@@ -15,6 +16,12 @@
   "keywords": [
     "AST"
   ],
+  "files": [
+    "lib"
+  ],
+  "bin": {
+    "verger": "./lib/scripts/verger.js"
+  },
   "author": "Michael M. Tiller",
   "license": "MIT",
   "devDependencies": {
