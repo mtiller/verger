@@ -1,4 +1,10 @@
-import { ASTLeafType, ASTSpec, ASTUnionType } from "../specification";
+import { Just, Maybe } from "purify-ts/Maybe";
+import {
+  ASTBaseType,
+  ASTLeafType,
+  ASTSpec,
+  ASTUnionType,
+} from "../specification";
 import { fieldType, fieldEntries } from "./properties";
 import { lines } from "./text";
 
@@ -11,34 +17,40 @@ export function extendsClause(a: string[]): string {
   return `extends ${a.join(",")}`;
 }
 
-export function leafOrBaseCode(a: ASTLeafType, spec: ASTSpec): string {
+export function baseCode(
+  a: ASTBaseType | ASTLeafType,
+  tag: Maybe<string>,
+  spec: ASTSpec
+): string {
   let decls = [...a.fields.entries()].map(
     (f) => `    ${f[0]}: ${fieldType(f[0], f[1], spec)};`
   );
-  if (a.type === "leaf") {
-    decls = [`    ${spec.tagName}: "${a.tag}";`, ...decls];
-  }
-
-  const children = fieldEntries(a, spec);
-  const typeClass =
-    a.type === "leaf"
-      ? [
-          `export class ${a.name} {`,
-          `    static is = (x: ${a.rootUnion}): x is ${a.name} => { return x.${spec.tagName}==="${a.tag}" }`,
-          `    static children = (x: ${a.name}): [${children
-            .map((x) => `${x[0]}: ${x[1].name}`)
-            .join(", ")}] => { return [${children
-            .map((x) => `x.${x[0]}`)
-            .join(", ")}] }`,
-          `    static tag = "${a.tag}"`,
-          `}`,
-        ]
-      : [];
+  decls = tag
+    .map((v) => [`    ${spec.tagName}: "${v}";`, ...decls])
+    .orDefault(decls);
 
   return lines(
     `export interface ${a.name} ${extendsClause(a.extends)} {`,
     lines(...decls),
-    "}",
-    ...typeClass
+    "}"
   );
+}
+
+export function leafCode(a: ASTLeafType, spec: ASTSpec): string {
+  const common = baseCode(a, Just(a.tag), spec);
+
+  const children = fieldEntries(a, spec);
+  const typeClass = [
+    `export class ${a.name} {`,
+    `    static is = (x: ${a.rootUnion}): x is ${a.name} => { return x.${spec.tagName}==="${a.tag}" }`,
+    `    static children = (x: ${a.name}): [${children
+      .map((x) => `${x[0]}: ${x[1].name}`)
+      .join(", ")}] => { return [${children
+      .map((x) => `x.${x[0]}`)
+      .join(", ")}] }`,
+    `    static tag = "${a.tag}"`,
+    `}`,
+  ];
+
+  return lines(common, ...typeClass);
 }
