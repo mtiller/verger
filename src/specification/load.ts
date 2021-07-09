@@ -9,7 +9,7 @@ export function loadSpec(spec: any): ASTSpec {
     bases: new Map(),
     leaves: new Map(),
     options: {
-      optional: "purify",
+      optional: "expnull",
     },
   };
   if (spec.hasOwnProperty("options")) {

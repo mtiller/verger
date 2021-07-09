@@ -16,5 +16,16 @@ describe("Test sample AST specifications", () => {
 
       expect(output).toMatchSnapshot();
     });
+    it(`should generate proper output for ${file}.yaml using purify`, () => {
+      const raw = fs.readFileSync(
+        path.join(__dirname, "..", "..", "samples", `${file}.yaml`)
+      );
+      const spec = yaml.parse(raw.toString());
+      spec.options.optional = "purify";
+      const types = loadSpec(spec);
+      const output = generate(types);
+
+      expect(output).toMatchSnapshot();
+    });
   });
 });
