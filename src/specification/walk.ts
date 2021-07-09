@@ -1,10 +1,10 @@
+import { FieldType } from "./fields";
 import {
   ASTBaseType,
   ASTLeafType,
   ASTSpec,
   ASTTree,
   ASTUnionType,
-  FieldType,
 } from "./nodes";
 
 export function walkNode(
