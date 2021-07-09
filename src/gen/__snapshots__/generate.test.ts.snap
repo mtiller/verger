@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test sample AST specifications should generate proper output for expr.yaml 1`] = `
+"// DO NOT EDIT
+// This file was automatically generated
+
+export interface BinaryOp  {
+    left: Expr;
+    right: Expr;
+}
+export interface Literal  {
+    tag: \\"literal\\";
+    value: number;
+}
+export class Literal {
+    static is = (x: Expr): x is Literal => { return x.tag===\\"literal\\" }
+    static children = (x: Literal): [] => { return [] }
+    static tag = \\"literal\\"
+}
+export interface ArithmeticOp extends BinaryOp {
+    tag: \\"arithmeticop\\";
+    op: \\"+\\" | \\"-\\" | \\"*\\" | \\"/\\";
+}
+export class ArithmeticOp {
+    static is = (x: Expr): x is ArithmeticOp => { return x.tag===\\"arithmeticop\\" }
+    static children = (x: ArithmeticOp): [left: Expr, right: Expr] => { return [x.left, x.right] }
+    static tag = \\"arithmeticop\\"
+}
+export interface UnaryOp  {
+    tag: \\"unaryop\\";
+    expr: Expr;
+    op: \\"()\\" | \\"+\\" | \\"-\\";
+}
+export class UnaryOp {
+    static is = (x: Expr): x is UnaryOp => { return x.tag===\\"unaryop\\" }
+    static children = (x: UnaryOp): [expr: Expr] => { return [x.expr] }
+    static tag = \\"unaryop\\"
+}
+export interface RelOp extends BinaryOp {
+    tag: \\"relop\\";
+    op: \\"+\\" | \\"-\\" | \\"*\\" | \\"/\\";
+}
+export class RelOp {
+    static is = (x: Expr): x is RelOp => { return x.tag===\\"relop\\" }
+    static children = (x: RelOp): [left: Expr, right: Expr] => { return [x.left, x.right] }
+    static tag = \\"relop\\"
+}
+export type Expr = Literal | ArithmeticOp | UnaryOp | RelOp;"
+`;
