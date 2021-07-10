@@ -1,6 +1,9 @@
 import { Nothing } from "purify-ts/Maybe";
 import { ASTSpec } from "../specification";
-import { baseCode, comment, leafCode, lines, unionCode } from "./templates";
+import { leafCode } from "./leaf";
+import { baseCode } from "./base";
+import { comment, lines } from "./utils";
+import { unionCode } from "./union";
 import prettier from "prettier";
 
 /**
