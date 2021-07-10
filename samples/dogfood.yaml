@@ -6,12 +6,6 @@ nodes:
       - tags: string[]
     NodeType:
       - types: string[]
-  Field:
-    - type: FieldType
-    - struct: ["scalar", "optional", "map", "set", "array"]
-  NodeField:
-    - type: NodeType
-    - struct: FieldStruct
   ASTTree:
     ASTUnionType:
       - name: string
