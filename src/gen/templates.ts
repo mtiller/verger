@@ -37,12 +37,12 @@ export function unionCode(a: ASTUnionType, spec: ASTSpec): string {
 
 export function matchBody(type: string, leaves: ASTLeafType[], spec: ASTSpec) {
   const ret: string[] = ["{"];
-  ret.push(`    switch(n.${spec.tagName}) {`);
+  ret.push(`    switch(n.${spec.options.tagName}) {`);
   for (const leaf of leaves) {
     ret.push(`      case "${leaf.tag}": return f.${leaf.name}(n)`);
   }
   ret.push(
-    `      default: { const x: never = n; throw new Error("Instance of ${type} has unexpected value for ${spec.tagName}: "+(n as any).tag)}`
+    `      default: { const x: never = n; throw new Error("Instance of ${type} has unexpected value for ${spec.options.tagName}: "+(n as any).tag)}`
   );
   ret.push("    }");
   ret.push("  }");
@@ -86,7 +86,7 @@ export function baseCode(
   );
   /** If a 'tag' is provided (for leaf nodes), add that. */
   decls = tag
-    .map((v) => [`    ${spec.tagName}: "${v}";`, ...decls])
+    .map((v) => [`    ${spec.options.tagName}: "${v}";`, ...decls])
     .orDefault(decls);
 
   /** Pull all this together into an interface definition. */
@@ -116,7 +116,7 @@ export function leafCode(a: ASTLeafType, spec: ASTSpec): string {
   /** Now generate the class definition associated with this leaf node. */
   const nodeClass = [
     `export class ${a.name} {`,
-    `    static is = (x: ${a.rootUnion}): x is ${a.name} => { return x.${spec.tagName}==="${a.tag}" }`,
+    `    static is = (x: ${a.rootUnion}): x is ${a.name} => { return x.${spec.options.tagName}==="${a.tag}" }`,
     `    static children = (x: ${a.name}) => { return [${children
       .map((x) => fieldChildren("x", x[0], x[1]))
       .join(", ")}] as const }`,

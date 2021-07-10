@@ -2,6 +2,7 @@ import { ASTBaseType, ASTLeafType, ASTUnionType } from "./nodes";
 
 /** Represents options for the code generator */
 export interface Options {
+  tagName: string;
   optional: "json" | "expnull" | "purify";
   maps: "json" | "map";
 }
@@ -11,7 +12,6 @@ export interface Options {
  * syntax tree being described and then generated.
  */
 export interface ASTSpec {
-  tagName: string;
   names: Set<string>;
   unions: Map<string, ASTUnionType>;
   bases: Map<string, ASTBaseType>;

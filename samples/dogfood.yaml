@@ -22,3 +22,6 @@ nodes:
       - name: string
       - bases: string[]
       - fields: Field{}
+
+options:
+  tagName: tag

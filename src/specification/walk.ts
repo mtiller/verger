@@ -119,7 +119,7 @@ function walkFields(
     /** Extract the name of the single key... */
     const fieldName = keys[0];
 
-    if (fieldName === spec.tagName)
+    if (fieldName === spec.options.tagName)
       throw new Error(
         "'${spec.tagName}'` is a reserved name (controlled by the options.tagName option"
       );

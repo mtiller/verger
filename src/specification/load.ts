@@ -1,5 +1,5 @@
 import { ASTSpec } from "./specification";
-import { walkNames, walkNode, walksBase } from "./walk";
+import { validName, walkNames, walkNode, walksBase } from "./walk";
 
 /**
  * Load an AST specification by traversing data provided
@@ -8,12 +8,12 @@ import { walkNames, walkNode, walksBase } from "./walk";
 export function loadSpec(spec: any): ASTSpec {
   /** Create the spec we will return. */
   const types: ASTSpec = {
-    tagName: "tag",
     names: new Set(),
     unions: new Map(),
     bases: new Map(),
     leaves: new Map(),
     options: {
+      tagName: "tag",
       optional: "json",
       maps: "json",
     },
@@ -93,6 +93,14 @@ export function loadOptions(options: any, spec: ASTSpec) {
           val
         );
         break;
+      }
+      case "tag": {
+        if (!validName(val)) {
+          throw new Error(
+            `The tagName option must be a valid Javascript identifier, but '${val}' is not.`
+          );
+        }
+        spec.options.tagName = val;
       }
       case "maps": {
         spec.options.maps = assertOptions(key, ["json", "map"], val);
