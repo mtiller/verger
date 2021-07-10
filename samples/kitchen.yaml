@@ -1,6 +1,6 @@
 nodes:
   Node:
-    Function:
+    FunctionDef:
       - name: string
       - args: Argument[]
       - body: Body
