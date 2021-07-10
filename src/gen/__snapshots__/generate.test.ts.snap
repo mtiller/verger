@@ -314,7 +314,33 @@ export class ASTLeafType {
     static tag = \\"astleaftype\\"
 }
 export type FieldType = BuiltinType | EnumType | NodeType;
-export type ASTTree = ASTUnionType | ASTLeafType;"
+namespace FieldType {
+  export const match = <R>(n: FieldType, f: {
+    BuiltinType: (n: BuiltinType) => R
+    EnumType: (n: EnumType) => R
+    NodeType: (n: NodeType) => R
+}) => {
+    switch(n.tag) {
+      case \\"builtintype\\": return f.BuiltinType(n)
+      case \\"enumtype\\": return f.EnumType(n)
+      case \\"nodetype\\": return f.NodeType(n)
+      default: { const x: never = n; throw new Error(\\"Instance of FieldType has unexpected value for tag: \\"+(n as any).tag)}
+    }
+  }
+}
+export type ASTTree = ASTUnionType | ASTLeafType;
+namespace ASTTree {
+  export const match = <R>(n: ASTTree, f: {
+    ASTUnionType: (n: ASTUnionType) => R
+    ASTLeafType: (n: ASTLeafType) => R
+}) => {
+    switch(n.tag) {
+      case \\"astuniontype\\": return f.ASTUnionType(n)
+      case \\"astleaftype\\": return f.ASTLeafType(n)
+      default: { const x: never = n; throw new Error(\\"Instance of ASTTree has unexpected value for tag: \\"+(n as any).tag)}
+    }
+  }
+}"
 `;
 
 exports[`Test sample AST specifications should generate proper output for dogfood.yaml using purify 1`] = `
@@ -631,7 +657,33 @@ export class ASTLeafType {
     static tag = \\"astleaftype\\"
 }
 export type FieldType = BuiltinType | EnumType | NodeType;
-export type ASTTree = ASTUnionType | ASTLeafType;"
+namespace FieldType {
+  export const match = <R>(n: FieldType, f: {
+    BuiltinType: (n: BuiltinType) => R
+    EnumType: (n: EnumType) => R
+    NodeType: (n: NodeType) => R
+}) => {
+    switch(n.tag) {
+      case \\"builtintype\\": return f.BuiltinType(n)
+      case \\"enumtype\\": return f.EnumType(n)
+      case \\"nodetype\\": return f.NodeType(n)
+      default: { const x: never = n; throw new Error(\\"Instance of FieldType has unexpected value for tag: \\"+(n as any).tag)}
+    }
+  }
+}
+export type ASTTree = ASTUnionType | ASTLeafType;
+namespace ASTTree {
+  export const match = <R>(n: ASTTree, f: {
+    ASTUnionType: (n: ASTUnionType) => R
+    ASTLeafType: (n: ASTLeafType) => R
+}) => {
+    switch(n.tag) {
+      case \\"astuniontype\\": return f.ASTUnionType(n)
+      case \\"astleaftype\\": return f.ASTLeafType(n)
+      default: { const x: never = n; throw new Error(\\"Instance of ASTTree has unexpected value for tag: \\"+(n as any).tag)}
+    }
+  }
+}"
 `;
 
 exports[`Test sample AST specifications should generate proper output for expr.yaml using json 1`] = `
@@ -830,7 +882,23 @@ export class RelOp {
     static children = (x: RelOp) => { return [x.left, x.right] as const }
     static tag = \\"relop\\"
 }
-export type Expr = Literal | ArithmeticOp | UnaryOp | RelOp;"
+export type Expr = Literal | ArithmeticOp | UnaryOp | RelOp;
+namespace Expr {
+  export const match = <R>(n: Expr, f: {
+    Literal: (n: Literal) => R
+    ArithmeticOp: (n: ArithmeticOp) => R
+    UnaryOp: (n: UnaryOp) => R
+    RelOp: (n: RelOp) => R
+}) => {
+    switch(n.tag) {
+      case \\"literal\\": return f.Literal(n)
+      case \\"arithmeticop\\": return f.ArithmeticOp(n)
+      case \\"unaryop\\": return f.UnaryOp(n)
+      case \\"relop\\": return f.RelOp(n)
+      default: { const x: never = n; throw new Error(\\"Instance of Expr has unexpected value for tag: \\"+(n as any).tag)}
+    }
+  }
+}"
 `;
 
 exports[`Test sample AST specifications should generate proper output for expr.yaml using purify 1`] = `
@@ -1029,7 +1097,23 @@ export class RelOp {
     static children = (x: RelOp) => { return [x.left, x.right] as const }
     static tag = \\"relop\\"
 }
-export type Expr = Literal | ArithmeticOp | UnaryOp | RelOp;"
+export type Expr = Literal | ArithmeticOp | UnaryOp | RelOp;
+namespace Expr {
+  export const match = <R>(n: Expr, f: {
+    Literal: (n: Literal) => R
+    ArithmeticOp: (n: ArithmeticOp) => R
+    UnaryOp: (n: UnaryOp) => R
+    RelOp: (n: RelOp) => R
+}) => {
+    switch(n.tag) {
+      case \\"literal\\": return f.Literal(n)
+      case \\"arithmeticop\\": return f.ArithmeticOp(n)
+      case \\"unaryop\\": return f.UnaryOp(n)
+      case \\"relop\\": return f.RelOp(n)
+      default: { const x: never = n; throw new Error(\\"Instance of Expr has unexpected value for tag: \\"+(n as any).tag)}
+    }
+  }
+}"
 `;
 
 exports[`Test sample AST specifications should generate proper output for kitchen.yaml using json 1`] = `
@@ -1304,7 +1388,39 @@ export class DeclarationStatement {
     static tag = \\"declarationstatement\\"
 }
 export type Statement = AssignmentStatement | DeclarationStatement;
-export type Node = Function | Declaration | Argument | Body | Statement;"
+namespace Statement {
+  export const match = <R>(n: Statement, f: {
+    AssignmentStatement: (n: AssignmentStatement) => R
+    DeclarationStatement: (n: DeclarationStatement) => R
+}) => {
+    switch(n.tag) {
+      case \\"assignmentstatement\\": return f.AssignmentStatement(n)
+      case \\"declarationstatement\\": return f.DeclarationStatement(n)
+      default: { const x: never = n; throw new Error(\\"Instance of Statement has unexpected value for tag: \\"+(n as any).tag)}
+    }
+  }
+}
+export type Node = Function | Declaration | Argument | Body | Statement;
+namespace Node {
+  export const match = <R>(n: Node, f: {
+    Function: (n: Function) => R
+    Declaration: (n: Declaration) => R
+    Argument: (n: Argument) => R
+    Body: (n: Body) => R
+    AssignmentStatement: (n: AssignmentStatement) => R
+    DeclarationStatement: (n: DeclarationStatement) => R
+}) => {
+    switch(n.tag) {
+      case \\"function\\": return f.Function(n)
+      case \\"declaration\\": return f.Declaration(n)
+      case \\"argument\\": return f.Argument(n)
+      case \\"body\\": return f.Body(n)
+      case \\"assignmentstatement\\": return f.AssignmentStatement(n)
+      case \\"declarationstatement\\": return f.DeclarationStatement(n)
+      default: { const x: never = n; throw new Error(\\"Instance of Node has unexpected value for tag: \\"+(n as any).tag)}
+    }
+  }
+}"
 `;
 
 exports[`Test sample AST specifications should generate proper output for kitchen.yaml using purify 1`] = `
@@ -1579,7 +1695,39 @@ export class DeclarationStatement {
     static tag = \\"declarationstatement\\"
 }
 export type Statement = AssignmentStatement | DeclarationStatement;
-export type Node = Function | Declaration | Argument | Body | Statement;"
+namespace Statement {
+  export const match = <R>(n: Statement, f: {
+    AssignmentStatement: (n: AssignmentStatement) => R
+    DeclarationStatement: (n: DeclarationStatement) => R
+}) => {
+    switch(n.tag) {
+      case \\"assignmentstatement\\": return f.AssignmentStatement(n)
+      case \\"declarationstatement\\": return f.DeclarationStatement(n)
+      default: { const x: never = n; throw new Error(\\"Instance of Statement has unexpected value for tag: \\"+(n as any).tag)}
+    }
+  }
+}
+export type Node = Function | Declaration | Argument | Body | Statement;
+namespace Node {
+  export const match = <R>(n: Node, f: {
+    Function: (n: Function) => R
+    Declaration: (n: Declaration) => R
+    Argument: (n: Argument) => R
+    Body: (n: Body) => R
+    AssignmentStatement: (n: AssignmentStatement) => R
+    DeclarationStatement: (n: DeclarationStatement) => R
+}) => {
+    switch(n.tag) {
+      case \\"function\\": return f.Function(n)
+      case \\"declaration\\": return f.Declaration(n)
+      case \\"argument\\": return f.Argument(n)
+      case \\"body\\": return f.Body(n)
+      case \\"assignmentstatement\\": return f.AssignmentStatement(n)
+      case \\"declarationstatement\\": return f.DeclarationStatement(n)
+      default: { const x: never = n; throw new Error(\\"Instance of Node has unexpected value for tag: \\"+(n as any).tag)}
+    }
+  }
+}"
 `;
 
 exports[`Test sample AST specifications should generate proper output for repmin.yaml using json 1`] = `
@@ -1679,7 +1827,19 @@ export class Leaf {
     static children = (x: Leaf) => { return [] as const }
     static tag = \\"leaf\\"
 }
-export type Tree = Fork | Leaf;"
+export type Tree = Fork | Leaf;
+namespace Tree {
+  export const match = <R>(n: Tree, f: {
+    Fork: (n: Fork) => R
+    Leaf: (n: Leaf) => R
+}) => {
+    switch(n.tag) {
+      case \\"fork\\": return f.Fork(n)
+      case \\"leaf\\": return f.Leaf(n)
+      default: { const x: never = n; throw new Error(\\"Instance of Tree has unexpected value for tag: \\"+(n as any).tag)}
+    }
+  }
+}"
 `;
 
 exports[`Test sample AST specifications should generate proper output for repmin.yaml using purify 1`] = `
@@ -1779,5 +1939,17 @@ export class Leaf {
     static children = (x: Leaf) => { return [] as const }
     static tag = \\"leaf\\"
 }
-export type Tree = Fork | Leaf;"
+export type Tree = Fork | Leaf;
+namespace Tree {
+  export const match = <R>(n: Tree, f: {
+    Fork: (n: Fork) => R
+    Leaf: (n: Leaf) => R
+}) => {
+    switch(n.tag) {
+      case \\"fork\\": return f.Fork(n)
+      case \\"leaf\\": return f.Leaf(n)
+      default: { const x: never = n; throw new Error(\\"Instance of Tree has unexpected value for tag: \\"+(n as any).tag)}
+    }
+  }
+}"
 `;
