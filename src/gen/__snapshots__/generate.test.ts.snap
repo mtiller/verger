@@ -820,8 +820,8 @@ Object {
   "options": Object {
     "maps": "json",
     "optional": "json",
+    "tagName": "tag",
   },
-  "tagName": "tag",
   "unions": Map {
     "Expr" => Object {
       "name": "Expr",
@@ -889,7 +889,7 @@ namespace Expr {
     ArithmeticOp: (n: ArithmeticOp) => R
     UnaryOp: (n: UnaryOp) => R
     RelOp: (n: RelOp) => R
-}) => {
+  }) => {
     switch(n.tag) {
       case \\"literal\\": return f.Literal(n)
       case \\"arithmeticop\\": return f.ArithmeticOp(n)
@@ -898,6 +898,18 @@ namespace Expr {
       default: { const x: never = n; throw new Error(\\"Instance of Expr has unexpected value for tag: \\"+(n as any).tag)}
     }
   }
+  export const partialMatch = <R>(n: Expr, f: Partial<{
+    Literal: (n: Literal) => R
+    ArithmeticOp: (n: ArithmeticOp) => R
+    UnaryOp: (n: UnaryOp) => R
+    RelOp: (n: RelOp) => R
+  }>, orElse: R) => {
+      if (f.Literal) return f.Literal;
+      if (f.ArithmeticOp) return f.ArithmeticOp;
+      if (f.UnaryOp) return f.UnaryOp;
+      if (f.RelOp) return f.RelOp;
+      return orElse;
+    }
 }"
 `;
 
@@ -1035,8 +1047,8 @@ Object {
   "options": Object {
     "maps": "json",
     "optional": "purify",
+    "tagName": "tag",
   },
-  "tagName": "tag",
   "unions": Map {
     "Expr" => Object {
       "name": "Expr",
@@ -1104,7 +1116,7 @@ namespace Expr {
     ArithmeticOp: (n: ArithmeticOp) => R
     UnaryOp: (n: UnaryOp) => R
     RelOp: (n: RelOp) => R
-}) => {
+  }) => {
     switch(n.tag) {
       case \\"literal\\": return f.Literal(n)
       case \\"arithmeticop\\": return f.ArithmeticOp(n)
@@ -1113,6 +1125,18 @@ namespace Expr {
       default: { const x: never = n; throw new Error(\\"Instance of Expr has unexpected value for tag: \\"+(n as any).tag)}
     }
   }
+  export const partialMatch = <R>(n: Expr, f: Partial<{
+    Literal: (n: Literal) => R
+    ArithmeticOp: (n: ArithmeticOp) => R
+    UnaryOp: (n: UnaryOp) => R
+    RelOp: (n: RelOp) => R
+  }>, orElse: R) => {
+      if (f.Literal) return f.Literal;
+      if (f.ArithmeticOp) return f.ArithmeticOp;
+      if (f.UnaryOp) return f.UnaryOp;
+      if (f.RelOp) return f.RelOp;
+      return orElse;
+    }
 }"
 `;
 
@@ -1296,8 +1320,8 @@ Object {
   "options": Object {
     "maps": "json",
     "optional": "json",
+    "tagName": "tag",
   },
-  "tagName": "tag",
   "unions": Map {
     "Statement" => Object {
       "name": "Statement",
@@ -1392,13 +1416,21 @@ namespace Statement {
   export const match = <R>(n: Statement, f: {
     AssignmentStatement: (n: AssignmentStatement) => R
     DeclarationStatement: (n: DeclarationStatement) => R
-}) => {
+  }) => {
     switch(n.tag) {
       case \\"assignmentstatement\\": return f.AssignmentStatement(n)
       case \\"declarationstatement\\": return f.DeclarationStatement(n)
       default: { const x: never = n; throw new Error(\\"Instance of Statement has unexpected value for tag: \\"+(n as any).tag)}
     }
   }
+  export const partialMatch = <R>(n: Statement, f: Partial<{
+    AssignmentStatement: (n: AssignmentStatement) => R
+    DeclarationStatement: (n: DeclarationStatement) => R
+  }>, orElse: R) => {
+      if (f.AssignmentStatement) return f.AssignmentStatement;
+      if (f.DeclarationStatement) return f.DeclarationStatement;
+      return orElse;
+    }
 }
 export type Node = Function | Declaration | Argument | Body | Statement;
 namespace Node {
@@ -1409,7 +1441,7 @@ namespace Node {
     Body: (n: Body) => R
     AssignmentStatement: (n: AssignmentStatement) => R
     DeclarationStatement: (n: DeclarationStatement) => R
-}) => {
+  }) => {
     switch(n.tag) {
       case \\"function\\": return f.Function(n)
       case \\"declaration\\": return f.Declaration(n)
@@ -1420,6 +1452,22 @@ namespace Node {
       default: { const x: never = n; throw new Error(\\"Instance of Node has unexpected value for tag: \\"+(n as any).tag)}
     }
   }
+  export const partialMatch = <R>(n: Node, f: Partial<{
+    Function: (n: Function) => R
+    Declaration: (n: Declaration) => R
+    Argument: (n: Argument) => R
+    Body: (n: Body) => R
+    AssignmentStatement: (n: AssignmentStatement) => R
+    DeclarationStatement: (n: DeclarationStatement) => R
+  }>, orElse: R) => {
+      if (f.Function) return f.Function;
+      if (f.Declaration) return f.Declaration;
+      if (f.Argument) return f.Argument;
+      if (f.Body) return f.Body;
+      if (f.AssignmentStatement) return f.AssignmentStatement;
+      if (f.DeclarationStatement) return f.DeclarationStatement;
+      return orElse;
+    }
 }"
 `;
 
@@ -1603,8 +1651,8 @@ Object {
   "options": Object {
     "maps": "json",
     "optional": "purify",
+    "tagName": "tag",
   },
-  "tagName": "tag",
   "unions": Map {
     "Statement" => Object {
       "name": "Statement",
@@ -1699,13 +1747,21 @@ namespace Statement {
   export const match = <R>(n: Statement, f: {
     AssignmentStatement: (n: AssignmentStatement) => R
     DeclarationStatement: (n: DeclarationStatement) => R
-}) => {
+  }) => {
     switch(n.tag) {
       case \\"assignmentstatement\\": return f.AssignmentStatement(n)
       case \\"declarationstatement\\": return f.DeclarationStatement(n)
       default: { const x: never = n; throw new Error(\\"Instance of Statement has unexpected value for tag: \\"+(n as any).tag)}
     }
   }
+  export const partialMatch = <R>(n: Statement, f: Partial<{
+    AssignmentStatement: (n: AssignmentStatement) => R
+    DeclarationStatement: (n: DeclarationStatement) => R
+  }>, orElse: R) => {
+      if (f.AssignmentStatement) return f.AssignmentStatement;
+      if (f.DeclarationStatement) return f.DeclarationStatement;
+      return orElse;
+    }
 }
 export type Node = Function | Declaration | Argument | Body | Statement;
 namespace Node {
@@ -1716,7 +1772,7 @@ namespace Node {
     Body: (n: Body) => R
     AssignmentStatement: (n: AssignmentStatement) => R
     DeclarationStatement: (n: DeclarationStatement) => R
-}) => {
+  }) => {
     switch(n.tag) {
       case \\"function\\": return f.Function(n)
       case \\"declaration\\": return f.Declaration(n)
@@ -1727,6 +1783,22 @@ namespace Node {
       default: { const x: never = n; throw new Error(\\"Instance of Node has unexpected value for tag: \\"+(n as any).tag)}
     }
   }
+  export const partialMatch = <R>(n: Node, f: Partial<{
+    Function: (n: Function) => R
+    Declaration: (n: Declaration) => R
+    Argument: (n: Argument) => R
+    Body: (n: Body) => R
+    AssignmentStatement: (n: AssignmentStatement) => R
+    DeclarationStatement: (n: DeclarationStatement) => R
+  }>, orElse: R) => {
+      if (f.Function) return f.Function;
+      if (f.Declaration) return f.Declaration;
+      if (f.Argument) return f.Argument;
+      if (f.Body) return f.Body;
+      if (f.AssignmentStatement) return f.AssignmentStatement;
+      if (f.DeclarationStatement) return f.DeclarationStatement;
+      return orElse;
+    }
 }"
 `;
 
@@ -1788,8 +1860,8 @@ Object {
   "options": Object {
     "maps": "json",
     "optional": "json",
+    "tagName": "tag",
   },
-  "tagName": "tag",
   "unions": Map {
     "Tree" => Object {
       "name": "Tree",
@@ -1832,13 +1904,21 @@ namespace Tree {
   export const match = <R>(n: Tree, f: {
     Fork: (n: Fork) => R
     Leaf: (n: Leaf) => R
-}) => {
+  }) => {
     switch(n.tag) {
       case \\"fork\\": return f.Fork(n)
       case \\"leaf\\": return f.Leaf(n)
       default: { const x: never = n; throw new Error(\\"Instance of Tree has unexpected value for tag: \\"+(n as any).tag)}
     }
   }
+  export const partialMatch = <R>(n: Tree, f: Partial<{
+    Fork: (n: Fork) => R
+    Leaf: (n: Leaf) => R
+  }>, orElse: R) => {
+      if (f.Fork) return f.Fork;
+      if (f.Leaf) return f.Leaf;
+      return orElse;
+    }
 }"
 `;
 
@@ -1900,8 +1980,8 @@ Object {
   "options": Object {
     "maps": "json",
     "optional": "purify",
+    "tagName": "tag",
   },
-  "tagName": "tag",
   "unions": Map {
     "Tree" => Object {
       "name": "Tree",
@@ -1944,12 +2024,20 @@ namespace Tree {
   export const match = <R>(n: Tree, f: {
     Fork: (n: Fork) => R
     Leaf: (n: Leaf) => R
-}) => {
+  }) => {
     switch(n.tag) {
       case \\"fork\\": return f.Fork(n)
       case \\"leaf\\": return f.Leaf(n)
       default: { const x: never = n; throw new Error(\\"Instance of Tree has unexpected value for tag: \\"+(n as any).tag)}
     }
   }
+  export const partialMatch = <R>(n: Tree, f: Partial<{
+    Fork: (n: Fork) => R
+    Leaf: (n: Leaf) => R
+  }>, orElse: R) => {
+      if (f.Fork) return f.Fork;
+      if (f.Leaf) return f.Leaf;
+      return orElse;
+    }
 }"
 `;
