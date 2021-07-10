@@ -1,44 +1,7 @@
+import { BuiltinTypes, Field, FieldType, NodeField } from "./nodes";
 import { ASTSpec } from "./specification";
 import { validName, validType } from "./walk";
 
-export type FieldStruct = "scalar" | "optional" | "map" | "array" | "set";
-
-export type BuiltinTypes = "string" | "number" | "boolean";
-
-/** Covers singleton or union */
-export interface BuiltinType {
-  kind: "builtin";
-  types: Array<BuiltinTypes>;
-}
-
-/** Represents a string enumeration */
-export interface EnumType {
-  kind: "enum";
-  tags: string[];
-}
-
-/** Covers singleton or union */
-export interface NodeType {
-  kind: "node";
-  types: string[];
-}
-
-/** The union of possible field types */
-export type FieldType = BuiltinType | EnumType | NodeType;
-
-export interface Field {
-  type: FieldType;
-  struct: FieldStruct;
-}
-
-/**
- * A subtype of `Field` where we know the field references
- * an AST Node (a child).
- */
-export type NodeField = {
-  type: NodeType;
-  struct: FieldStruct;
-};
 /** Predicate for identifying a NodeField */
 export const isNodeField = (x: Field): x is NodeField => {
   return x.type.kind === "node";

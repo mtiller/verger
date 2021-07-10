@@ -1,5 +1,12 @@
-import { Field, FieldStruct, parseField, parseType } from "./fields";
-import { ASTBaseType, ASTLeafType, ASTTree, ASTUnionType } from "./nodes";
+import { parseField } from "./fields";
+import {
+  ASTBaseType,
+  ASTLeafType,
+  ASTTree,
+  ASTUnionType,
+  Field,
+  FieldStruct,
+} from "./nodes";
 import { ASTSpec } from "./specification";
 
 /** This function walks the `node` part of the specification */
