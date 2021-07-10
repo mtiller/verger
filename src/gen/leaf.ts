@@ -1,13 +1,7 @@
-import { Just, Maybe } from "purify-ts/Maybe";
-import {
-  ASTBaseType,
-  ASTLeafType,
-  ASTSpec,
-  Field,
-  NodeField,
-} from "../specification";
+import { Just } from "purify-ts/Maybe";
+import { ASTLeafType, ASTSpec, Field, NodeField } from "../specification";
 import { baseCode } from "./base";
-import { childFieldEntries, fieldName } from "./properties";
+import { allFieldEntries, childFieldEntries, fieldType } from "./properties";
 import { comment, lines } from "./utils";
 
 /** Generate code for a leaf node */
@@ -37,7 +31,7 @@ export function leafCode(a: ASTLeafType, spec: ASTSpec): string {
       `Given an instance of ${a.name}, determine all children that are instances of ${a.rootUnion.name}`
     ),
     `    static children = (x: ${a.name}) => { return [${children
-      .map((x) => fieldChildren("x", x[0], x[1]))
+      .map((x) => fieldChildren("x", x[0], x[1], spec))
       .join(", ")}] as const }`,
     comment(
       `Although generally not necessary, this tag can be used to identify instances of ${a.name}`
@@ -46,10 +40,42 @@ export function leafCode(a: ASTLeafType, spec: ASTSpec): string {
     `}`,
   ];
 
+  const constructor =
+    spec.options.constructor === "obj"
+      ? [
+          `export function ${constructorName(a.name)}(fields: Omit<${
+            a.name
+          }, "${spec.options.tagName}">): ${a.name} {`,
+          `    return { "${spec.options.tagName}": "${a.tag}", ...fields };`,
+          "}",
+        ]
+      : [
+          `export function ${constructorName(a.name)}(${constructorArgs(
+            a,
+            spec
+          )}): ${a.name} {`,
+          `    return { "${spec.options.tagName}": "${
+            a.tag
+          }", ${constructorField(a, spec)} };`,
+          "}",
+        ];
+
   /** Concatenate the common stuff and this special class */
-  return lines(common, ...nodeClass);
+  return lines(
+    common,
+    ...nodeClass,
+    comment(
+      `This function can be invoked to create a new instance of ${a.name}`
+    ),
+    ...constructor
+  );
 }
 
+function constructorField(leaf: ASTLeafType, spec: ASTSpec): string {
+  return allFieldEntries(leaf, spec)
+    .map(([n]) => n)
+    .join(", ");
+}
 /** Used to ensure scalar fields are processed first */
 function compareFields(a: [string, NodeField], b: [string, NodeField]) {
   const ascore = a[1].struct === "scalar" ? -1 : 0;
@@ -57,8 +83,22 @@ function compareFields(a: [string, NodeField], b: [string, NodeField]) {
   return ascore - bscore;
 }
 
+function constructorArgs(leaf: ASTLeafType, spec: ASTSpec): string {
+  return allFieldEntries(leaf, spec)
+    .map(([n, field]) => `${n}: ${fieldType(field, true, spec)}`)
+    .join(", ");
+}
+function constructorName(s: string) {
+  return s.charAt(0).toLowerCase() + s.slice(1);
+}
+
 /** Generate an expression for all children resulting from a given field. */
-export function fieldChildren(v: string, field: string, f: Field): string {
+function fieldChildren(
+  v: string,
+  field: string,
+  f: Field,
+  spec: ASTSpec
+): string {
   switch (f.struct) {
     case "scalar":
       return `${v}.${field}`;
@@ -68,7 +108,14 @@ export function fieldChildren(v: string, field: string, f: Field): string {
       return `...${v}.${field}`;
     case "map":
       return `...Object.entries(${v}.${field}).map(x => x[1])`;
-    // TODO: optional
+    case "optional":
+      switch (spec.options.optional) {
+        case "json":
+        case "expnull":
+          return `...(${v}.${field} ? [${v}.${field}] : [])`;
+        case "purify":
+          return `...${v}.${field}.map( x => [x]).orDefault([])`;
+      }
     // TODO: map
     default: {
       throw new Error(`Unknown data structure: '${f.struct}'`);

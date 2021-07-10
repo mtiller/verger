@@ -22,7 +22,8 @@ export function baseCode(
 
   /** Generate declarations for all fields. */
   let decls = [...a.fields.entries()].map(
-    (f) => `    ${fieldName(f[0], f[1], spec)}: ${fieldType(f[1], spec)};`
+    (f) =>
+      `    ${fieldName(f[0], f[1], spec)}: ${fieldType(f[1], false, spec)};`
   );
   /** If a 'tag' is provided (for leaf nodes), add that. */
   decls = tag

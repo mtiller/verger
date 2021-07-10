@@ -6,6 +6,7 @@ import {
   Field,
   FieldStruct,
   FieldType,
+  isNodeField,
   isNodeFieldEntry,
   NodeField,
 } from "../specification";
@@ -17,8 +18,8 @@ import {
  * @param spec The AST specification
  * @returns
  */
-export function fieldType(x: Field, spec: ASTSpec): string {
-  return fieldStruct(x.struct, fieldTypeName(x.type, spec), spec);
+export function fieldType(x: Field, arg: boolean, spec: ASTSpec): string {
+  return fieldStruct(x.struct, fieldTypeName(x.type, spec), arg, spec);
 }
 
 /**
@@ -79,6 +80,7 @@ export function fieldTypeName(x: FieldType, spec: ASTSpec): string {
 export function fieldStruct(
   struct: FieldStruct,
   typename: string,
+  arg: boolean,
   spec: ASTSpec
 ): string {
   switch (struct) {
@@ -93,7 +95,7 @@ export function fieldStruct(
         case "purify":
           return `Maybe<${typename}>`;
         case "json":
-          return `${typename}`;
+          return arg ? `${typename} | undefined` : typename;
         default: {
           throw new Error(
             `Unrecognized optional handler: '${spec.options.optional}'`
@@ -126,20 +128,20 @@ export function fieldStruct(
  * @param spec AST specification
  * @returns
  */
-export function childFieldEntries(
+export function allFieldEntries(
   a: ASTLeafType | ASTBaseType,
   spec: ASTSpec
-): Array<[string, NodeField]> {
-  let ret: Array<[string, NodeField]> = [];
+): Array<[string, Field]> {
+  let ret: Array<[string, Field]> = [];
   /** We start by expanding contents of the base classes */
   a.extends.forEach((baseName) => {
     const base = spec.bases.get(baseName);
     if (base === undefined) throw new Error(`Unknown base type ${baseName}`);
-    const entries = childFieldEntries(base, spec);
+    const entries = allFieldEntries(base, spec);
     ret = [...ret, ...entries];
   });
   /** Now we get the contents from the node description itself */
-  const entries = [...a.fields.entries()].filter(isNodeFieldEntry);
+  const entries = [...a.fields.entries()];
 
   /** Finally, we unsure that we don't end up with two fields with the same name. */
   const dup = entries.find((e) => ret.some((r) => r[0] === e[0]));
@@ -147,6 +149,10 @@ export function childFieldEntries(
     throw new Error("Field ${dup[0]} is no unique");
   }
   return [...ret, ...entries];
+}
+
+export function childFieldEntries(a: ASTLeafType | ASTBaseType, spec: ASTSpec) {
+  return allFieldEntries(a, spec).filter(isNodeFieldEntry);
 }
 
 export function unionLeaves(u: ASTUnionType, spec: ASTSpec): ASTLeafType[] {

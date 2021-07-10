@@ -293,6 +293,7 @@ Object {
     "ASTLeafType",
   },
   "options": Object {
+    "constructor": "inline",
     "maps": "json",
     "optional": "json",
     "tagName": "kind",
@@ -351,6 +352,12 @@ export class BuiltinType {
    **/
   static tag = \\"builtintype\\";
 }
+/**
+ * This function can be invoked to create a new instance of BuiltinType
+ **/
+export function builtinType(types: Set<\\"str\\" | \\"num\\" | \\"bool\\">): BuiltinType {
+  return { kind: \\"builtintype\\", types };
+}
 
 /**
  * This code implements the types and functions associated with
@@ -378,6 +385,12 @@ export class EnumType {
    **/
   static tag = \\"enumtype\\";
 }
+/**
+ * This function can be invoked to create a new instance of EnumType
+ **/
+export function enumType(tags: string[]): EnumType {
+  return { kind: \\"enumtype\\", tags };
+}
 
 /**
  * This code implements the types and functions associated with
@@ -404,6 +417,12 @@ export class NodeType {
    * Although generally not necessary, this tag can be used to identify instances of NodeType
    **/
   static tag = \\"nodetype\\";
+}
+/**
+ * This function can be invoked to create a new instance of NodeType
+ **/
+export function nodeType(types: string[]): NodeType {
+  return { kind: \\"nodetype\\", types };
 }
 
 /**
@@ -433,6 +452,15 @@ export class Field {
    **/
   static tag = \\"field\\";
 }
+/**
+ * This function can be invoked to create a new instance of Field
+ **/
+export function field(
+  type: FieldType,
+  struct: \\"scalar\\" | \\"optional\\" | \\"map\\" | \\"set\\" | \\"array\\"
+): Field {
+  return { kind: \\"field\\", type, struct };
+}
 
 /**
  * This code implements the types and functions associated with
@@ -461,6 +489,12 @@ export class NodeField {
    **/
   static tag = \\"nodefield\\";
 }
+/**
+ * This function can be invoked to create a new instance of NodeField
+ **/
+export function nodeField(type: NodeType, struct: \\"FieldStruct\\"): NodeField {
+  return { kind: \\"nodefield\\", type, struct };
+}
 
 /**
  * This code implements the types and functions associated with
@@ -488,6 +522,12 @@ export class ASTUnionType {
    * Although generally not necessary, this tag can be used to identify instances of ASTUnionType
    **/
   static tag = \\"astuniontype\\";
+}
+/**
+ * This function can be invoked to create a new instance of ASTUnionType
+ **/
+export function aSTUnionType(name: string, subtypes: string[]): ASTUnionType {
+  return { kind: \\"astuniontype\\", name, subtypes };
 }
 
 /**
@@ -519,6 +559,18 @@ export class ASTLeafType {
    * Although generally not necessary, this tag can be used to identify instances of ASTLeafType
    **/
   static tag = \\"astleaftype\\";
+}
+/**
+ * This function can be invoked to create a new instance of ASTLeafType
+ **/
+export function aSTLeafType(
+  tag: string,
+  rootUnion: string,
+  name: string,
+  bases: string[],
+  fields: Record<string, Field>
+): ASTLeafType {
+  return { kind: \\"astleaftype\\", tag, rootUnion, name, bases, fields };
 }
 
 /**
@@ -1004,6 +1056,7 @@ Object {
     "ASTLeafType",
   },
   "options": Object {
+    "constructor": "inline",
     "maps": "json",
     "optional": "purify",
     "tagName": "kind",
@@ -1062,6 +1115,12 @@ export class BuiltinType {
    **/
   static tag = \\"builtintype\\";
 }
+/**
+ * This function can be invoked to create a new instance of BuiltinType
+ **/
+export function builtinType(types: Set<\\"str\\" | \\"num\\" | \\"bool\\">): BuiltinType {
+  return { kind: \\"builtintype\\", types };
+}
 
 /**
  * This code implements the types and functions associated with
@@ -1089,6 +1148,12 @@ export class EnumType {
    **/
   static tag = \\"enumtype\\";
 }
+/**
+ * This function can be invoked to create a new instance of EnumType
+ **/
+export function enumType(tags: string[]): EnumType {
+  return { kind: \\"enumtype\\", tags };
+}
 
 /**
  * This code implements the types and functions associated with
@@ -1115,6 +1180,12 @@ export class NodeType {
    * Although generally not necessary, this tag can be used to identify instances of NodeType
    **/
   static tag = \\"nodetype\\";
+}
+/**
+ * This function can be invoked to create a new instance of NodeType
+ **/
+export function nodeType(types: string[]): NodeType {
+  return { kind: \\"nodetype\\", types };
 }
 
 /**
@@ -1144,6 +1215,15 @@ export class Field {
    **/
   static tag = \\"field\\";
 }
+/**
+ * This function can be invoked to create a new instance of Field
+ **/
+export function field(
+  type: FieldType,
+  struct: \\"scalar\\" | \\"optional\\" | \\"map\\" | \\"set\\" | \\"array\\"
+): Field {
+  return { kind: \\"field\\", type, struct };
+}
 
 /**
  * This code implements the types and functions associated with
@@ -1172,6 +1252,12 @@ export class NodeField {
    **/
   static tag = \\"nodefield\\";
 }
+/**
+ * This function can be invoked to create a new instance of NodeField
+ **/
+export function nodeField(type: NodeType, struct: \\"FieldStruct\\"): NodeField {
+  return { kind: \\"nodefield\\", type, struct };
+}
 
 /**
  * This code implements the types and functions associated with
@@ -1199,6 +1285,12 @@ export class ASTUnionType {
    * Although generally not necessary, this tag can be used to identify instances of ASTUnionType
    **/
   static tag = \\"astuniontype\\";
+}
+/**
+ * This function can be invoked to create a new instance of ASTUnionType
+ **/
+export function aSTUnionType(name: string, subtypes: string[]): ASTUnionType {
+  return { kind: \\"astuniontype\\", name, subtypes };
 }
 
 /**
@@ -1230,6 +1322,18 @@ export class ASTLeafType {
    * Although generally not necessary, this tag can be used to identify instances of ASTLeafType
    **/
   static tag = \\"astleaftype\\";
+}
+/**
+ * This function can be invoked to create a new instance of ASTLeafType
+ **/
+export function aSTLeafType(
+  tag: string,
+  rootUnion: string,
+  name: string,
+  bases: string[],
+  fields: Record<string, Field>
+): ASTLeafType {
+  return { kind: \\"astleaftype\\", tag, rootUnion, name, bases, fields };
 }
 
 /**
@@ -1610,6 +1714,7 @@ Object {
     "BinaryOp",
   },
   "options": Object {
+    "constructor": "inline",
     "maps": "json",
     "optional": "json",
     "tagName": "tag",
@@ -1670,6 +1775,12 @@ export class Literal {
    **/
   static tag = \\"literal\\";
 }
+/**
+ * This function can be invoked to create a new instance of Literal
+ **/
+export function literal(value: number): Literal {
+  return { tag: \\"literal\\", value };
+}
 
 /**
  * This code implements the types and functions associated with
@@ -1696,6 +1807,16 @@ export class ArithmeticOp {
    * Although generally not necessary, this tag can be used to identify instances of ArithmeticOp
    **/
   static tag = \\"arithmeticop\\";
+}
+/**
+ * This function can be invoked to create a new instance of ArithmeticOp
+ **/
+export function arithmeticOp(
+  left: Expr,
+  right: Expr,
+  op: \\"+\\" | \\"-\\" | \\"*\\" | \\"/\\"
+): ArithmeticOp {
+  return { tag: \\"arithmeticop\\", left, right, op };
 }
 
 /**
@@ -1725,6 +1846,12 @@ export class UnaryOp {
    **/
   static tag = \\"unaryop\\";
 }
+/**
+ * This function can be invoked to create a new instance of UnaryOp
+ **/
+export function unaryOp(expr: Expr, op: \\"()\\" | \\"+\\" | \\"-\\"): UnaryOp {
+  return { tag: \\"unaryop\\", expr, op };
+}
 
 /**
  * This code implements the types and functions associated with
@@ -1751,6 +1878,16 @@ export class RelOp {
    * Although generally not necessary, this tag can be used to identify instances of RelOp
    **/
   static tag = \\"relop\\";
+}
+/**
+ * This function can be invoked to create a new instance of RelOp
+ **/
+export function relOp(
+  left: Expr,
+  right: Expr,
+  op: \\"+\\" | \\"-\\" | \\"*\\" | \\"/\\"
+): RelOp {
+  return { tag: \\"relop\\", left, right, op };
 }
 
 /**
@@ -2051,6 +2188,7 @@ Object {
     "BinaryOp",
   },
   "options": Object {
+    "constructor": "inline",
     "maps": "json",
     "optional": "purify",
     "tagName": "tag",
@@ -2111,6 +2249,12 @@ export class Literal {
    **/
   static tag = \\"literal\\";
 }
+/**
+ * This function can be invoked to create a new instance of Literal
+ **/
+export function literal(value: number): Literal {
+  return { tag: \\"literal\\", value };
+}
 
 /**
  * This code implements the types and functions associated with
@@ -2137,6 +2281,16 @@ export class ArithmeticOp {
    * Although generally not necessary, this tag can be used to identify instances of ArithmeticOp
    **/
   static tag = \\"arithmeticop\\";
+}
+/**
+ * This function can be invoked to create a new instance of ArithmeticOp
+ **/
+export function arithmeticOp(
+  left: Expr,
+  right: Expr,
+  op: \\"+\\" | \\"-\\" | \\"*\\" | \\"/\\"
+): ArithmeticOp {
+  return { tag: \\"arithmeticop\\", left, right, op };
 }
 
 /**
@@ -2166,6 +2320,12 @@ export class UnaryOp {
    **/
   static tag = \\"unaryop\\";
 }
+/**
+ * This function can be invoked to create a new instance of UnaryOp
+ **/
+export function unaryOp(expr: Expr, op: \\"()\\" | \\"+\\" | \\"-\\"): UnaryOp {
+  return { tag: \\"unaryop\\", expr, op };
+}
 
 /**
  * This code implements the types and functions associated with
@@ -2192,6 +2352,16 @@ export class RelOp {
    * Although generally not necessary, this tag can be used to identify instances of RelOp
    **/
   static tag = \\"relop\\";
+}
+/**
+ * This function can be invoked to create a new instance of RelOp
+ **/
+export function relOp(
+  left: Expr,
+  right: Expr,
+  op: \\"+\\" | \\"-\\" | \\"*\\" | \\"/\\"
+): RelOp {
+  return { tag: \\"relop\\", left, right, op };
 }
 
 /**
@@ -2566,6 +2736,7 @@ Object {
     "DeclarationStatement",
   },
   "options": Object {
+    "constructor": "inline",
     "maps": "json",
     "optional": "json",
     "tagName": "tag",
@@ -2628,6 +2799,12 @@ export class Function {
    **/
   static tag = \\"function\\";
 }
+/**
+ * This function can be invoked to create a new instance of Function
+ **/
+export function function(name: string, args: Argument[], body: Body): Function {
+  return { tag: \\"function\\", name, args, body };
+}
 
 /**
  * This code implements the types and functions associated with
@@ -2657,6 +2834,16 @@ export class Declaration {
    **/
   static tag = \\"declaration\\";
 }
+/**
+ * This function can be invoked to create a new instance of Declaration
+ **/
+export function declaration(
+  name: string,
+  type: string,
+  init: number | undefined
+): Declaration {
+  return { tag: \\"declaration\\", name, type, init };
+}
 
 /**
  * This code implements the types and functions associated with
@@ -2685,6 +2872,12 @@ export class Argument {
    **/
   static tag = \\"argument\\";
 }
+/**
+ * This function can be invoked to create a new instance of Argument
+ **/
+export function argument(name: string, type: string): Argument {
+  return { tag: \\"argument\\", name, type };
+}
 
 /**
  * This code implements the types and functions associated with
@@ -2711,6 +2904,12 @@ export class Body {
    * Although generally not necessary, this tag can be used to identify instances of Body
    **/
   static tag = \\"body\\";
+}
+/**
+ * This function can be invoked to create a new instance of Body
+ **/
+export function body(statement: Statement): Body {
+  return { tag: \\"body\\", statement };
 }
 
 /**
@@ -2740,6 +2939,15 @@ export class AssignmentStatement {
    **/
   static tag = \\"assignmentstatement\\";
 }
+/**
+ * This function can be invoked to create a new instance of AssignmentStatement
+ **/
+export function assignmentStatement(
+  name: string,
+  init: number
+): AssignmentStatement {
+  return { tag: \\"assignmentstatement\\", name, init };
+}
 
 /**
  * This code implements the types and functions associated with
@@ -2766,6 +2974,12 @@ export class DeclarationStatement {
    * Although generally not necessary, this tag can be used to identify instances of DeclarationStatement
    **/
   static tag = \\"declarationstatement\\";
+}
+/**
+ * This function can be invoked to create a new instance of DeclarationStatement
+ **/
+export function declarationStatement(name: string): DeclarationStatement {
+  return { tag: \\"declarationstatement\\", name };
 }
 
 /**
@@ -3258,6 +3472,7 @@ Object {
     "DeclarationStatement",
   },
   "options": Object {
+    "constructor": "inline",
     "maps": "json",
     "optional": "purify",
     "tagName": "tag",
@@ -3321,6 +3536,12 @@ export class Function {
    **/
   static tag = \\"function\\";
 }
+/**
+ * This function can be invoked to create a new instance of Function
+ **/
+export function function(name: string, args: Argument[], body: Body): Function {
+  return { tag: \\"function\\", name, args, body };
+}
 
 /**
  * This code implements the types and functions associated with
@@ -3350,6 +3571,16 @@ export class Declaration {
    **/
   static tag = \\"declaration\\";
 }
+/**
+ * This function can be invoked to create a new instance of Declaration
+ **/
+export function declaration(
+  name: string,
+  type: string,
+  init: Maybe<number>
+): Declaration {
+  return { tag: \\"declaration\\", name, type, init };
+}
 
 /**
  * This code implements the types and functions associated with
@@ -3378,6 +3609,12 @@ export class Argument {
    **/
   static tag = \\"argument\\";
 }
+/**
+ * This function can be invoked to create a new instance of Argument
+ **/
+export function argument(name: string, type: string): Argument {
+  return { tag: \\"argument\\", name, type };
+}
 
 /**
  * This code implements the types and functions associated with
@@ -3404,6 +3641,12 @@ export class Body {
    * Although generally not necessary, this tag can be used to identify instances of Body
    **/
   static tag = \\"body\\";
+}
+/**
+ * This function can be invoked to create a new instance of Body
+ **/
+export function body(statement: Statement): Body {
+  return { tag: \\"body\\", statement };
 }
 
 /**
@@ -3433,6 +3676,15 @@ export class AssignmentStatement {
    **/
   static tag = \\"assignmentstatement\\";
 }
+/**
+ * This function can be invoked to create a new instance of AssignmentStatement
+ **/
+export function assignmentStatement(
+  name: string,
+  init: number
+): AssignmentStatement {
+  return { tag: \\"assignmentstatement\\", name, init };
+}
 
 /**
  * This code implements the types and functions associated with
@@ -3459,6 +3711,12 @@ export class DeclarationStatement {
    * Although generally not necessary, this tag can be used to identify instances of DeclarationStatement
    **/
   static tag = \\"declarationstatement\\";
+}
+/**
+ * This function can be invoked to create a new instance of DeclarationStatement
+ **/
+export function declarationStatement(name: string): DeclarationStatement {
+  return { tag: \\"declarationstatement\\", name };
 }
 
 /**
@@ -3769,6 +4027,7 @@ Object {
     "Leaf",
   },
   "options": Object {
+    "constructor": "inline",
     "maps": "json",
     "optional": "json",
     "tagName": "tag",
@@ -3819,6 +4078,12 @@ export class Fork {
    **/
   static tag = \\"fork\\";
 }
+/**
+ * This function can be invoked to create a new instance of Fork
+ **/
+export function fork(left: Tree, right: Tree): Fork {
+  return { tag: \\"fork\\", left, right };
+}
 
 /**
  * This code implements the types and functions associated with
@@ -3845,6 +4110,12 @@ export class Leaf {
    * Although generally not necessary, this tag can be used to identify instances of Leaf
    **/
   static tag = \\"leaf\\";
+}
+/**
+ * This function can be invoked to create a new instance of Leaf
+ **/
+export function leaf(value: number): Leaf {
+  return { tag: \\"leaf\\", value };
 }
 
 /**
@@ -4017,6 +4288,7 @@ Object {
     "Leaf",
   },
   "options": Object {
+    "constructor": "inline",
     "maps": "json",
     "optional": "purify",
     "tagName": "tag",
@@ -4067,6 +4339,12 @@ export class Fork {
    **/
   static tag = \\"fork\\";
 }
+/**
+ * This function can be invoked to create a new instance of Fork
+ **/
+export function fork(left: Tree, right: Tree): Fork {
+  return { tag: \\"fork\\", left, right };
+}
 
 /**
  * This code implements the types and functions associated with
@@ -4093,6 +4371,12 @@ export class Leaf {
    * Although generally not necessary, this tag can be used to identify instances of Leaf
    **/
   static tag = \\"leaf\\";
+}
+/**
+ * This function can be invoked to create a new instance of Leaf
+ **/
+export function leaf(value: number): Leaf {
+  return { tag: \\"leaf\\", value };
 }
 
 /**

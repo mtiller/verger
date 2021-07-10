@@ -5,6 +5,7 @@ export interface Options {
   tagName: string;
   optional: "json" | "expnull" | "purify";
   maps: "json" | "map";
+  constructor: "inline" | "obj";
 }
 
 /**

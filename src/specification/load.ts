@@ -17,6 +17,7 @@ export function loadSpec(spec: any): ASTSpec {
       tagName: "tag",
       optional: "json",
       maps: "json",
+      constructor: "inline",
     },
   };
 
@@ -118,6 +119,9 @@ export function loadOptions(options: any, spec: ASTSpec) {
       case "maps": {
         spec.options.maps = assertOptions(key, ["json", "map"], val);
         break;
+      }
+      case "constructor": {
+        spec.options.constructor = assertOptions(key, ["inline", "obj"], val);
       }
       default: {
         throw new Error(`Unknown option ${key}`);
