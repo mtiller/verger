@@ -1,5 +1,5 @@
 import { ASTSpec } from "./specification";
-import { validName } from "./walk";
+import { validName, validType } from "./walk";
 
 export type FieldStruct = "scalar" | "optional" | "map" | "array" | "set";
 

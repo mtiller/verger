@@ -189,7 +189,7 @@ export function walkNames(a: any, spec: ASTSpec) {
       if (spec.names.has(name)) {
         throw new Error(`Name ${name} defined multiple times`);
       }
-      if (validName(name)) {
+      if (validType(name)) {
         /** If this is a valid name, add it and recurse. */
         spec.names.add(name);
         walkNames(content, spec);
@@ -209,4 +209,8 @@ export function walkNames(a: any, spec: ASTSpec) {
 const idRegExp = /^[$A-Z_][0-9A-Z_$]*$/i;
 export function validName(n: string): boolean {
   return idRegExp.test(n);
+}
+export function validType(n: string): boolean {
+  if (n[0].toLowerCase() === n[0]) return false;
+  return validName(n);
 }
