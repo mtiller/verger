@@ -17,11 +17,11 @@ nodes:
       - name: string
       - subtypes: string[]
     ASTLeafType:
-      - kind: string
+      - tag: string
       - rootUnion: string
       - name: string
       - bases: string[]
       - fields: Field{}
 
 options:
-  tagName: tag
+  tagName: kind

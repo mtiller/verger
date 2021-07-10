@@ -121,7 +121,7 @@ function walkFields(
 
     if (fieldName === spec.options.tagName)
       throw new Error(
-        "'${spec.tagName}'` is a reserved name (controlled by the options.tagName option"
+        `'${spec.options.tagName}' is a reserved name (controlled by the options.tagName option (${spec.options.tagName})`
       );
     /** ...and the value associated with that single key */
     let type = item[fieldName];

@@ -148,7 +148,7 @@ Object {
     "ASTLeafType" => Object {
       "extends": Array [],
       "fields": Map {
-        "kind" => Object {
+        "tag" => Object {
           "struct": "scalar",
           "type": Object {
             "kind": "builtin",
@@ -214,8 +214,8 @@ Object {
   "options": Object {
     "maps": "json",
     "optional": "json",
+    "tagName": "kind",
   },
-  "tagName": "tag",
   "unions": Map {
     "FieldType" => Object {
       "name": "FieldType",
@@ -244,72 +244,72 @@ exports[`Test sample AST specifications should generate proper output for dogfoo
 
 
 export interface BuiltinType  {
-    tag: \\"builtintype\\";
+    kind: \\"builtintype\\";
     types: Set<\\"str\\" | \\"num\\" | \\"bool\\">;
 }
 export class BuiltinType {
-    static is = (x: FieldType): x is BuiltinType => { return x.tag===\\"builtintype\\" }
+    static is = (x: FieldType): x is BuiltinType => { return x.kind===\\"builtintype\\" }
     static children = (x: BuiltinType) => { return [] as const }
     static tag = \\"builtintype\\"
 }
 export interface EnumType  {
-    tag: \\"enumtype\\";
+    kind: \\"enumtype\\";
     tags: string[];
 }
 export class EnumType {
-    static is = (x: FieldType): x is EnumType => { return x.tag===\\"enumtype\\" }
+    static is = (x: FieldType): x is EnumType => { return x.kind===\\"enumtype\\" }
     static children = (x: EnumType) => { return [] as const }
     static tag = \\"enumtype\\"
 }
 export interface NodeType  {
-    tag: \\"nodetype\\";
+    kind: \\"nodetype\\";
     types: string[];
 }
 export class NodeType {
-    static is = (x: FieldType): x is NodeType => { return x.tag===\\"nodetype\\" }
+    static is = (x: FieldType): x is NodeType => { return x.kind===\\"nodetype\\" }
     static children = (x: NodeType) => { return [] as const }
     static tag = \\"nodetype\\"
 }
 export interface Field  {
-    tag: \\"field\\";
+    kind: \\"field\\";
     type: FieldType;
     struct: \\"scalar\\" | \\"optional\\" | \\"map\\" | \\"set\\" | \\"array\\";
 }
 export class Field {
-    static is = (x: Field): x is Field => { return x.tag===\\"field\\" }
+    static is = (x: Field): x is Field => { return x.kind===\\"field\\" }
     static children = (x: Field) => { return [x.type] as const }
     static tag = \\"field\\"
 }
 export interface NodeField  {
-    tag: \\"nodefield\\";
+    kind: \\"nodefield\\";
     type: NodeType;
     struct: \\"FieldStruct\\";
 }
 export class NodeField {
-    static is = (x: NodeField): x is NodeField => { return x.tag===\\"nodefield\\" }
+    static is = (x: NodeField): x is NodeField => { return x.kind===\\"nodefield\\" }
     static children = (x: NodeField) => { return [x.type] as const }
     static tag = \\"nodefield\\"
 }
 export interface ASTUnionType  {
-    tag: \\"astuniontype\\";
+    kind: \\"astuniontype\\";
     name: string;
     subtypes: string[];
 }
 export class ASTUnionType {
-    static is = (x: ASTTree): x is ASTUnionType => { return x.tag===\\"astuniontype\\" }
+    static is = (x: ASTTree): x is ASTUnionType => { return x.kind===\\"astuniontype\\" }
     static children = (x: ASTUnionType) => { return [] as const }
     static tag = \\"astuniontype\\"
 }
 export interface ASTLeafType  {
-    tag: \\"astleaftype\\";
-    kind: string;
+    kind: \\"astleaftype\\";
+    tag: string;
     rootUnion: string;
     name: string;
     bases: string[];
     fields: Record<string,Field>;
 }
 export class ASTLeafType {
-    static is = (x: ASTTree): x is ASTLeafType => { return x.tag===\\"astleaftype\\" }
+    static is = (x: ASTTree): x is ASTLeafType => { return x.kind===\\"astleaftype\\" }
     static children = (x: ASTLeafType) => { return [...Object.entries(x.fields).map(x => x[1])] as const }
     static tag = \\"astleaftype\\"
 }
@@ -319,27 +319,45 @@ namespace FieldType {
     BuiltinType: (n: BuiltinType) => R
     EnumType: (n: EnumType) => R
     NodeType: (n: NodeType) => R
-}) => {
-    switch(n.tag) {
+  }) => {
+    switch(n.kind) {
       case \\"builtintype\\": return f.BuiltinType(n)
       case \\"enumtype\\": return f.EnumType(n)
       case \\"nodetype\\": return f.NodeType(n)
-      default: { const x: never = n; throw new Error(\\"Instance of FieldType has unexpected value for tag: \\"+(n as any).tag)}
+      default: { const x: never = n; throw new Error(\\"Instance of FieldType has unexpected value for kind: \\"+(n as any).tag)}
     }
   }
+  export const partialMatch = <R>(n: FieldType, f: Partial<{
+    BuiltinType: (n: BuiltinType) => R
+    EnumType: (n: EnumType) => R
+    NodeType: (n: NodeType) => R
+  }>, orElse: R) => {
+      if (f.BuiltinType) return f.BuiltinType;
+      if (f.EnumType) return f.EnumType;
+      if (f.NodeType) return f.NodeType;
+      return orElse;
+    }
 }
 export type ASTTree = ASTUnionType | ASTLeafType;
 namespace ASTTree {
   export const match = <R>(n: ASTTree, f: {
     ASTUnionType: (n: ASTUnionType) => R
     ASTLeafType: (n: ASTLeafType) => R
-}) => {
-    switch(n.tag) {
+  }) => {
+    switch(n.kind) {
       case \\"astuniontype\\": return f.ASTUnionType(n)
       case \\"astleaftype\\": return f.ASTLeafType(n)
-      default: { const x: never = n; throw new Error(\\"Instance of ASTTree has unexpected value for tag: \\"+(n as any).tag)}
+      default: { const x: never = n; throw new Error(\\"Instance of ASTTree has unexpected value for kind: \\"+(n as any).tag)}
     }
   }
+  export const partialMatch = <R>(n: ASTTree, f: Partial<{
+    ASTUnionType: (n: ASTUnionType) => R
+    ASTLeafType: (n: ASTLeafType) => R
+  }>, orElse: R) => {
+      if (f.ASTUnionType) return f.ASTUnionType;
+      if (f.ASTLeafType) return f.ASTLeafType;
+      return orElse;
+    }
 }"
 `;
 
@@ -491,7 +509,7 @@ Object {
     "ASTLeafType" => Object {
       "extends": Array [],
       "fields": Map {
-        "kind" => Object {
+        "tag" => Object {
           "struct": "scalar",
           "type": Object {
             "kind": "builtin",
@@ -557,8 +575,8 @@ Object {
   "options": Object {
     "maps": "json",
     "optional": "purify",
+    "tagName": "kind",
   },
-  "tagName": "tag",
   "unions": Map {
     "FieldType" => Object {
       "name": "FieldType",
@@ -587,72 +605,72 @@ exports[`Test sample AST specifications should generate proper output for dogfoo
 
 
 export interface BuiltinType  {
-    tag: \\"builtintype\\";
+    kind: \\"builtintype\\";
     types: Set<\\"str\\" | \\"num\\" | \\"bool\\">;
 }
 export class BuiltinType {
-    static is = (x: FieldType): x is BuiltinType => { return x.tag===\\"builtintype\\" }
+    static is = (x: FieldType): x is BuiltinType => { return x.kind===\\"builtintype\\" }
     static children = (x: BuiltinType) => { return [] as const }
     static tag = \\"builtintype\\"
 }
 export interface EnumType  {
-    tag: \\"enumtype\\";
+    kind: \\"enumtype\\";
     tags: string[];
 }
 export class EnumType {
-    static is = (x: FieldType): x is EnumType => { return x.tag===\\"enumtype\\" }
+    static is = (x: FieldType): x is EnumType => { return x.kind===\\"enumtype\\" }
     static children = (x: EnumType) => { return [] as const }
     static tag = \\"enumtype\\"
 }
 export interface NodeType  {
-    tag: \\"nodetype\\";
+    kind: \\"nodetype\\";
     types: string[];
 }
 export class NodeType {
-    static is = (x: FieldType): x is NodeType => { return x.tag===\\"nodetype\\" }
+    static is = (x: FieldType): x is NodeType => { return x.kind===\\"nodetype\\" }
     static children = (x: NodeType) => { return [] as const }
     static tag = \\"nodetype\\"
 }
 export interface Field  {
-    tag: \\"field\\";
+    kind: \\"field\\";
     type: FieldType;
     struct: \\"scalar\\" | \\"optional\\" | \\"map\\" | \\"set\\" | \\"array\\";
 }
 export class Field {
-    static is = (x: Field): x is Field => { return x.tag===\\"field\\" }
+    static is = (x: Field): x is Field => { return x.kind===\\"field\\" }
     static children = (x: Field) => { return [x.type] as const }
     static tag = \\"field\\"
 }
 export interface NodeField  {
-    tag: \\"nodefield\\";
+    kind: \\"nodefield\\";
     type: NodeType;
     struct: \\"FieldStruct\\";
 }
 export class NodeField {
-    static is = (x: NodeField): x is NodeField => { return x.tag===\\"nodefield\\" }
+    static is = (x: NodeField): x is NodeField => { return x.kind===\\"nodefield\\" }
     static children = (x: NodeField) => { return [x.type] as const }
     static tag = \\"nodefield\\"
 }
 export interface ASTUnionType  {
-    tag: \\"astuniontype\\";
+    kind: \\"astuniontype\\";
     name: string;
     subtypes: string[];
 }
 export class ASTUnionType {
-    static is = (x: ASTTree): x is ASTUnionType => { return x.tag===\\"astuniontype\\" }
+    static is = (x: ASTTree): x is ASTUnionType => { return x.kind===\\"astuniontype\\" }
     static children = (x: ASTUnionType) => { return [] as const }
     static tag = \\"astuniontype\\"
 }
 export interface ASTLeafType  {
-    tag: \\"astleaftype\\";
-    kind: string;
+    kind: \\"astleaftype\\";
+    tag: string;
     rootUnion: string;
     name: string;
     bases: string[];
     fields: Record<string,Field>;
 }
 export class ASTLeafType {
-    static is = (x: ASTTree): x is ASTLeafType => { return x.tag===\\"astleaftype\\" }
+    static is = (x: ASTTree): x is ASTLeafType => { return x.kind===\\"astleaftype\\" }
     static children = (x: ASTLeafType) => { return [...Object.entries(x.fields).map(x => x[1])] as const }
     static tag = \\"astleaftype\\"
 }
@@ -662,27 +680,45 @@ namespace FieldType {
     BuiltinType: (n: BuiltinType) => R
     EnumType: (n: EnumType) => R
     NodeType: (n: NodeType) => R
-}) => {
-    switch(n.tag) {
+  }) => {
+    switch(n.kind) {
       case \\"builtintype\\": return f.BuiltinType(n)
       case \\"enumtype\\": return f.EnumType(n)
       case \\"nodetype\\": return f.NodeType(n)
-      default: { const x: never = n; throw new Error(\\"Instance of FieldType has unexpected value for tag: \\"+(n as any).tag)}
+      default: { const x: never = n; throw new Error(\\"Instance of FieldType has unexpected value for kind: \\"+(n as any).tag)}
     }
   }
+  export const partialMatch = <R>(n: FieldType, f: Partial<{
+    BuiltinType: (n: BuiltinType) => R
+    EnumType: (n: EnumType) => R
+    NodeType: (n: NodeType) => R
+  }>, orElse: R) => {
+      if (f.BuiltinType) return f.BuiltinType;
+      if (f.EnumType) return f.EnumType;
+      if (f.NodeType) return f.NodeType;
+      return orElse;
+    }
 }
 export type ASTTree = ASTUnionType | ASTLeafType;
 namespace ASTTree {
   export const match = <R>(n: ASTTree, f: {
     ASTUnionType: (n: ASTUnionType) => R
     ASTLeafType: (n: ASTLeafType) => R
-}) => {
-    switch(n.tag) {
+  }) => {
+    switch(n.kind) {
       case \\"astuniontype\\": return f.ASTUnionType(n)
       case \\"astleaftype\\": return f.ASTLeafType(n)
-      default: { const x: never = n; throw new Error(\\"Instance of ASTTree has unexpected value for tag: \\"+(n as any).tag)}
+      default: { const x: never = n; throw new Error(\\"Instance of ASTTree has unexpected value for kind: \\"+(n as any).tag)}
     }
   }
+  export const partialMatch = <R>(n: ASTTree, f: Partial<{
+    ASTUnionType: (n: ASTUnionType) => R
+    ASTLeafType: (n: ASTLeafType) => R
+  }>, orElse: R) => {
+      if (f.ASTUnionType) return f.ASTUnionType;
+      if (f.ASTLeafType) return f.ASTLeafType;
+      return orElse;
+    }
 }"
 `;
 

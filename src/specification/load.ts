@@ -21,7 +21,7 @@ export function loadSpec(spec: any): ASTSpec {
 
   /** Parse any options first. */
   if (spec.hasOwnProperty("options")) {
-    loadOptions(spec["options"], spec);
+    loadOptions(spec["options"], types);
   }
 
   /** Create the nodes for bases (base class types) and nodes  */
@@ -94,16 +94,18 @@ export function loadOptions(options: any, spec: ASTSpec) {
         );
         break;
       }
-      case "tag": {
+      case "tagName": {
         if (!validName(val)) {
           throw new Error(
             `The tagName option must be a valid Javascript identifier, but '${val}' is not.`
           );
         }
         spec.options.tagName = val;
+        break;
       }
       case "maps": {
         spec.options.maps = assertOptions(key, ["json", "map"], val);
+        break;
       }
       default: {
         throw new Error(`Unknown option ${key}`);
