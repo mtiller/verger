@@ -12,6 +12,17 @@ export function unionCode(a: ASTUnionType, spec: ASTSpec): string {
   const type = `export type ${a.name} = ${a.subtypes.join(" | ")};`;
   const leafNames = unionLeaves(a, spec);
   const leaves = leafNames.map((leaf) => spec.leaves.get(leaf.name));
+
+  /** This isn't quite right (requires common root node type). */
+  const unionChildren = lines(
+    comment(`For a node of type ${a.name}, find all children`),
+    `export const children = (n: ${a.name}) => ${a.name}.map<readonly ${a.name}[]>(n, {`,
+    ...leaves.map((leaf) =>
+      leaf ? `${leaf.name}: (x) => ${leaf.name}.children(x),` : ""
+    ),
+    "})"
+  );
+
   const classDef = lines(
     `namespace ${a.name} {`,
     lines(
@@ -19,7 +30,7 @@ export function unionCode(a: ASTUnionType, spec: ASTSpec): string {
         `Given an instance of type ${a.name}, map that value depending on the`,
         "specific underlying node type"
       ),
-      `  export const match = <R>(n: ${a.name}, f: ${matchPayload(
+      `  export const map = <R>(n: ${a.name}, f: ${matchPayload(
         leafNames,
         "R"
       )}) => ${matchBody(a.name, leafNames, spec)}`,
@@ -27,9 +38,7 @@ export function unionCode(a: ASTUnionType, spec: ASTSpec): string {
         `Given an instance of type ${a.name}, map that value for certain subtypes`,
         "and for all others, simply return the `orElse` argument"
       ),
-      `  export const partialMatch = <R>(n: ${
-        a.name
-      }, f: Partial<${matchPayload(
+      `  export const partialMap = <R>(n: ${a.name}, f: Partial<${matchPayload(
         leafNames,
         "R"
       )}>, orElse: R) => ${partialMatchBody(leafNames, spec, false)}`,
@@ -37,7 +46,7 @@ export function unionCode(a: ASTUnionType, spec: ASTSpec): string {
         `Given an instance of type ${a.name}, take action depending on the`,
         "specific underlying node type"
       ),
-      `  export const forEach = (n: ${a.name}, f: ${matchPayload(
+      `  export const match = (n: ${a.name}, f: ${matchPayload(
         leafNames,
         "void"
       )}): void => ${matchBody(a.name, leafNames, spec)}`,
@@ -45,7 +54,7 @@ export function unionCode(a: ASTUnionType, spec: ASTSpec): string {
         `Given an instance of type ${a.name}, take action for certain subtypes`,
         "and for all others, simply return the `orElse` argument"
       ),
-      `  export const partialForEach = (n: ${a.name}, f: Partial<${matchPayload(
+      `  export const partialMatch = (n: ${a.name}, f: Partial<${matchPayload(
         leafNames,
         "void"
       )}>, orElse?: (n: ${a.name}) => void) => ${partialMatchBody(
@@ -53,12 +62,6 @@ export function unionCode(a: ASTUnionType, spec: ASTSpec): string {
         spec,
         true
       )}`,
-      comment(`For a node of type ${a.name}, find all children`),
-      `export const children = (n: ${a.name}) => ${a.name}.match<readonly ${a.name}[]>(n, {`,
-      ...leaves.map((leaf) =>
-        leaf ? `${leaf.name}: (x) => ${leaf.name}.children(x),` : ""
-      ),
-      "})",
       "}"
     )
   );

@@ -583,7 +583,7 @@ namespace FieldType {
    * Given an instance of type FieldType, map that value depending on the
    * specific underlying node type
    **/
-  export const match = <R>(
+  export const map = <R>(
     n: FieldType,
     f: {
       BuiltinType: (n: BuiltinType) => R;
@@ -611,7 +611,7 @@ namespace FieldType {
    * Given an instance of type FieldType, map that value for certain subtypes
    * and for all others, simply return the \`orElse\` argument
    **/
-  export const partialMatch = <R>(
+  export const partialMap = <R>(
     n: FieldType,
     f: Partial<{
       BuiltinType: (n: BuiltinType) => R;
@@ -629,7 +629,7 @@ namespace FieldType {
    * Given an instance of type FieldType, take action depending on the
    * specific underlying node type
    **/
-  export const forEach = (
+  export const match = (
     n: FieldType,
     f: {
       BuiltinType: (n: BuiltinType) => void;
@@ -657,7 +657,7 @@ namespace FieldType {
    * Given an instance of type FieldType, take action for certain subtypes
    * and for all others, simply return the \`orElse\` argument
    **/
-  export const partialForEach = (
+  export const partialMatch = (
     n: FieldType,
     f: Partial<{
       BuiltinType: (n: BuiltinType) => void;
@@ -683,7 +683,7 @@ namespace ASTTree {
    * Given an instance of type ASTTree, map that value depending on the
    * specific underlying node type
    **/
-  export const match = <R>(
+  export const map = <R>(
     n: ASTTree,
     f: {
       ASTUnionType: (n: ASTUnionType) => R;
@@ -707,7 +707,7 @@ namespace ASTTree {
    * Given an instance of type ASTTree, map that value for certain subtypes
    * and for all others, simply return the \`orElse\` argument
    **/
-  export const partialMatch = <R>(
+  export const partialMap = <R>(
     n: ASTTree,
     f: Partial<{
       ASTUnionType: (n: ASTUnionType) => R;
@@ -723,7 +723,7 @@ namespace ASTTree {
    * Given an instance of type ASTTree, take action depending on the
    * specific underlying node type
    **/
-  export const forEach = (
+  export const match = (
     n: ASTTree,
     f: {
       ASTUnionType: (n: ASTUnionType) => void;
@@ -747,7 +747,7 @@ namespace ASTTree {
    * Given an instance of type ASTTree, take action for certain subtypes
    * and for all others, simply return the \`orElse\` argument
    **/
-  export const partialForEach = (
+  export const partialMatch = (
     n: ASTTree,
     f: Partial<{
       ASTUnionType: (n: ASTUnionType) => void;
@@ -1346,7 +1346,7 @@ namespace FieldType {
    * Given an instance of type FieldType, map that value depending on the
    * specific underlying node type
    **/
-  export const match = <R>(
+  export const map = <R>(
     n: FieldType,
     f: {
       BuiltinType: (n: BuiltinType) => R;
@@ -1374,7 +1374,7 @@ namespace FieldType {
    * Given an instance of type FieldType, map that value for certain subtypes
    * and for all others, simply return the \`orElse\` argument
    **/
-  export const partialMatch = <R>(
+  export const partialMap = <R>(
     n: FieldType,
     f: Partial<{
       BuiltinType: (n: BuiltinType) => R;
@@ -1392,7 +1392,7 @@ namespace FieldType {
    * Given an instance of type FieldType, take action depending on the
    * specific underlying node type
    **/
-  export const forEach = (
+  export const match = (
     n: FieldType,
     f: {
       BuiltinType: (n: BuiltinType) => void;
@@ -1420,7 +1420,7 @@ namespace FieldType {
    * Given an instance of type FieldType, take action for certain subtypes
    * and for all others, simply return the \`orElse\` argument
    **/
-  export const partialForEach = (
+  export const partialMatch = (
     n: FieldType,
     f: Partial<{
       BuiltinType: (n: BuiltinType) => void;
@@ -1446,7 +1446,7 @@ namespace ASTTree {
    * Given an instance of type ASTTree, map that value depending on the
    * specific underlying node type
    **/
-  export const match = <R>(
+  export const map = <R>(
     n: ASTTree,
     f: {
       ASTUnionType: (n: ASTUnionType) => R;
@@ -1470,7 +1470,7 @@ namespace ASTTree {
    * Given an instance of type ASTTree, map that value for certain subtypes
    * and for all others, simply return the \`orElse\` argument
    **/
-  export const partialMatch = <R>(
+  export const partialMap = <R>(
     n: ASTTree,
     f: Partial<{
       ASTUnionType: (n: ASTUnionType) => R;
@@ -1486,7 +1486,7 @@ namespace ASTTree {
    * Given an instance of type ASTTree, take action depending on the
    * specific underlying node type
    **/
-  export const forEach = (
+  export const match = (
     n: ASTTree,
     f: {
       ASTUnionType: (n: ASTUnionType) => void;
@@ -1510,7 +1510,7 @@ namespace ASTTree {
    * Given an instance of type ASTTree, take action for certain subtypes
    * and for all others, simply return the \`orElse\` argument
    **/
-  export const partialForEach = (
+  export const partialMatch = (
     n: ASTTree,
     f: Partial<{
       ASTUnionType: (n: ASTUnionType) => void;
@@ -1900,7 +1900,7 @@ namespace Expr {
    * Given an instance of type Expr, map that value depending on the
    * specific underlying node type
    **/
-  export const match = <R>(
+  export const map = <R>(
     n: Expr,
     f: {
       Literal: (n: Literal) => R;
@@ -1930,7 +1930,7 @@ namespace Expr {
    * Given an instance of type Expr, map that value for certain subtypes
    * and for all others, simply return the \`orElse\` argument
    **/
-  export const partialMatch = <R>(
+  export const partialMap = <R>(
     n: Expr,
     f: Partial<{
       Literal: (n: Literal) => R;
@@ -1950,7 +1950,7 @@ namespace Expr {
    * Given an instance of type Expr, take action depending on the
    * specific underlying node type
    **/
-  export const forEach = (
+  export const match = (
     n: Expr,
     f: {
       Literal: (n: Literal) => void;
@@ -1980,7 +1980,7 @@ namespace Expr {
    * Given an instance of type Expr, take action for certain subtypes
    * and for all others, simply return the \`orElse\` argument
    **/
-  export const partialForEach = (
+  export const partialMatch = (
     n: Expr,
     f: Partial<{
       Literal: (n: Literal) => void;
@@ -2374,7 +2374,7 @@ namespace Expr {
    * Given an instance of type Expr, map that value depending on the
    * specific underlying node type
    **/
-  export const match = <R>(
+  export const map = <R>(
     n: Expr,
     f: {
       Literal: (n: Literal) => R;
@@ -2404,7 +2404,7 @@ namespace Expr {
    * Given an instance of type Expr, map that value for certain subtypes
    * and for all others, simply return the \`orElse\` argument
    **/
-  export const partialMatch = <R>(
+  export const partialMap = <R>(
     n: Expr,
     f: Partial<{
       Literal: (n: Literal) => R;
@@ -2424,7 +2424,7 @@ namespace Expr {
    * Given an instance of type Expr, take action depending on the
    * specific underlying node type
    **/
-  export const forEach = (
+  export const match = (
     n: Expr,
     f: {
       Literal: (n: Literal) => void;
@@ -2454,7 +2454,7 @@ namespace Expr {
    * Given an instance of type Expr, take action for certain subtypes
    * and for all others, simply return the \`orElse\` argument
    **/
-  export const partialForEach = (
+  export const partialMatch = (
     n: Expr,
     f: Partial<{
       Literal: (n: Literal) => void;
@@ -2996,7 +2996,7 @@ namespace Statement {
    * Given an instance of type Statement, map that value depending on the
    * specific underlying node type
    **/
-  export const match = <R>(
+  export const map = <R>(
     n: Statement,
     f: {
       AssignmentStatement: (n: AssignmentStatement) => R;
@@ -3021,7 +3021,7 @@ namespace Statement {
    * Given an instance of type Statement, map that value for certain subtypes
    * and for all others, simply return the \`orElse\` argument
    **/
-  export const partialMatch = <R>(
+  export const partialMap = <R>(
     n: Statement,
     f: Partial<{
       AssignmentStatement: (n: AssignmentStatement) => R;
@@ -3039,7 +3039,7 @@ namespace Statement {
    * Given an instance of type Statement, take action depending on the
    * specific underlying node type
    **/
-  export const forEach = (
+  export const match = (
     n: Statement,
     f: {
       AssignmentStatement: (n: AssignmentStatement) => void;
@@ -3064,7 +3064,7 @@ namespace Statement {
    * Given an instance of type Statement, take action for certain subtypes
    * and for all others, simply return the \`orElse\` argument
    **/
-  export const partialForEach = (
+  export const partialMatch = (
     n: Statement,
     f: Partial<{
       AssignmentStatement: (n: AssignmentStatement) => void;
@@ -3090,7 +3090,7 @@ namespace Node {
    * Given an instance of type Node, map that value depending on the
    * specific underlying node type
    **/
-  export const match = <R>(
+  export const map = <R>(
     n: Node,
     f: {
       FunctionDef: (n: FunctionDef) => R;
@@ -3126,7 +3126,7 @@ namespace Node {
    * Given an instance of type Node, map that value for certain subtypes
    * and for all others, simply return the \`orElse\` argument
    **/
-  export const partialMatch = <R>(
+  export const partialMap = <R>(
     n: Node,
     f: Partial<{
       FunctionDef: (n: FunctionDef) => R;
@@ -3152,7 +3152,7 @@ namespace Node {
    * Given an instance of type Node, take action depending on the
    * specific underlying node type
    **/
-  export const forEach = (
+  export const match = (
     n: Node,
     f: {
       FunctionDef: (n: FunctionDef) => void;
@@ -3188,7 +3188,7 @@ namespace Node {
    * Given an instance of type Node, take action for certain subtypes
    * and for all others, simply return the \`orElse\` argument
    **/
-  export const partialForEach = (
+  export const partialMatch = (
     n: Node,
     f: Partial<{
       FunctionDef: (n: FunctionDef) => void;
@@ -3737,7 +3737,7 @@ namespace Statement {
    * Given an instance of type Statement, map that value depending on the
    * specific underlying node type
    **/
-  export const match = <R>(
+  export const map = <R>(
     n: Statement,
     f: {
       AssignmentStatement: (n: AssignmentStatement) => R;
@@ -3762,7 +3762,7 @@ namespace Statement {
    * Given an instance of type Statement, map that value for certain subtypes
    * and for all others, simply return the \`orElse\` argument
    **/
-  export const partialMatch = <R>(
+  export const partialMap = <R>(
     n: Statement,
     f: Partial<{
       AssignmentStatement: (n: AssignmentStatement) => R;
@@ -3780,7 +3780,7 @@ namespace Statement {
    * Given an instance of type Statement, take action depending on the
    * specific underlying node type
    **/
-  export const forEach = (
+  export const match = (
     n: Statement,
     f: {
       AssignmentStatement: (n: AssignmentStatement) => void;
@@ -3805,7 +3805,7 @@ namespace Statement {
    * Given an instance of type Statement, take action for certain subtypes
    * and for all others, simply return the \`orElse\` argument
    **/
-  export const partialForEach = (
+  export const partialMatch = (
     n: Statement,
     f: Partial<{
       AssignmentStatement: (n: AssignmentStatement) => void;
@@ -3831,7 +3831,7 @@ namespace Node {
    * Given an instance of type Node, map that value depending on the
    * specific underlying node type
    **/
-  export const match = <R>(
+  export const map = <R>(
     n: Node,
     f: {
       FunctionDef: (n: FunctionDef) => R;
@@ -3867,7 +3867,7 @@ namespace Node {
    * Given an instance of type Node, map that value for certain subtypes
    * and for all others, simply return the \`orElse\` argument
    **/
-  export const partialMatch = <R>(
+  export const partialMap = <R>(
     n: Node,
     f: Partial<{
       FunctionDef: (n: FunctionDef) => R;
@@ -3893,7 +3893,7 @@ namespace Node {
    * Given an instance of type Node, take action depending on the
    * specific underlying node type
    **/
-  export const forEach = (
+  export const match = (
     n: Node,
     f: {
       FunctionDef: (n: FunctionDef) => void;
@@ -3929,7 +3929,7 @@ namespace Node {
    * Given an instance of type Node, take action for certain subtypes
    * and for all others, simply return the \`orElse\` argument
    **/
-  export const partialForEach = (
+  export const partialMatch = (
     n: Node,
     f: Partial<{
       FunctionDef: (n: FunctionDef) => void;
@@ -4136,7 +4136,7 @@ namespace Tree {
    * Given an instance of type Tree, map that value depending on the
    * specific underlying node type
    **/
-  export const match = <R>(
+  export const map = <R>(
     n: Tree,
     f: {
       Fork: (n: Fork) => R;
@@ -4160,7 +4160,7 @@ namespace Tree {
    * Given an instance of type Tree, map that value for certain subtypes
    * and for all others, simply return the \`orElse\` argument
    **/
-  export const partialMatch = <R>(
+  export const partialMap = <R>(
     n: Tree,
     f: Partial<{
       Fork: (n: Fork) => R;
@@ -4176,7 +4176,7 @@ namespace Tree {
    * Given an instance of type Tree, take action depending on the
    * specific underlying node type
    **/
-  export const forEach = (
+  export const match = (
     n: Tree,
     f: {
       Fork: (n: Fork) => void;
@@ -4200,7 +4200,7 @@ namespace Tree {
    * Given an instance of type Tree, take action for certain subtypes
    * and for all others, simply return the \`orElse\` argument
    **/
-  export const partialForEach = (
+  export const partialMatch = (
     n: Tree,
     f: Partial<{
       Fork: (n: Fork) => void;
@@ -4397,7 +4397,7 @@ namespace Tree {
    * Given an instance of type Tree, map that value depending on the
    * specific underlying node type
    **/
-  export const match = <R>(
+  export const map = <R>(
     n: Tree,
     f: {
       Fork: (n: Fork) => R;
@@ -4421,7 +4421,7 @@ namespace Tree {
    * Given an instance of type Tree, map that value for certain subtypes
    * and for all others, simply return the \`orElse\` argument
    **/
-  export const partialMatch = <R>(
+  export const partialMap = <R>(
     n: Tree,
     f: Partial<{
       Fork: (n: Fork) => R;
@@ -4437,7 +4437,7 @@ namespace Tree {
    * Given an instance of type Tree, take action depending on the
    * specific underlying node type
    **/
-  export const forEach = (
+  export const match = (
     n: Tree,
     f: {
       Fork: (n: Fork) => void;
@@ -4461,7 +4461,7 @@ namespace Tree {
    * Given an instance of type Tree, take action for certain subtypes
    * and for all others, simply return the \`orElse\` argument
    **/
-  export const partialForEach = (
+  export const partialMatch = (
     n: Tree,
     f: Partial<{
       Fork: (n: Fork) => void;
