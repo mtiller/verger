@@ -32,7 +32,11 @@ export function generate(spec: ASTSpec): string {
     lines(...unionDefs)
   );
 
-  const pretty = prettier.format(file, { parser: "babel-ts" });
-
-  return pretty;
+  try {
+    const pretty = prettier.format(file, { parser: "babel-ts" });
+    return pretty;
+  } catch (e) {
+    console.error("Prettier failed");
+    return file;
+  }
 }

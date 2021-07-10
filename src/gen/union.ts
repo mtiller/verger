@@ -1,4 +1,5 @@
 import { ASTLeafType, ASTSpec, ASTUnionType } from "../specification";
+import { leafCode } from "./leaf";
 import { unionLeaves } from "./properties";
 import { comment, lines } from "./utils";
 
@@ -9,7 +10,8 @@ export function unionCode(a: ASTUnionType, spec: ASTSpec): string {
     `the union type ${a.name}.`
   );
   const type = `export type ${a.name} = ${a.subtypes.join(" | ")};`;
-  const leaves = unionLeaves(a, spec);
+  const leafNames = unionLeaves(a, spec);
+  const leaves = leafNames.map((leaf) => spec.leaves.get(leaf.name));
   const classDef = lines(
     `namespace ${a.name} {`,
     lines(
@@ -18,9 +20,9 @@ export function unionCode(a: ASTUnionType, spec: ASTSpec): string {
         "specific underlying node type"
       ),
       `  export const match = <R>(n: ${a.name}, f: ${matchPayload(
-        leaves,
+        leafNames,
         "R"
-      )}) => ${matchBody(a.name, leaves, spec)}`,
+      )}) => ${matchBody(a.name, leafNames, spec)}`,
       comment(
         `Given an instance of type ${a.name}, map that value for certain subtypes`,
         "and for all others, simply return the `orElse` argument"
@@ -28,31 +30,37 @@ export function unionCode(a: ASTUnionType, spec: ASTSpec): string {
       `  export const partialMatch = <R>(n: ${
         a.name
       }, f: Partial<${matchPayload(
-        leaves,
+        leafNames,
         "R"
-      )}>, orElse: R) => ${partialMatchBody(leaves, spec, false)}`,
+      )}>, orElse: R) => ${partialMatchBody(leafNames, spec, false)}`,
       comment(
         `Given an instance of type ${a.name}, take action depending on the`,
         "specific underlying node type"
       ),
       `  export const forEach = (n: ${a.name}, f: ${matchPayload(
-        leaves,
+        leafNames,
         "void"
-      )}): void => ${matchBody(a.name, leaves, spec)}`,
+      )}): void => ${matchBody(a.name, leafNames, spec)}`,
       comment(
         `Given an instance of type ${a.name}, take action for certain subtypes`,
         "and for all others, simply return the `orElse` argument"
       ),
       `  export const partialForEach = (n: ${a.name}, f: Partial<${matchPayload(
-        leaves,
+        leafNames,
         "void"
       )}>, orElse?: (n: ${a.name}) => void) => ${partialMatchBody(
-        leaves,
+        leafNames,
         spec,
         true
-      )}`
-    ),
-    "}"
+      )}`,
+      comment(`For a node of type ${a.name}, find all children`),
+      `export const children = (n: ${a.name}) => ${a.name}.match<readonly ${a.name}[]>(n, {`,
+      ...leaves.map((leaf) =>
+        leaf ? `${leaf.name}: (x) => ${leaf.name}.children(x),` : ""
+      ),
+      "})",
+      "}"
+    )
   );
   return lines("", header, type, classDef, "");
 }

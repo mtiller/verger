@@ -1,4 +1,4 @@
-- Add constructor functions!
+- Union children function
 - Use generated AST
 - Allow additional "built-in" types to be registered
 - Custom Visitor Interface?
