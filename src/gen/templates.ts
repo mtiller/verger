@@ -7,11 +7,50 @@ import {
   Field,
   NodeField,
 } from "../specification";
-import { fieldType, childFieldEntries, fieldName } from "./properties";
+import {
+  fieldType,
+  childFieldEntries,
+  fieldName,
+  unionLeaves,
+} from "./properties";
 
 /** Generate code for each union node */
 export function unionCode(a: ASTUnionType, spec: ASTSpec): string {
-  return `export type ${a.name} = ${a.subtypes.join(" | ")};`;
+  const type = `export type ${a.name} = ${a.subtypes.join(" | ")};`;
+  const leaves = unionLeaves(a, spec);
+  const classDef = lines(
+    `namespace ${a.name} {`,
+    lines(
+      `  export const match = <R>(n: ${a.name}, f: ${matchPayload(
+        leaves
+      )}) => ${matchBody(a.name, leaves, spec)}`
+    ),
+    "}"
+  );
+  return lines(type, classDef);
+}
+
+export function matchBody(type: string, leaves: ASTLeafType[], spec: ASTSpec) {
+  const ret: string[] = ["{"];
+  ret.push(`    switch(n.${spec.tagName}) {`);
+  for (const leaf of leaves) {
+    ret.push(`      case "${leaf.tag}": return f.${leaf.name}(n)`);
+  }
+  ret.push(
+    `      default: { const x: never = n; throw new Error("Instance of ${type} has unexpected value for ${spec.tagName}: "+(n as any).tag)}`
+  );
+  ret.push("    }");
+  ret.push("  }");
+  return lines(...ret);
+}
+
+export function matchPayload(leaves: ASTLeafType[]): string {
+  const ret: string[] = ["{"];
+  for (const leaf of leaves) {
+    ret.push(`    ${leaf.name}: (n: ${leaf.name}) => R`);
+  }
+  ret.push("}");
+  return lines(...ret);
 }
 
 /** Formulate the extends clause for a leaf node */

@@ -6,10 +6,10 @@
   "scripts": {
     "prepublish": "tsc",
     "sample": "yarn sample:expr && yarn sample:repmin && yarn sample:kitchen",
-    "sample:expr": "ts-node scripts/astgen.ts samples/expr.yaml | tee samples/expr.ts",
-    "sample:repmin": "ts-node scripts/astgen.ts samples/repmin.yaml | tee samples/repmin.ts",
-    "sample:kitchen": "ts-node scripts/astgen.ts samples/kitchen.yaml | tee samples/kitchen.ts",
-    "sample:dogfood": "ts-node scripts/astgen.ts samples/dogfood.yaml | tee samples/dogfood.ts",
+    "sample:expr": "ts-node scripts/verger.ts samples/expr.yaml | tee samples/expr.ts",
+    "sample:repmin": "ts-node scripts/verger.ts samples/repmin.yaml | tee samples/repmin.ts",
+    "sample:kitchen": "ts-node scripts/verger.ts samples/kitchen.yaml | tee samples/kitchen.ts",
+    "sample:dogfood": "ts-node scripts/verger.ts samples/dogfood.yaml | tee samples/dogfood.ts",
     "build": "tsc",
     "test": "jest"
   },

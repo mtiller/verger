@@ -1,4 +1,4 @@
-- Use union-types internally (for `matchExhaustive`)
 - Implement match(...)
-- Implement <class>.filter()
-- All additional "built-in" types to be registered
+- Use generated AST
+- Allow additional "built-in" types to be registered
+- Custom Visitor Interface?

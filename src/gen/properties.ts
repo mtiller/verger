@@ -2,6 +2,7 @@ import {
   ASTBaseType,
   ASTLeafType,
   ASTSpec,
+  ASTUnionType,
   Field,
   FieldStruct,
   FieldType,
@@ -146,4 +147,25 @@ export function childFieldEntries(
     throw new Error("Field ${dup[0]} is no unique");
   }
   return [...ret, ...entries];
+}
+
+export function unionLeaves(u: ASTUnionType, spec: ASTSpec): ASTLeafType[] {
+  let ret: ASTLeafType[] = [];
+  for (const subtype of u.subtypes) {
+    const union = spec.unions.get(subtype);
+    const leaf = spec.leaves.get(subtype);
+    if (union && leaf) {
+      throw new Error(
+        `Subtype ${subtype} of ${u.name} is both a union and a leaf?!?`
+      );
+    }
+    if (union !== undefined) {
+      ret = [...ret, ...unionLeaves(union, spec)];
+    } else if (leaf !== undefined) {
+      ret = [...ret, leaf];
+    } else {
+      throw new Error(`Unable to find subtype ${subtype} of union ${u.name}`);
+    }
+  }
+  return ret;
 }
