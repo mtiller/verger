@@ -5,11 +5,13 @@ import { baseCode } from "./base";
 import { comment, lines } from "./utils";
 import { unionCode } from "./union";
 import prettier from "prettier";
+import { imports } from "./imports";
 
 /**
  * This is the top level function to generate Javascript code.
  */
 export function generate(spec: ASTSpec): string {
+  const imps = imports(spec);
   const leaves = [...spec.leaves.values()];
   const bases = [...spec.bases.values()];
   const unions = [...spec.unions.values()];
@@ -23,6 +25,7 @@ export function generate(spec: ASTSpec): string {
   );
 
   const file = lines(
+    imps,
     preamble,
     lines(...baseDefs),
     lines(...leafDefs),
