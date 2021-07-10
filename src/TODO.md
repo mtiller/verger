@@ -1,4 +1,4 @@
-- Implement match(...)
+- Add constructor functions!
 - Use generated AST
 - Allow additional "built-in" types to be registered
 - Custom Visitor Interface?

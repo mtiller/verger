@@ -16,23 +16,57 @@ import {
 
 /** Generate code for each union node */
 export function unionCode(a: ASTUnionType, spec: ASTSpec): string {
+  const header = comment(
+    "This code implements the types and functions associated with",
+    `the union type ${a.name}.`
+  );
   const type = `export type ${a.name} = ${a.subtypes.join(" | ")};`;
   const leaves = unionLeaves(a, spec);
   const classDef = lines(
     `namespace ${a.name} {`,
     lines(
+      comment(
+        `Given an instance of type ${a.name}, map that value depending on the`,
+        "specific underlying node type"
+      ),
       `  export const match = <R>(n: ${a.name}, f: ${matchPayload(
-        leaves
+        leaves,
+        "R"
       )}) => ${matchBody(a.name, leaves, spec)}`,
+      comment(
+        `Given an instance of type ${a.name}, map that value for certain subtypes`,
+        "and for all others, simply return the `orElse` argument"
+      ),
       `  export const partialMatch = <R>(n: ${
         a.name
-      }, f: Partial<${matchPayload(leaves)}>, orElse: R) => ${partialMatchBody(
-        leaves
+      }, f: Partial<${matchPayload(
+        leaves,
+        "R"
+      )}>, orElse: R) => ${partialMatchBody(leaves, spec, false)}`,
+      comment(
+        `Given an instance of type ${a.name}, take action depending on the`,
+        "specific underlying node type"
+      ),
+      `  export const forEach = (n: ${a.name}, f: ${matchPayload(
+        leaves,
+        "void"
+      )}): void => ${matchBody(a.name, leaves, spec)}`,
+      comment(
+        `Given an instance of type ${a.name}, take action for certain subtypes`,
+        "and for all others, simply return the `orElse` argument"
+      ),
+      `  export const partialForEach = (n: ${a.name}, f: Partial<${matchPayload(
+        leaves,
+        "void"
+      )}>, orElse?: (n: ${a.name}) => void) => ${partialMatchBody(
+        leaves,
+        spec,
+        true
       )}`
     ),
     "}"
   );
-  return lines(type, classDef);
+  return lines("", header, type, classDef, "");
 }
 
 export function matchBody(type: string, leaves: ASTLeafType[], spec: ASTSpec) {
@@ -49,20 +83,30 @@ export function matchBody(type: string, leaves: ASTLeafType[], spec: ASTSpec) {
   return lines(...ret);
 }
 
-export function partialMatchBody(leaves: ASTLeafType[]) {
+export function partialMatchBody(
+  leaves: ASTLeafType[],
+  spec: ASTSpec,
+  foreach: boolean
+) {
   const ret: string[] = ["{"];
   for (const leaf of leaves) {
-    ret.push(`      if (f.${leaf.name}) return f.${leaf.name};`);
+    ret.push(
+      `      if (n.${spec.options.tagName}==="${leaf.tag}" && f.${leaf.name}) return f.${leaf.name}(n);`
+    );
   }
-  ret.push(`      return orElse;`);
+  if (foreach) {
+    ret.push(`      if (orElse) return orElse(n)`);
+  } else {
+    ret.push(`      return orElse;`);
+  }
   ret.push("    }");
   return lines(...ret);
 }
 
-export function matchPayload(leaves: ASTLeafType[]): string {
+export function matchPayload(leaves: ASTLeafType[], r: string): string {
   const ret: string[] = ["{"];
   for (const leaf of leaves) {
-    ret.push(`    ${leaf.name}: (n: ${leaf.name}) => R`);
+    ret.push(`    ${leaf.name}: (n: ${leaf.name}) => ${r}`);
   }
   ret.push("  }");
   return lines(...ret);
@@ -80,6 +124,11 @@ export function baseCode(
   tag: Maybe<string>, // Tag value if this is a leaf node
   spec: ASTSpec
 ): string {
+  const header = comment(
+    "This code implements the types and functions associated with",
+    `the ${tag.map(() => "leaf").orDefault("base")} type ${a.name}.`
+  );
+
   /** Generate declarations for all fields. */
   let decls = [...a.fields.entries()].map(
     (f) => `    ${fieldName(f[0], f[1], spec)}: ${fieldType(f[1], spec)};`
@@ -91,6 +140,8 @@ export function baseCode(
 
   /** Pull all this together into an interface definition. */
   return lines(
+    "",
+    header,
     `export interface ${a.name} ${extendsClause(a.extends)} {`,
     lines(...decls),
     "}"
@@ -116,10 +167,19 @@ export function leafCode(a: ASTLeafType, spec: ASTSpec): string {
   /** Now generate the class definition associated with this leaf node. */
   const nodeClass = [
     `export class ${a.name} {`,
-    `    static is = (x: ${a.rootUnion}): x is ${a.name} => { return x.${spec.options.tagName}==="${a.tag}" }`,
+    comment(
+      `A predicate function that take an instance of type ${a.rootUnion.name} and determines if it is an instance of ${a.name}`
+    ),
+    `    static is = (x: ${a.rootUnion.name}): x is ${a.name} => { return x.${spec.options.tagName}==="${a.tag}" }`,
+    comment(
+      `Given an instance of ${a.name}, determine all children that are instances of ${a.rootUnion.name}`
+    ),
     `    static children = (x: ${a.name}) => { return [${children
       .map((x) => fieldChildren("x", x[0], x[1]))
       .join(", ")}] as const }`,
+    comment(
+      `Although generally not necessary, this tag can be used to identify instances of ${a.name}`
+    ),
     `    static tag = "${a.tag}"`,
     `}`,
   ];
@@ -157,4 +217,10 @@ export function fieldChildren(v: string, field: string, f: Field): string {
 /** A help function for listing lines to be joined. */
 export function lines(...lines: string[]): string {
   return lines.join("\n");
+}
+
+export function comment(...lines: string[]): string {
+  const starred = lines.map((x) => ` * ${x}`);
+  const bookended = ["/**", ...starred, " **/"];
+  return bookended.join("\n");
 }

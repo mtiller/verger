@@ -30,7 +30,8 @@ export function isUnion(a: ASTTree): a is ASTUnionType {
 export interface ASTLeafType {
   type: "leaf";
   tag: string;
-  rootUnion: string;
+  rootUnion: ASTUnionType;
+  parentUnion: ASTUnionType;
   name: string;
   extends: string[];
   fields: Map<string, Field>;

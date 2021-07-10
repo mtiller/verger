@@ -1,11 +1,12 @@
-import { Field, FieldStruct, parseField } from "./fields";
+import { Field, FieldStruct, parseField, parseType } from "./fields";
 import { ASTBaseType, ASTLeafType, ASTTree, ASTUnionType } from "./nodes";
 import { ASTSpec } from "./specification";
 
 /** This function walks the `node` part of the specification */
 export function walkNode(
   n: string,
-  rootUnion: string,
+  rootUnion: ASTUnionType,
+  parentUnion: ASTUnionType,
   content: any,
   types: ASTSpec
 ): ASTTree {
@@ -21,6 +22,7 @@ export function walkNode(
       type: "leaf",
       name: n,
       tag: n.toLowerCase(),
+      parentUnion: parentUnion,
       rootUnion: rootUnion,
       extends: [],
       fields: new Map<string, Field>(),
@@ -55,7 +57,7 @@ export function walkNode(
         throw new Error(`Unrecognized name ${subtype}`);
       }
       /** Now walk those subtype nodes and parse them */
-      walkNode(subtype, rootUnion, contents, types);
+      walkNode(subtype, rootUnion, ret, contents, types);
     }
     if (!types.names.has(ret.name)) {
       throw new Error(`Unknown name ${ret.name}`);
