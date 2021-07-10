@@ -1,6 +1,24 @@
-import { BuiltinTypes, Field, FieldType, NodeField } from "./nodes";
+import { FieldType, NodeType } from "./nodes";
 import { ASTSpec } from "./specification";
 import { validName, validType } from "./walk";
+
+export type FieldStruct = "scalar" | "optional" | "map" | "array" | "set";
+
+export type BuiltinTypes = "string" | "number" | "boolean";
+
+export interface Field {
+  type: FieldType;
+  struct: FieldStruct;
+}
+
+/**
+ * A subtype of `Field` where we know the field references
+ * an AST Node (a child).
+ */
+export type NodeField = {
+  type: NodeType;
+  struct: FieldStruct;
+};
 
 /** Predicate for identifying a NodeField */
 export const isNodeField = (x: Field): x is NodeField => {

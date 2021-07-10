@@ -1,6 +1,4 @@
-export type FieldStruct = "scalar" | "optional" | "map" | "array" | "set";
-
-export type BuiltinTypes = "string" | "number" | "boolean";
+import { BuiltinTypes, Field } from "./fields";
 
 /** Covers singleton or union */
 export interface BuiltinType {
@@ -22,20 +20,6 @@ export interface NodeType {
 
 /** The union of possible field types */
 export type FieldType = BuiltinType | EnumType | NodeType;
-
-export interface Field {
-  type: FieldType;
-  struct: FieldStruct;
-}
-
-/**
- * A subtype of `Field` where we know the field references
- * an AST Node (a child).
- */
-export type NodeField = {
-  type: NodeType;
-  struct: FieldStruct;
-};
 
 /**
  * This is just a simple interface (that will not appear
