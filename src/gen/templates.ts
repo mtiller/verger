@@ -23,7 +23,12 @@ export function unionCode(a: ASTUnionType, spec: ASTSpec): string {
     lines(
       `  export const match = <R>(n: ${a.name}, f: ${matchPayload(
         leaves
-      )}) => ${matchBody(a.name, leaves, spec)}`
+      )}) => ${matchBody(a.name, leaves, spec)}`,
+      `  export const partialMatch = <R>(n: ${
+        a.name
+      }, f: Partial<${matchPayload(leaves)}>, orElse: R) => ${partialMatchBody(
+        leaves
+      )}`
     ),
     "}"
   );
@@ -44,12 +49,22 @@ export function matchBody(type: string, leaves: ASTLeafType[], spec: ASTSpec) {
   return lines(...ret);
 }
 
+export function partialMatchBody(leaves: ASTLeafType[]) {
+  const ret: string[] = ["{"];
+  for (const leaf of leaves) {
+    ret.push(`      if (f.${leaf.name}) return f.${leaf.name};`);
+  }
+  ret.push(`      return orElse;`);
+  ret.push("    }");
+  return lines(...ret);
+}
+
 export function matchPayload(leaves: ASTLeafType[]): string {
   const ret: string[] = ["{"];
   for (const leaf of leaves) {
     ret.push(`    ${leaf.name}: (n: ${leaf.name}) => R`);
   }
-  ret.push("}");
+  ret.push("  }");
   return lines(...ret);
 }
 
