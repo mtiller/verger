@@ -24,7 +24,7 @@ export function unionCode(a: ASTUnionType, spec: ASTSpec): string {
   );
 
   const classDef = lines(
-    `namespace ${a.name} {`,
+    `export namespace ${a.name} {`,
     lines(
       comment(
         `Given an instance of type ${a.name}, map that value depending on the`,

@@ -13,10 +13,10 @@ nodes:
     ASTLeafType:
       - tag: string
       - rootUnion: ASTUnionType
-      - parentUnion: ASTUnionType
       - name: string
       - bases: string[]
       - fields: Field{}
 
 options:
   tagName: kind
+  map: map
