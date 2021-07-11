@@ -1,11 +1,13 @@
-import { FieldType, NodeType } from "./nodes";
+import { builtinType, enumType, FieldType, nodeType, NodeType } from "./nodes";
 import { ASTSpec } from "./specification";
 import { validName, validType } from "./walk";
 
 export type FieldStruct = "scalar" | "optional" | "map" | "array" | "set";
 
-export type BuiltinTypes = "string" | "number" | "boolean";
-
+export type BuiltinTypes = "str" | "num" | "bool";
+export function isBuiltinType(x: string): x is BuiltinTypes {
+  return x === "str" || x === "num" || x === "bool";
+}
 export interface Field {
   type: FieldType;
   struct: FieldStruct;
@@ -22,7 +24,7 @@ export type NodeField = {
 
 /** Predicate for identifying a NodeField */
 export const isNodeField = (x: Field): x is NodeField => {
-  return x.type.kind === "node";
+  return NodeType.is(x.type);
 };
 /** Another predicate for identifying an entry with a NodeField value */
 export const isNodeFieldEntry = (
@@ -57,24 +59,15 @@ export function parseType(str: string, spec: ASTSpec): FieldType {
   if (types.every((x) => validName(x))) {
     /** If they are all builtins, then this is a builtin node */
     if (types.every(isBuiltin)) {
-      return {
-        kind: "builtin",
-        types: types.filter(isBuiltin),
-      };
+      return builtinType(new Set(types.filter(isBuiltinType)));
     }
     /** If they are all names of node types, then this is a "node" node */
     if (types.every((x) => spec.names.has(x))) {
-      return {
-        kind: "node",
-        types: types,
-      };
+      return nodeType(types);
     }
     /** If there are no builtins or known types, assume these are string literals */
     if (types.every((x) => !spec.names.has(x) && !isBuiltin(x))) {
-      return {
-        kind: "enum",
-        tags: types,
-      };
+      return enumType(types);
     }
     throw new Error(`Unrecognized type name: '${str}'`);
   } else {

@@ -34,7 +34,7 @@ export function baseCode(
   return lines(
     "",
     header,
-    `export interface ${a.name} ${extendsClause(a.extends)} {`,
+    `export interface ${a.name} ${extendsClause(a.bases)} {`,
     lines(...decls),
     "}"
   );

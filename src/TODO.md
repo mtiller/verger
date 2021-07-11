@@ -1,3 +1,4 @@
+- constructor name should lowercase all but one of first capital letters.
 - Union children function
 - Use generated AST
 - Allow additional "built-in" types to be registered

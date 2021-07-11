@@ -1,5 +1,13 @@
 import { parseField, Field, FieldStruct } from "./fields";
-import { ASTBaseType, ASTLeafType, ASTTree, ASTUnionType } from "./nodes";
+import {
+  ASTBaseType,
+  aSTLeafType,
+  ASTLeafType,
+  ASTTree,
+  aSTUnionType,
+  ASTUnionType,
+  enumType,
+} from "./nodes";
 import { ASTSpec } from "./specification";
 
 /** This function walks the `node` part of the specification */
@@ -18,18 +26,10 @@ export function walkNode(
    * array is the set of fields.
    */
   if (Array.isArray(content)) {
-    const ret: ASTLeafType = {
-      type: "leaf",
-      name: n,
-      tag: n.toLowerCase(),
-      parentUnion: parentUnion,
-      rootUnion: rootUnion,
-      extends: [],
-      fields: new Map<string, Field>(),
-    };
+    const ret = aSTLeafType(n.toLowerCase(), rootUnion, n, [], new Map());
 
     /** Walk the specified fields end "decode" what you find. */
-    walkFields(ret.name, content, ret.extends, ret.fields, types);
+    walkFields(ret.name, content, ret.bases, ret.fields, types);
     if (!types.names.has(ret.name)) {
       throw new Error(`Unknown name ${ret.name}`);
     }
@@ -41,11 +41,7 @@ export function walkNode(
      * If we get here, then we assume the contents are nested nodes
      * and the current node is a union of those nested nodes.
      */
-    const ret: ASTUnionType = {
-      type: "union",
-      name: n,
-      subtypes: [],
-    };
+    const ret = aSTUnionType(n, []);
     /**
      * Loop over each "subtype" node listed under our union node
      */
@@ -77,12 +73,12 @@ export function walkNode(
 export function walksBase(name: string, content: unknown, types: ASTSpec) {
   const base: ASTBaseType = {
     name: name,
-    extends: [],
+    bases: [],
     fields: new Map(),
   };
   /** Each base class must be a collection of fields (no nesting is allowed for base classes) */
   if (Array.isArray(content)) {
-    walkFields(name, content, base.extends, base.fields, types);
+    walkFields(name, content, base.bases, base.fields, types);
     if (!types.names.has(name)) {
       throw new Error(`Unrecognized name ${name}`);
     }
@@ -158,10 +154,7 @@ function walkFields(
         /** If so, add a new enum field. */
         const struct: FieldStruct = "scalar";
         fields.set(fieldName, {
-          type: {
-            kind: "enum",
-            tags: type,
-          },
+          type: enumType(type),
           struct,
         });
       }

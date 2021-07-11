@@ -1,4 +1,4 @@
-import { ASTUnionType } from "./nodes";
+import { aSTUnionType, ASTUnionType } from "./nodes";
 import { ASTSpec } from "./specification";
 import { validName, walkNames, walkNode, walksBase } from "./walk";
 
@@ -49,11 +49,7 @@ export function loadSpec(spec: any): ASTSpec {
      * If we get here, then we assume the contents are nested nodes
      * and the current node is a union of those nested nodes.
      */
-    const rootUnion: ASTUnionType = {
-      type: "union",
-      name: name,
-      subtypes: [],
-    };
+    const rootUnion: ASTUnionType = aSTUnionType(name, []);
 
     walkNode(name, rootUnion, rootUnion, content, types);
   }

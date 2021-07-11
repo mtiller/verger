@@ -61,16 +61,11 @@ export function fieldName(name: string, x: Field, spec: ASTSpec): string {
  * @returns
  */
 export function fieldTypeName(x: FieldType, spec: ASTSpec): string {
-  switch (x.kind) {
-    case "builtin":
-    case "node":
-      return x.types.join(" | ");
-    case "enum":
-      return x.tags.map((x) => `"${x}"`).join(" | ");
-    default: {
-      throw new Error(`Unrecognized field type kind: '${(x as any).kind}'`);
-    }
-  }
+  return FieldType.map(x, {
+    BuiltinType: (v) => [...v.types].join(" | "),
+    NodeType: (v) => [...v.types].join(" | "),
+    EnumType: (v) => v.tags.map((x) => `"${x}"`).join(" | "),
+  });
 }
 
 /**
@@ -134,7 +129,7 @@ export function allFieldEntries(
 ): Array<[string, Field]> {
   let ret: Array<[string, Field]> = [];
   /** We start by expanding contents of the base classes */
-  a.extends.forEach((baseName) => {
+  a.bases.forEach((baseName) => {
     const base = spec.bases.get(baseName);
     if (base === undefined) throw new Error(`Unknown base type ${baseName}`);
     const entries = allFieldEntries(base, spec);
