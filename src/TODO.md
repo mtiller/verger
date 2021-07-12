@@ -1,5 +1,5 @@
 - constructor name should lowercase all but one of first capital letters.
-- Union children function
+- Union children function (just for that union tree, ignore others)
 - Use generated AST
 - Allow additional "built-in" types to be registered
 - Custom Visitor Interface?

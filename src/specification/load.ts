@@ -6,13 +6,14 @@ import { validName, walkNames, walkNode, walksBase } from "./walk";
  * Load an AST specification by traversing data provided
  * (generally from YAML).
  */
-export function loadSpec(spec: any): ASTSpec {
+export function loadSpec(ydata: any): ASTSpec {
   /** Create the spec we will return. */
   const types: ASTSpec = {
     names: new Set(),
     unions: new Map(),
     bases: new Map(),
     leaves: new Map(),
+    externs: new Set(),
     options: {
       tagName: "tag",
       optional: "json",
@@ -22,13 +23,14 @@ export function loadSpec(spec: any): ASTSpec {
   };
 
   /** Parse any options first. */
-  if (spec.hasOwnProperty("options")) {
-    loadOptions(spec["options"], types);
+  if (ydata.hasOwnProperty("options")) {
+    loadOptions(ydata["options"], types);
   }
 
   /** Create the nodes for bases (base class types) and nodes  */
-  const bases: any = spec["bases"] ?? {};
-  const root: any = spec["nodes"];
+  const bases: any = ydata["bases"] ?? {};
+  const externs: any = ydata["externs"] ?? [];
+  const root: any = ydata["nodes"];
 
   /** If no nodes are specified, this is an error */
   if (root === undefined) {
@@ -38,6 +40,21 @@ export function loadSpec(spec: any): ASTSpec {
   /** First pass...just grab names */
   walkNames(root, types);
   walkNames(bases, types);
+
+  if (Array.isArray(externs)) {
+    for (const extern of externs) {
+      if (typeof extern === "string") {
+        types.names.add(extern);
+        types.externs.add(extern);
+      } else {
+        throw new Error(
+          `Expected string for external type, but got '${extern}' (${typeof extern})`
+        );
+      }
+    }
+  } else {
+    throw new Error(`External types should be a list`);
+  }
 
   /** Second pass, extract structure of types */
   for (const [name, content] of Object.entries(bases)) {

@@ -19,7 +19,12 @@ import {
  * @returns
  */
 export function fieldType(x: Field, arg: boolean, spec: ASTSpec): string {
-  return fieldStruct(x.struct, fieldTypeName(x.type, spec), arg, spec);
+  console.log(JSON.stringify(x));
+  const typename = fieldTypeName(x.type, spec);
+  console.log("typename = ", typename);
+  const struct = fieldStruct(x.struct, typename, arg, spec);
+  console.log("struct = ", struct);
+  return struct;
 }
 
 /**

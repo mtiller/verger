@@ -1,7 +1,7 @@
 nodes:
   FieldType:
     BuiltinType:
-      - types: <str|num|bool>
+      - types: <string>
     EnumType:
       - tags: string[]
     NodeType:
@@ -16,7 +16,9 @@ nodes:
       - name: string
       - bases: string[]
       - fields: Field{}
+externs:
+  - Field
 
 options:
   tagName: kind
-  map: map
+  maps: map

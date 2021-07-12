@@ -17,5 +17,6 @@ export interface ASTSpec {
   unions: Map<string, ASTUnionType>;
   bases: Map<string, ASTBaseType>;
   leaves: Map<string, ASTLeafType>;
+  externs: Set<string>;
   options: Options;
 }

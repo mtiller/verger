@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { readFile } from "fs-extra";
+import { readFile, writeFile } from "fs-extra";
 import { Cli, Command, Option } from "clipanion";
 import yaml from "yaml";
 import { loadSpec } from "../src/specification";
@@ -15,12 +15,13 @@ const cli = new Cli({
 
 class GenerateCommand extends Command {
   inputFile = Option.String();
+  outputFile = Option.String();
   async execute() {
     const raw = await readFile(this.inputFile);
     const spec = yaml.parse(raw.toString());
     const types = loadSpec(spec);
     const output = generate(types);
-    console.log(output);
+    await writeFile(this.outputFile, output);
   }
 }
 

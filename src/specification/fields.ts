@@ -4,9 +4,9 @@ import { validName, validType } from "./walk";
 
 export type FieldStruct = "scalar" | "optional" | "map" | "array" | "set";
 
-export type BuiltinTypes = "str" | "num" | "bool";
+export type BuiltinTypes = "string" | "number" | "boolean";
 export function isBuiltinType(x: string): x is BuiltinTypes {
-  return x === "str" || x === "num" || x === "bool";
+  return x === "string" || x === "number" || x === "boolean";
 }
 export interface Field {
   type: FieldType;
@@ -55,19 +55,26 @@ function isBuiltin(x: string): x is BuiltinTypes {
 export function parseType(str: string, spec: ASTSpec): FieldType {
   /** If this expresses a union type, split it up */
   const types = str.split("|").map((x) => x.trim());
+  console.log("types: ", types);
   /** Ensure every member of the union is a valid type name */
-  if (types.every((x) => validName(x))) {
+  if (
+    types.every((x) => (x[0] === "." ? validName(x.slice(1)) : validName(x)))
+  ) {
     /** If they are all builtins, then this is a builtin node */
     if (types.every(isBuiltin)) {
+      console.log("builtins");
       return builtinType(new Set(types.filter(isBuiltinType)));
     }
     /** If they are all names of node types, then this is a "node" node */
     if (types.every((x) => spec.names.has(x))) {
+      console.log("nodes");
       return nodeType(types);
     }
-    /** If there are no builtins or known types, assume these are string literals */
-    if (types.every((x) => !spec.names.has(x) && !isBuiltin(x))) {
-      return enumType(types);
+    /** If names start with a '.', assume these are string literals */
+    if (types.every((x) => x.startsWith("."))) {
+      const tags = types.map((x) => x.slice(1));
+      console.log("tags", tags);
+      return enumType(tags);
     }
     throw new Error(`Unrecognized type name: '${str}'`);
   } else {

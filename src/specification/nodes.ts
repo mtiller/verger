@@ -11,7 +11,7 @@ import { Field } from "./fields";
  **/
 export interface BuiltinType {
   kind: "builtintype";
-  types: Set<"str" | "num" | "bool">;
+  types: Set<"string" | "number" | "boolean">;
 }
 export class BuiltinType {
   /**
@@ -34,7 +34,9 @@ export class BuiltinType {
 /**
  * This function can be invoked to create a new instance of BuiltinType
  **/
-export function builtinType(types: Set<"str" | "num" | "bool">): BuiltinType {
+export function builtinType(
+  types: Set<"string" | "number" | "boolean">
+): BuiltinType {
   return { kind: "builtintype", types };
 }
 

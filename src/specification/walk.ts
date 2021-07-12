@@ -2,7 +2,6 @@ import { parseField, Field, FieldStruct } from "./fields";
 import {
   ASTBaseType,
   aSTLeafType,
-  ASTLeafType,
   ASTTree,
   aSTUnionType,
   ASTUnionType,
