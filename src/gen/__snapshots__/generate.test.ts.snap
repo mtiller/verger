@@ -3,9 +3,7 @@
 exports[`Test sample AST specifications should generate proper output for dogfood.yaml using json 1`] = `
 Object {
   "bases": Map {},
-  "externs": Set {
-    "Field",
-  },
+  "externs": Set {},
   "leaves": Map {
     "BuiltinType" => Object {
       "bases": Array [],
@@ -73,6 +71,41 @@ Object {
       },
       "tag": "nodetype",
     },
+    "Field" => Object {
+      "bases": Array [],
+      "fields": Map {
+        "type" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "nodetype",
+            "types": Array [
+              "FieldType",
+            ],
+          },
+        },
+        "struct" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "enumtype",
+            "tags": Array [
+              "scalar",
+              "optional",
+              "map",
+              "array",
+              "set",
+            ],
+          },
+        },
+      },
+      "kind": "astleaftype",
+      "name": "Field",
+      "rootUnion": Object {
+        "kind": "astuniontype",
+        "name": "ASTTree",
+        "subtypes": Array [],
+      },
+      "tag": "field",
+    },
     "ASTUnionType" => Object {
       "bases": Array [],
       "fields": Map {
@@ -103,6 +136,46 @@ Object {
         "subtypes": Array [],
       },
       "tag": "astuniontype",
+    },
+    "ASTBaseType" => Object {
+      "bases": Array [],
+      "fields": Map {
+        "name" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtintype",
+            "types": Set {
+              "string",
+            },
+          },
+        },
+        "bases" => Object {
+          "struct": "array",
+          "type": Object {
+            "kind": "builtintype",
+            "types": Set {
+              "string",
+            },
+          },
+        },
+        "fields" => Object {
+          "struct": "map",
+          "type": Object {
+            "kind": "nodetype",
+            "types": Array [
+              "Field",
+            ],
+          },
+        },
+      },
+      "kind": "astleaftype",
+      "name": "ASTBaseType",
+      "rootUnion": Object {
+        "kind": "astuniontype",
+        "name": "ASTTree",
+        "subtypes": Array [],
+      },
+      "tag": "astbasetype",
     },
     "ASTLeafType" => Object {
       "bases": Array [],
@@ -169,9 +242,10 @@ Object {
     "EnumType",
     "NodeType",
     "ASTTree",
-    "ASTUnionType",
-    "ASTLeafType",
     "Field",
+    "ASTUnionType",
+    "ASTBaseType",
+    "ASTLeafType",
   },
   "options": Object {
     "constructor": "inline",
@@ -193,7 +267,9 @@ Object {
       "kind": "astuniontype",
       "name": "ASTTree",
       "subtypes": Array [
+        "Field",
         "ASTUnionType",
+        "ASTBaseType",
         "ASTLeafType",
       ],
     },
@@ -308,6 +384,43 @@ export function nodeType(types: string[]): NodeType {
 
 /**
  * This code implements the types and functions associated with
+ * the leaf type Field.
+ **/
+export interface Field {
+  kind: \\"field\\";
+  type: FieldType;
+  struct: \\"scalar\\" | \\"optional\\" | \\"map\\" | \\"array\\" | \\"set\\";
+}
+export class Field {
+  /**
+   * A predicate function that take an instance of type ASTTree and determines if it is an instance of Field
+   **/
+  static is = (x: ASTTree): x is Field => {
+    return x.kind === \\"field\\";
+  };
+  /**
+   * Given an instance of Field, determine all children that are instances of ASTTree
+   **/
+  static children = (x: Field) => {
+    return [x.type] as const;
+  };
+  /**
+   * Although generally not necessary, this tag can be used to identify instances of Field
+   **/
+  static tag = \\"field\\";
+}
+/**
+ * This function can be invoked to create a new instance of Field
+ **/
+export function field(
+  type: FieldType,
+  struct: \\"scalar\\" | \\"optional\\" | \\"map\\" | \\"array\\" | \\"set\\"
+): Field {
+  return { kind: \\"field\\", type, struct };
+}
+
+/**
+ * This code implements the types and functions associated with
  * the leaf type ASTUnionType.
  **/
 export interface ASTUnionType {
@@ -338,6 +451,45 @@ export class ASTUnionType {
  **/
 export function astUnionType(name: string, subtypes: string[]): ASTUnionType {
   return { kind: \\"astuniontype\\", name, subtypes };
+}
+
+/**
+ * This code implements the types and functions associated with
+ * the leaf type ASTBaseType.
+ **/
+export interface ASTBaseType {
+  kind: \\"astbasetype\\";
+  name: string;
+  bases: string[];
+  fields: Map<string, Field>;
+}
+export class ASTBaseType {
+  /**
+   * A predicate function that take an instance of type ASTTree and determines if it is an instance of ASTBaseType
+   **/
+  static is = (x: ASTTree): x is ASTBaseType => {
+    return x.kind === \\"astbasetype\\";
+  };
+  /**
+   * Given an instance of ASTBaseType, determine all children that are instances of ASTTree
+   **/
+  static children = (x: ASTBaseType) => {
+    return [...Object.entries(x.fields).map((x) => x[1])] as const;
+  };
+  /**
+   * Although generally not necessary, this tag can be used to identify instances of ASTBaseType
+   **/
+  static tag = \\"astbasetype\\";
+}
+/**
+ * This function can be invoked to create a new instance of ASTBaseType
+ **/
+export function astBaseType(
+  name: string,
+  bases: string[],
+  fields: Map<string, Field>
+): ASTBaseType {
+  return { kind: \\"astbasetype\\", name, bases, fields };
 }
 
 /**
@@ -487,7 +639,7 @@ export namespace FieldType {
  * This code implements the types and functions associated with
  * the union type ASTTree.
  **/
-export type ASTTree = ASTUnionType | ASTLeafType;
+export type ASTTree = Field | ASTUnionType | ASTBaseType | ASTLeafType;
 export namespace ASTTree {
   /**
    * Given an instance of type ASTTree, map that value depending on the
@@ -496,13 +648,19 @@ export namespace ASTTree {
   export const map = <R>(
     n: ASTTree,
     f: {
+      Field: (n: Field) => R;
       ASTUnionType: (n: ASTUnionType) => R;
+      ASTBaseType: (n: ASTBaseType) => R;
       ASTLeafType: (n: ASTLeafType) => R;
     }
   ) => {
     switch (n.kind) {
+      case \\"field\\":
+        return f.Field(n);
       case \\"astuniontype\\":
         return f.ASTUnionType(n);
+      case \\"astbasetype\\":
+        return f.ASTBaseType(n);
       case \\"astleaftype\\":
         return f.ASTLeafType(n);
       default: {
@@ -520,12 +678,16 @@ export namespace ASTTree {
   export const partialMap = <R>(
     n: ASTTree,
     f: Partial<{
+      Field: (n: Field) => R;
       ASTUnionType: (n: ASTUnionType) => R;
+      ASTBaseType: (n: ASTBaseType) => R;
       ASTLeafType: (n: ASTLeafType) => R;
     }>,
     orElse: R
   ) => {
+    if (n.kind === \\"field\\" && f.Field) return f.Field(n);
     if (n.kind === \\"astuniontype\\" && f.ASTUnionType) return f.ASTUnionType(n);
+    if (n.kind === \\"astbasetype\\" && f.ASTBaseType) return f.ASTBaseType(n);
     if (n.kind === \\"astleaftype\\" && f.ASTLeafType) return f.ASTLeafType(n);
     return orElse;
   };
@@ -536,13 +698,19 @@ export namespace ASTTree {
   export const match = (
     n: ASTTree,
     f: {
+      Field: (n: Field) => void;
       ASTUnionType: (n: ASTUnionType) => void;
+      ASTBaseType: (n: ASTBaseType) => void;
       ASTLeafType: (n: ASTLeafType) => void;
     }
   ): void => {
     switch (n.kind) {
+      case \\"field\\":
+        return f.Field(n);
       case \\"astuniontype\\":
         return f.ASTUnionType(n);
+      case \\"astbasetype\\":
+        return f.ASTBaseType(n);
       case \\"astleaftype\\":
         return f.ASTLeafType(n);
       default: {
@@ -560,12 +728,16 @@ export namespace ASTTree {
   export const partialMatch = (
     n: ASTTree,
     f: Partial<{
+      Field: (n: Field) => void;
       ASTUnionType: (n: ASTUnionType) => void;
+      ASTBaseType: (n: ASTBaseType) => void;
       ASTLeafType: (n: ASTLeafType) => void;
     }>,
     orElse?: (n: ASTTree) => void
   ) => {
+    if (n.kind === \\"field\\" && f.Field) return f.Field(n);
     if (n.kind === \\"astuniontype\\" && f.ASTUnionType) return f.ASTUnionType(n);
+    if (n.kind === \\"astbasetype\\" && f.ASTBaseType) return f.ASTBaseType(n);
     if (n.kind === \\"astleaftype\\" && f.ASTLeafType) return f.ASTLeafType(n);
     if (orElse) return orElse(n);
   };
@@ -576,9 +748,7 @@ export namespace ASTTree {
 exports[`Test sample AST specifications should generate proper output for dogfood.yaml using purify 1`] = `
 Object {
   "bases": Map {},
-  "externs": Set {
-    "Field",
-  },
+  "externs": Set {},
   "leaves": Map {
     "BuiltinType" => Object {
       "bases": Array [],
@@ -646,6 +816,41 @@ Object {
       },
       "tag": "nodetype",
     },
+    "Field" => Object {
+      "bases": Array [],
+      "fields": Map {
+        "type" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "nodetype",
+            "types": Array [
+              "FieldType",
+            ],
+          },
+        },
+        "struct" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "enumtype",
+            "tags": Array [
+              "scalar",
+              "optional",
+              "map",
+              "array",
+              "set",
+            ],
+          },
+        },
+      },
+      "kind": "astleaftype",
+      "name": "Field",
+      "rootUnion": Object {
+        "kind": "astuniontype",
+        "name": "ASTTree",
+        "subtypes": Array [],
+      },
+      "tag": "field",
+    },
     "ASTUnionType" => Object {
       "bases": Array [],
       "fields": Map {
@@ -676,6 +881,46 @@ Object {
         "subtypes": Array [],
       },
       "tag": "astuniontype",
+    },
+    "ASTBaseType" => Object {
+      "bases": Array [],
+      "fields": Map {
+        "name" => Object {
+          "struct": "scalar",
+          "type": Object {
+            "kind": "builtintype",
+            "types": Set {
+              "string",
+            },
+          },
+        },
+        "bases" => Object {
+          "struct": "array",
+          "type": Object {
+            "kind": "builtintype",
+            "types": Set {
+              "string",
+            },
+          },
+        },
+        "fields" => Object {
+          "struct": "map",
+          "type": Object {
+            "kind": "nodetype",
+            "types": Array [
+              "Field",
+            ],
+          },
+        },
+      },
+      "kind": "astleaftype",
+      "name": "ASTBaseType",
+      "rootUnion": Object {
+        "kind": "astuniontype",
+        "name": "ASTTree",
+        "subtypes": Array [],
+      },
+      "tag": "astbasetype",
     },
     "ASTLeafType" => Object {
       "bases": Array [],
@@ -742,9 +987,10 @@ Object {
     "EnumType",
     "NodeType",
     "ASTTree",
-    "ASTUnionType",
-    "ASTLeafType",
     "Field",
+    "ASTUnionType",
+    "ASTBaseType",
+    "ASTLeafType",
   },
   "options": Object {
     "constructor": "inline",
@@ -766,7 +1012,9 @@ Object {
       "kind": "astuniontype",
       "name": "ASTTree",
       "subtypes": Array [
+        "Field",
         "ASTUnionType",
+        "ASTBaseType",
         "ASTLeafType",
       ],
     },
@@ -881,6 +1129,43 @@ export function nodeType(types: string[]): NodeType {
 
 /**
  * This code implements the types and functions associated with
+ * the leaf type Field.
+ **/
+export interface Field {
+  kind: \\"field\\";
+  type: FieldType;
+  struct: \\"scalar\\" | \\"optional\\" | \\"map\\" | \\"array\\" | \\"set\\";
+}
+export class Field {
+  /**
+   * A predicate function that take an instance of type ASTTree and determines if it is an instance of Field
+   **/
+  static is = (x: ASTTree): x is Field => {
+    return x.kind === \\"field\\";
+  };
+  /**
+   * Given an instance of Field, determine all children that are instances of ASTTree
+   **/
+  static children = (x: Field) => {
+    return [x.type] as const;
+  };
+  /**
+   * Although generally not necessary, this tag can be used to identify instances of Field
+   **/
+  static tag = \\"field\\";
+}
+/**
+ * This function can be invoked to create a new instance of Field
+ **/
+export function field(
+  type: FieldType,
+  struct: \\"scalar\\" | \\"optional\\" | \\"map\\" | \\"array\\" | \\"set\\"
+): Field {
+  return { kind: \\"field\\", type, struct };
+}
+
+/**
+ * This code implements the types and functions associated with
  * the leaf type ASTUnionType.
  **/
 export interface ASTUnionType {
@@ -911,6 +1196,45 @@ export class ASTUnionType {
  **/
 export function astUnionType(name: string, subtypes: string[]): ASTUnionType {
   return { kind: \\"astuniontype\\", name, subtypes };
+}
+
+/**
+ * This code implements the types and functions associated with
+ * the leaf type ASTBaseType.
+ **/
+export interface ASTBaseType {
+  kind: \\"astbasetype\\";
+  name: string;
+  bases: string[];
+  fields: Map<string, Field>;
+}
+export class ASTBaseType {
+  /**
+   * A predicate function that take an instance of type ASTTree and determines if it is an instance of ASTBaseType
+   **/
+  static is = (x: ASTTree): x is ASTBaseType => {
+    return x.kind === \\"astbasetype\\";
+  };
+  /**
+   * Given an instance of ASTBaseType, determine all children that are instances of ASTTree
+   **/
+  static children = (x: ASTBaseType) => {
+    return [...Object.entries(x.fields).map((x) => x[1])] as const;
+  };
+  /**
+   * Although generally not necessary, this tag can be used to identify instances of ASTBaseType
+   **/
+  static tag = \\"astbasetype\\";
+}
+/**
+ * This function can be invoked to create a new instance of ASTBaseType
+ **/
+export function astBaseType(
+  name: string,
+  bases: string[],
+  fields: Map<string, Field>
+): ASTBaseType {
+  return { kind: \\"astbasetype\\", name, bases, fields };
 }
 
 /**
@@ -1060,7 +1384,7 @@ export namespace FieldType {
  * This code implements the types and functions associated with
  * the union type ASTTree.
  **/
-export type ASTTree = ASTUnionType | ASTLeafType;
+export type ASTTree = Field | ASTUnionType | ASTBaseType | ASTLeafType;
 export namespace ASTTree {
   /**
    * Given an instance of type ASTTree, map that value depending on the
@@ -1069,13 +1393,19 @@ export namespace ASTTree {
   export const map = <R>(
     n: ASTTree,
     f: {
+      Field: (n: Field) => R;
       ASTUnionType: (n: ASTUnionType) => R;
+      ASTBaseType: (n: ASTBaseType) => R;
       ASTLeafType: (n: ASTLeafType) => R;
     }
   ) => {
     switch (n.kind) {
+      case \\"field\\":
+        return f.Field(n);
       case \\"astuniontype\\":
         return f.ASTUnionType(n);
+      case \\"astbasetype\\":
+        return f.ASTBaseType(n);
       case \\"astleaftype\\":
         return f.ASTLeafType(n);
       default: {
@@ -1093,12 +1423,16 @@ export namespace ASTTree {
   export const partialMap = <R>(
     n: ASTTree,
     f: Partial<{
+      Field: (n: Field) => R;
       ASTUnionType: (n: ASTUnionType) => R;
+      ASTBaseType: (n: ASTBaseType) => R;
       ASTLeafType: (n: ASTLeafType) => R;
     }>,
     orElse: R
   ) => {
+    if (n.kind === \\"field\\" && f.Field) return f.Field(n);
     if (n.kind === \\"astuniontype\\" && f.ASTUnionType) return f.ASTUnionType(n);
+    if (n.kind === \\"astbasetype\\" && f.ASTBaseType) return f.ASTBaseType(n);
     if (n.kind === \\"astleaftype\\" && f.ASTLeafType) return f.ASTLeafType(n);
     return orElse;
   };
@@ -1109,13 +1443,19 @@ export namespace ASTTree {
   export const match = (
     n: ASTTree,
     f: {
+      Field: (n: Field) => void;
       ASTUnionType: (n: ASTUnionType) => void;
+      ASTBaseType: (n: ASTBaseType) => void;
       ASTLeafType: (n: ASTLeafType) => void;
     }
   ): void => {
     switch (n.kind) {
+      case \\"field\\":
+        return f.Field(n);
       case \\"astuniontype\\":
         return f.ASTUnionType(n);
+      case \\"astbasetype\\":
+        return f.ASTBaseType(n);
       case \\"astleaftype\\":
         return f.ASTLeafType(n);
       default: {
@@ -1133,12 +1473,16 @@ export namespace ASTTree {
   export const partialMatch = (
     n: ASTTree,
     f: Partial<{
+      Field: (n: Field) => void;
       ASTUnionType: (n: ASTUnionType) => void;
+      ASTBaseType: (n: ASTBaseType) => void;
       ASTLeafType: (n: ASTLeafType) => void;
     }>,
     orElse?: (n: ASTTree) => void
   ) => {
+    if (n.kind === \\"field\\" && f.Field) return f.Field(n);
     if (n.kind === \\"astuniontype\\" && f.ASTUnionType) return f.ASTUnionType(n);
+    if (n.kind === \\"astbasetype\\" && f.ASTBaseType) return f.ASTBaseType(n);
     if (n.kind === \\"astleaftype\\" && f.ASTLeafType) return f.ASTLeafType(n);
     if (orElse) return orElse(n);
   };
