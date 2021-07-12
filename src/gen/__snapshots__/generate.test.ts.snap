@@ -336,7 +336,7 @@ export class ASTUnionType {
 /**
  * This function can be invoked to create a new instance of ASTUnionType
  **/
-export function aSTUnionType(name: string, subtypes: string[]): ASTUnionType {
+export function astUnionType(name: string, subtypes: string[]): ASTUnionType {
   return { kind: \\"astuniontype\\", name, subtypes };
 }
 
@@ -373,7 +373,7 @@ export class ASTLeafType {
 /**
  * This function can be invoked to create a new instance of ASTLeafType
  **/
-export function aSTLeafType(
+export function astLeafType(
   tag: string,
   rootUnion: ASTUnionType,
   name: string,
@@ -909,7 +909,7 @@ export class ASTUnionType {
 /**
  * This function can be invoked to create a new instance of ASTUnionType
  **/
-export function aSTUnionType(name: string, subtypes: string[]): ASTUnionType {
+export function astUnionType(name: string, subtypes: string[]): ASTUnionType {
   return { kind: \\"astuniontype\\", name, subtypes };
 }
 
@@ -946,7 +946,7 @@ export class ASTLeafType {
 /**
  * This function can be invoked to create a new instance of ASTLeafType
  **/
-export function aSTLeafType(
+export function astLeafType(
   tag: string,
   rootUnion: ASTUnionType,
   name: string,

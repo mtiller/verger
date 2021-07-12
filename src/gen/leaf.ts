@@ -88,8 +88,12 @@ function constructorArgs(leaf: ASTLeafType, spec: ASTSpec): string {
     .map(([n, field]) => `${n}: ${fieldType(field, true, spec)}`)
     .join(", ");
 }
+
 function constructorName(s: string) {
-  return s.charAt(0).toLowerCase() + s.slice(1);
+  let i = 0;
+  for (; s[i] === s[i].toUpperCase(); i++) {}
+  const n = Math.max(1, i - 1);
+  return s.slice(0, n).toLowerCase() + s.slice(n);
 }
 
 /** Generate an expression for all children resulting from a given field. */
