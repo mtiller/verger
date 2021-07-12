@@ -1,3 +1,3 @@
+- Top level "leaves" can replace bases
 - Union children function (just for that union tree, ignore others)
-- Use generated AST
 - Custom Visitor Interface?
