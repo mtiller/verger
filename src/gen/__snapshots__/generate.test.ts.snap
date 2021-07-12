@@ -3,282 +3,164 @@
 exports[`Test sample AST specifications should generate proper output for dogfood.yaml using json 1`] = `
 Object {
   "bases": Map {},
+  "externs": Set {
+    "Field",
+  },
   "leaves": Map {
     "BuiltinType" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "types" => Object {
           "struct": "set",
           "type": Object {
-            "kind": "enum",
-            "tags": Array [
-              "str",
-              "num",
-              "bool",
-            ],
+            "kind": "builtintype",
+            "types": Set {
+              "string",
+            },
           },
         },
       },
+      "kind": "astleaftype",
       "name": "BuiltinType",
-      "parentUnion": Object {
-        "name": "FieldType",
-        "subtypes": Array [
-          "BuiltinType",
-          "EnumType",
-          "NodeType",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "FieldType",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "builtintype",
-      "type": "leaf",
     },
     "EnumType" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "tags" => Object {
           "struct": "array",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
       },
+      "kind": "astleaftype",
       "name": "EnumType",
-      "parentUnion": Object {
-        "name": "FieldType",
-        "subtypes": Array [
-          "BuiltinType",
-          "EnumType",
-          "NodeType",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "FieldType",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "enumtype",
-      "type": "leaf",
     },
     "NodeType" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "types" => Object {
           "struct": "array",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
       },
+      "kind": "astleaftype",
       "name": "NodeType",
-      "parentUnion": Object {
-        "name": "FieldType",
-        "subtypes": Array [
-          "BuiltinType",
-          "EnumType",
-          "NodeType",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "FieldType",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "nodetype",
-      "type": "leaf",
-    },
-    "Field" => Object {
-      "extends": Array [],
-      "fields": Map {
-        "type" => Object {
-          "struct": "scalar",
-          "type": Object {
-            "kind": "node",
-            "types": Array [
-              "FieldType",
-            ],
-          },
-        },
-        "struct" => Object {
-          "struct": "scalar",
-          "type": Object {
-            "kind": "enum",
-            "tags": Array [
-              "scalar",
-              "optional",
-              "map",
-              "set",
-              "array",
-            ],
-          },
-        },
-      },
-      "name": "Field",
-      "parentUnion": Object {
-        "name": "Field",
-        "subtypes": Array [],
-        "type": "union",
-      },
-      "rootUnion": Object {
-        "name": "Field",
-        "subtypes": Array [],
-        "type": "union",
-      },
-      "tag": "field",
-      "type": "leaf",
-    },
-    "NodeField" => Object {
-      "extends": Array [],
-      "fields": Map {
-        "type" => Object {
-          "struct": "scalar",
-          "type": Object {
-            "kind": "node",
-            "types": Array [
-              "NodeType",
-            ],
-          },
-        },
-        "struct" => Object {
-          "struct": "scalar",
-          "type": Object {
-            "kind": "enum",
-            "tags": Array [
-              "FieldStruct",
-            ],
-          },
-        },
-      },
-      "name": "NodeField",
-      "parentUnion": Object {
-        "name": "NodeField",
-        "subtypes": Array [],
-        "type": "union",
-      },
-      "rootUnion": Object {
-        "name": "NodeField",
-        "subtypes": Array [],
-        "type": "union",
-      },
-      "tag": "nodefield",
-      "type": "leaf",
     },
     "ASTUnionType" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "name" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
         "subtypes" => Object {
           "struct": "array",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
       },
+      "kind": "astleaftype",
       "name": "ASTUnionType",
-      "parentUnion": Object {
-        "name": "ASTTree",
-        "subtypes": Array [
-          "ASTUnionType",
-          "ASTLeafType",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "ASTTree",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "astuniontype",
-      "type": "leaf",
     },
     "ASTLeafType" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "tag" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
         "rootUnion" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
+            "kind": "nodetype",
             "types": Array [
-              "string",
+              "ASTUnionType",
             ],
           },
         },
         "name" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
         "bases" => Object {
           "struct": "array",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
         "fields" => Object {
           "struct": "map",
           "type": Object {
-            "kind": "node",
+            "kind": "nodetype",
             "types": Array [
               "Field",
             ],
           },
         },
       },
+      "kind": "astleaftype",
       "name": "ASTLeafType",
-      "parentUnion": Object {
-        "name": "ASTTree",
-        "subtypes": Array [
-          "ASTUnionType",
-          "ASTLeafType",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "ASTTree",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "astleaftype",
-      "type": "leaf",
     },
   },
   "names": Set {
@@ -286,35 +168,34 @@ Object {
     "BuiltinType",
     "EnumType",
     "NodeType",
-    "Field",
-    "NodeField",
     "ASTTree",
     "ASTUnionType",
     "ASTLeafType",
+    "Field",
   },
   "options": Object {
     "constructor": "inline",
-    "maps": "json",
+    "maps": "map",
     "optional": "json",
     "tagName": "kind",
   },
   "unions": Map {
     "FieldType" => Object {
+      "kind": "astuniontype",
       "name": "FieldType",
       "subtypes": Array [
         "BuiltinType",
         "EnumType",
         "NodeType",
       ],
-      "type": "union",
     },
     "ASTTree" => Object {
+      "kind": "astuniontype",
       "name": "ASTTree",
       "subtypes": Array [
         "ASTUnionType",
         "ASTLeafType",
       ],
-      "type": "union",
     },
   },
 }
@@ -332,7 +213,7 @@ exports[`Test sample AST specifications should generate proper output for dogfoo
  **/
 export interface BuiltinType {
   kind: \\"builtintype\\";
-  types: Set<\\"str\\" | \\"num\\" | \\"bool\\">;
+  types: Set<string>;
 }
 export class BuiltinType {
   /**
@@ -355,7 +236,7 @@ export class BuiltinType {
 /**
  * This function can be invoked to create a new instance of BuiltinType
  **/
-export function builtinType(types: Set<\\"str\\" | \\"num\\" | \\"bool\\">): BuiltinType {
+export function builtinType(types: Set<string>): BuiltinType {
   return { kind: \\"builtintype\\", types };
 }
 
@@ -427,77 +308,6 @@ export function nodeType(types: string[]): NodeType {
 
 /**
  * This code implements the types and functions associated with
- * the leaf type Field.
- **/
-export interface Field {
-  kind: \\"field\\";
-  type: FieldType;
-  struct: \\"scalar\\" | \\"optional\\" | \\"map\\" | \\"set\\" | \\"array\\";
-}
-export class Field {
-  /**
-   * A predicate function that take an instance of type Field and determines if it is an instance of Field
-   **/
-  static is = (x: Field): x is Field => {
-    return x.kind === \\"field\\";
-  };
-  /**
-   * Given an instance of Field, determine all children that are instances of Field
-   **/
-  static children = (x: Field) => {
-    return [x.type] as const;
-  };
-  /**
-   * Although generally not necessary, this tag can be used to identify instances of Field
-   **/
-  static tag = \\"field\\";
-}
-/**
- * This function can be invoked to create a new instance of Field
- **/
-export function field(
-  type: FieldType,
-  struct: \\"scalar\\" | \\"optional\\" | \\"map\\" | \\"set\\" | \\"array\\"
-): Field {
-  return { kind: \\"field\\", type, struct };
-}
-
-/**
- * This code implements the types and functions associated with
- * the leaf type NodeField.
- **/
-export interface NodeField {
-  kind: \\"nodefield\\";
-  type: NodeType;
-  struct: \\"FieldStruct\\";
-}
-export class NodeField {
-  /**
-   * A predicate function that take an instance of type NodeField and determines if it is an instance of NodeField
-   **/
-  static is = (x: NodeField): x is NodeField => {
-    return x.kind === \\"nodefield\\";
-  };
-  /**
-   * Given an instance of NodeField, determine all children that are instances of NodeField
-   **/
-  static children = (x: NodeField) => {
-    return [x.type] as const;
-  };
-  /**
-   * Although generally not necessary, this tag can be used to identify instances of NodeField
-   **/
-  static tag = \\"nodefield\\";
-}
-/**
- * This function can be invoked to create a new instance of NodeField
- **/
-export function nodeField(type: NodeType, struct: \\"FieldStruct\\"): NodeField {
-  return { kind: \\"nodefield\\", type, struct };
-}
-
-/**
- * This code implements the types and functions associated with
  * the leaf type ASTUnionType.
  **/
 export interface ASTUnionType {
@@ -537,10 +347,10 @@ export function aSTUnionType(name: string, subtypes: string[]): ASTUnionType {
 export interface ASTLeafType {
   kind: \\"astleaftype\\";
   tag: string;
-  rootUnion: string;
+  rootUnion: ASTUnionType;
   name: string;
   bases: string[];
-  fields: Record<string, Field>;
+  fields: Map<string, Field>;
 }
 export class ASTLeafType {
   /**
@@ -553,7 +363,7 @@ export class ASTLeafType {
    * Given an instance of ASTLeafType, determine all children that are instances of ASTTree
    **/
   static children = (x: ASTLeafType) => {
-    return [...Object.entries(x.fields).map((x) => x[1])] as const;
+    return [x.rootUnion, ...Object.entries(x.fields).map((x) => x[1])] as const;
   };
   /**
    * Although generally not necessary, this tag can be used to identify instances of ASTLeafType
@@ -565,10 +375,10 @@ export class ASTLeafType {
  **/
 export function aSTLeafType(
   tag: string,
-  rootUnion: string,
+  rootUnion: ASTUnionType,
   name: string,
   bases: string[],
-  fields: Record<string, Field>
+  fields: Map<string, Field>
 ): ASTLeafType {
   return { kind: \\"astleaftype\\", tag, rootUnion, name, bases, fields };
 }
@@ -578,7 +388,7 @@ export function aSTLeafType(
  * the union type FieldType.
  **/
 export type FieldType = BuiltinType | EnumType | NodeType;
-namespace FieldType {
+export namespace FieldType {
   /**
    * Given an instance of type FieldType, map that value depending on the
    * specific underlying node type
@@ -678,7 +488,7 @@ namespace FieldType {
  * the union type ASTTree.
  **/
 export type ASTTree = ASTUnionType | ASTLeafType;
-namespace ASTTree {
+export namespace ASTTree {
   /**
    * Given an instance of type ASTTree, map that value depending on the
    * specific underlying node type
@@ -766,282 +576,164 @@ namespace ASTTree {
 exports[`Test sample AST specifications should generate proper output for dogfood.yaml using purify 1`] = `
 Object {
   "bases": Map {},
+  "externs": Set {
+    "Field",
+  },
   "leaves": Map {
     "BuiltinType" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "types" => Object {
           "struct": "set",
           "type": Object {
-            "kind": "enum",
-            "tags": Array [
-              "str",
-              "num",
-              "bool",
-            ],
+            "kind": "builtintype",
+            "types": Set {
+              "string",
+            },
           },
         },
       },
+      "kind": "astleaftype",
       "name": "BuiltinType",
-      "parentUnion": Object {
-        "name": "FieldType",
-        "subtypes": Array [
-          "BuiltinType",
-          "EnumType",
-          "NodeType",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "FieldType",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "builtintype",
-      "type": "leaf",
     },
     "EnumType" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "tags" => Object {
           "struct": "array",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
       },
+      "kind": "astleaftype",
       "name": "EnumType",
-      "parentUnion": Object {
-        "name": "FieldType",
-        "subtypes": Array [
-          "BuiltinType",
-          "EnumType",
-          "NodeType",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "FieldType",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "enumtype",
-      "type": "leaf",
     },
     "NodeType" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "types" => Object {
           "struct": "array",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
       },
+      "kind": "astleaftype",
       "name": "NodeType",
-      "parentUnion": Object {
-        "name": "FieldType",
-        "subtypes": Array [
-          "BuiltinType",
-          "EnumType",
-          "NodeType",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "FieldType",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "nodetype",
-      "type": "leaf",
-    },
-    "Field" => Object {
-      "extends": Array [],
-      "fields": Map {
-        "type" => Object {
-          "struct": "scalar",
-          "type": Object {
-            "kind": "node",
-            "types": Array [
-              "FieldType",
-            ],
-          },
-        },
-        "struct" => Object {
-          "struct": "scalar",
-          "type": Object {
-            "kind": "enum",
-            "tags": Array [
-              "scalar",
-              "optional",
-              "map",
-              "set",
-              "array",
-            ],
-          },
-        },
-      },
-      "name": "Field",
-      "parentUnion": Object {
-        "name": "Field",
-        "subtypes": Array [],
-        "type": "union",
-      },
-      "rootUnion": Object {
-        "name": "Field",
-        "subtypes": Array [],
-        "type": "union",
-      },
-      "tag": "field",
-      "type": "leaf",
-    },
-    "NodeField" => Object {
-      "extends": Array [],
-      "fields": Map {
-        "type" => Object {
-          "struct": "scalar",
-          "type": Object {
-            "kind": "node",
-            "types": Array [
-              "NodeType",
-            ],
-          },
-        },
-        "struct" => Object {
-          "struct": "scalar",
-          "type": Object {
-            "kind": "enum",
-            "tags": Array [
-              "FieldStruct",
-            ],
-          },
-        },
-      },
-      "name": "NodeField",
-      "parentUnion": Object {
-        "name": "NodeField",
-        "subtypes": Array [],
-        "type": "union",
-      },
-      "rootUnion": Object {
-        "name": "NodeField",
-        "subtypes": Array [],
-        "type": "union",
-      },
-      "tag": "nodefield",
-      "type": "leaf",
     },
     "ASTUnionType" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "name" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
         "subtypes" => Object {
           "struct": "array",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
       },
+      "kind": "astleaftype",
       "name": "ASTUnionType",
-      "parentUnion": Object {
-        "name": "ASTTree",
-        "subtypes": Array [
-          "ASTUnionType",
-          "ASTLeafType",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "ASTTree",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "astuniontype",
-      "type": "leaf",
     },
     "ASTLeafType" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "tag" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
         "rootUnion" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
+            "kind": "nodetype",
             "types": Array [
-              "string",
+              "ASTUnionType",
             ],
           },
         },
         "name" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
         "bases" => Object {
           "struct": "array",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
         "fields" => Object {
           "struct": "map",
           "type": Object {
-            "kind": "node",
+            "kind": "nodetype",
             "types": Array [
               "Field",
             ],
           },
         },
       },
+      "kind": "astleaftype",
       "name": "ASTLeafType",
-      "parentUnion": Object {
-        "name": "ASTTree",
-        "subtypes": Array [
-          "ASTUnionType",
-          "ASTLeafType",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "ASTTree",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "astleaftype",
-      "type": "leaf",
     },
   },
   "names": Set {
@@ -1049,35 +741,34 @@ Object {
     "BuiltinType",
     "EnumType",
     "NodeType",
-    "Field",
-    "NodeField",
     "ASTTree",
     "ASTUnionType",
     "ASTLeafType",
+    "Field",
   },
   "options": Object {
     "constructor": "inline",
-    "maps": "json",
+    "maps": "map",
     "optional": "purify",
     "tagName": "kind",
   },
   "unions": Map {
     "FieldType" => Object {
+      "kind": "astuniontype",
       "name": "FieldType",
       "subtypes": Array [
         "BuiltinType",
         "EnumType",
         "NodeType",
       ],
-      "type": "union",
     },
     "ASTTree" => Object {
+      "kind": "astuniontype",
       "name": "ASTTree",
       "subtypes": Array [
         "ASTUnionType",
         "ASTLeafType",
       ],
-      "type": "union",
     },
   },
 }
@@ -1095,7 +786,7 @@ exports[`Test sample AST specifications should generate proper output for dogfoo
  **/
 export interface BuiltinType {
   kind: \\"builtintype\\";
-  types: Set<\\"str\\" | \\"num\\" | \\"bool\\">;
+  types: Set<string>;
 }
 export class BuiltinType {
   /**
@@ -1118,7 +809,7 @@ export class BuiltinType {
 /**
  * This function can be invoked to create a new instance of BuiltinType
  **/
-export function builtinType(types: Set<\\"str\\" | \\"num\\" | \\"bool\\">): BuiltinType {
+export function builtinType(types: Set<string>): BuiltinType {
   return { kind: \\"builtintype\\", types };
 }
 
@@ -1190,77 +881,6 @@ export function nodeType(types: string[]): NodeType {
 
 /**
  * This code implements the types and functions associated with
- * the leaf type Field.
- **/
-export interface Field {
-  kind: \\"field\\";
-  type: FieldType;
-  struct: \\"scalar\\" | \\"optional\\" | \\"map\\" | \\"set\\" | \\"array\\";
-}
-export class Field {
-  /**
-   * A predicate function that take an instance of type Field and determines if it is an instance of Field
-   **/
-  static is = (x: Field): x is Field => {
-    return x.kind === \\"field\\";
-  };
-  /**
-   * Given an instance of Field, determine all children that are instances of Field
-   **/
-  static children = (x: Field) => {
-    return [x.type] as const;
-  };
-  /**
-   * Although generally not necessary, this tag can be used to identify instances of Field
-   **/
-  static tag = \\"field\\";
-}
-/**
- * This function can be invoked to create a new instance of Field
- **/
-export function field(
-  type: FieldType,
-  struct: \\"scalar\\" | \\"optional\\" | \\"map\\" | \\"set\\" | \\"array\\"
-): Field {
-  return { kind: \\"field\\", type, struct };
-}
-
-/**
- * This code implements the types and functions associated with
- * the leaf type NodeField.
- **/
-export interface NodeField {
-  kind: \\"nodefield\\";
-  type: NodeType;
-  struct: \\"FieldStruct\\";
-}
-export class NodeField {
-  /**
-   * A predicate function that take an instance of type NodeField and determines if it is an instance of NodeField
-   **/
-  static is = (x: NodeField): x is NodeField => {
-    return x.kind === \\"nodefield\\";
-  };
-  /**
-   * Given an instance of NodeField, determine all children that are instances of NodeField
-   **/
-  static children = (x: NodeField) => {
-    return [x.type] as const;
-  };
-  /**
-   * Although generally not necessary, this tag can be used to identify instances of NodeField
-   **/
-  static tag = \\"nodefield\\";
-}
-/**
- * This function can be invoked to create a new instance of NodeField
- **/
-export function nodeField(type: NodeType, struct: \\"FieldStruct\\"): NodeField {
-  return { kind: \\"nodefield\\", type, struct };
-}
-
-/**
- * This code implements the types and functions associated with
  * the leaf type ASTUnionType.
  **/
 export interface ASTUnionType {
@@ -1300,10 +920,10 @@ export function aSTUnionType(name: string, subtypes: string[]): ASTUnionType {
 export interface ASTLeafType {
   kind: \\"astleaftype\\";
   tag: string;
-  rootUnion: string;
+  rootUnion: ASTUnionType;
   name: string;
   bases: string[];
-  fields: Record<string, Field>;
+  fields: Map<string, Field>;
 }
 export class ASTLeafType {
   /**
@@ -1316,7 +936,7 @@ export class ASTLeafType {
    * Given an instance of ASTLeafType, determine all children that are instances of ASTTree
    **/
   static children = (x: ASTLeafType) => {
-    return [...Object.entries(x.fields).map((x) => x[1])] as const;
+    return [x.rootUnion, ...Object.entries(x.fields).map((x) => x[1])] as const;
   };
   /**
    * Although generally not necessary, this tag can be used to identify instances of ASTLeafType
@@ -1328,10 +948,10 @@ export class ASTLeafType {
  **/
 export function aSTLeafType(
   tag: string,
-  rootUnion: string,
+  rootUnion: ASTUnionType,
   name: string,
   bases: string[],
-  fields: Record<string, Field>
+  fields: Map<string, Field>
 ): ASTLeafType {
   return { kind: \\"astleaftype\\", tag, rootUnion, name, bases, fields };
 }
@@ -1341,7 +961,7 @@ export function aSTLeafType(
  * the union type FieldType.
  **/
 export type FieldType = BuiltinType | EnumType | NodeType;
-namespace FieldType {
+export namespace FieldType {
   /**
    * Given an instance of type FieldType, map that value depending on the
    * specific underlying node type
@@ -1441,7 +1061,7 @@ namespace FieldType {
  * the union type ASTTree.
  **/
 export type ASTTree = ASTUnionType | ASTLeafType;
-namespace ASTTree {
+export namespace ASTTree {
   /**
    * Given an instance of type ASTTree, map that value depending on the
    * specific underlying node type
@@ -1530,12 +1150,12 @@ exports[`Test sample AST specifications should generate proper output for expr.y
 Object {
   "bases": Map {
     "BinaryOp" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "left" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "node",
+            "kind": "nodetype",
             "types": Array [
               "Expr",
             ],
@@ -1544,7 +1164,7 @@ Object {
         "right" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "node",
+            "kind": "nodetype",
             "types": Array [
               "Expr",
             ],
@@ -1554,48 +1174,39 @@ Object {
       "name": "BinaryOp",
     },
   },
+  "externs": Set {},
   "leaves": Map {
     "Literal" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "value" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "number",
-            ],
+            },
           },
         },
       },
+      "kind": "astleaftype",
       "name": "Literal",
-      "parentUnion": Object {
-        "name": "Expr",
-        "subtypes": Array [
-          "Literal",
-          "ArithmeticOp",
-          "UnaryOp",
-          "RelOp",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "Expr",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "literal",
-      "type": "leaf",
     },
     "ArithmeticOp" => Object {
-      "extends": Array [
+      "bases": Array [
         "BinaryOp",
       ],
       "fields": Map {
         "op" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "enum",
+            "kind": "enumtype",
             "tags": Array [
               "+",
               "-",
@@ -1605,32 +1216,22 @@ Object {
           },
         },
       },
+      "kind": "astleaftype",
       "name": "ArithmeticOp",
-      "parentUnion": Object {
-        "name": "Expr",
-        "subtypes": Array [
-          "Literal",
-          "ArithmeticOp",
-          "UnaryOp",
-          "RelOp",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "Expr",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "arithmeticop",
-      "type": "leaf",
     },
     "UnaryOp" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "expr" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "node",
+            "kind": "nodetype",
             "types": Array [
               "Expr",
             ],
@@ -1639,7 +1240,7 @@ Object {
         "op" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "enum",
+            "kind": "enumtype",
             "tags": Array [
               "()",
               "+",
@@ -1648,34 +1249,24 @@ Object {
           },
         },
       },
+      "kind": "astleaftype",
       "name": "UnaryOp",
-      "parentUnion": Object {
-        "name": "Expr",
-        "subtypes": Array [
-          "Literal",
-          "ArithmeticOp",
-          "UnaryOp",
-          "RelOp",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "Expr",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "unaryop",
-      "type": "leaf",
     },
     "RelOp" => Object {
-      "extends": Array [
+      "bases": Array [
         "BinaryOp",
       ],
       "fields": Map {
         "op" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "enum",
+            "kind": "enumtype",
             "tags": Array [
               "+",
               "-",
@@ -1685,24 +1276,14 @@ Object {
           },
         },
       },
+      "kind": "astleaftype",
       "name": "RelOp",
-      "parentUnion": Object {
-        "name": "Expr",
-        "subtypes": Array [
-          "Literal",
-          "ArithmeticOp",
-          "UnaryOp",
-          "RelOp",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "Expr",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "relop",
-      "type": "leaf",
     },
   },
   "names": Set {
@@ -1721,6 +1302,7 @@ Object {
   },
   "unions": Map {
     "Expr" => Object {
+      "kind": "astuniontype",
       "name": "Expr",
       "subtypes": Array [
         "Literal",
@@ -1728,7 +1310,6 @@ Object {
         "UnaryOp",
         "RelOp",
       ],
-      "type": "union",
     },
   },
 }
@@ -1895,7 +1476,7 @@ export function relOp(
  * the union type Expr.
  **/
 export type Expr = Literal | ArithmeticOp | UnaryOp | RelOp;
-namespace Expr {
+export namespace Expr {
   /**
    * Given an instance of type Expr, map that value depending on the
    * specific underlying node type
@@ -2004,12 +1585,12 @@ exports[`Test sample AST specifications should generate proper output for expr.y
 Object {
   "bases": Map {
     "BinaryOp" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "left" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "node",
+            "kind": "nodetype",
             "types": Array [
               "Expr",
             ],
@@ -2018,7 +1599,7 @@ Object {
         "right" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "node",
+            "kind": "nodetype",
             "types": Array [
               "Expr",
             ],
@@ -2028,48 +1609,39 @@ Object {
       "name": "BinaryOp",
     },
   },
+  "externs": Set {},
   "leaves": Map {
     "Literal" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "value" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "number",
-            ],
+            },
           },
         },
       },
+      "kind": "astleaftype",
       "name": "Literal",
-      "parentUnion": Object {
-        "name": "Expr",
-        "subtypes": Array [
-          "Literal",
-          "ArithmeticOp",
-          "UnaryOp",
-          "RelOp",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "Expr",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "literal",
-      "type": "leaf",
     },
     "ArithmeticOp" => Object {
-      "extends": Array [
+      "bases": Array [
         "BinaryOp",
       ],
       "fields": Map {
         "op" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "enum",
+            "kind": "enumtype",
             "tags": Array [
               "+",
               "-",
@@ -2079,32 +1651,22 @@ Object {
           },
         },
       },
+      "kind": "astleaftype",
       "name": "ArithmeticOp",
-      "parentUnion": Object {
-        "name": "Expr",
-        "subtypes": Array [
-          "Literal",
-          "ArithmeticOp",
-          "UnaryOp",
-          "RelOp",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "Expr",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "arithmeticop",
-      "type": "leaf",
     },
     "UnaryOp" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "expr" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "node",
+            "kind": "nodetype",
             "types": Array [
               "Expr",
             ],
@@ -2113,7 +1675,7 @@ Object {
         "op" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "enum",
+            "kind": "enumtype",
             "tags": Array [
               "()",
               "+",
@@ -2122,34 +1684,24 @@ Object {
           },
         },
       },
+      "kind": "astleaftype",
       "name": "UnaryOp",
-      "parentUnion": Object {
-        "name": "Expr",
-        "subtypes": Array [
-          "Literal",
-          "ArithmeticOp",
-          "UnaryOp",
-          "RelOp",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "Expr",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "unaryop",
-      "type": "leaf",
     },
     "RelOp" => Object {
-      "extends": Array [
+      "bases": Array [
         "BinaryOp",
       ],
       "fields": Map {
         "op" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "enum",
+            "kind": "enumtype",
             "tags": Array [
               "+",
               "-",
@@ -2159,24 +1711,14 @@ Object {
           },
         },
       },
+      "kind": "astleaftype",
       "name": "RelOp",
-      "parentUnion": Object {
-        "name": "Expr",
-        "subtypes": Array [
-          "Literal",
-          "ArithmeticOp",
-          "UnaryOp",
-          "RelOp",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "Expr",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "relop",
-      "type": "leaf",
     },
   },
   "names": Set {
@@ -2195,6 +1737,7 @@ Object {
   },
   "unions": Map {
     "Expr" => Object {
+      "kind": "astuniontype",
       "name": "Expr",
       "subtypes": Array [
         "Literal",
@@ -2202,7 +1745,6 @@ Object {
         "UnaryOp",
         "RelOp",
       ],
-      "type": "union",
     },
   },
 }
@@ -2369,7 +1911,7 @@ export function relOp(
  * the union type Expr.
  **/
 export type Expr = Literal | ArithmeticOp | UnaryOp | RelOp;
-namespace Expr {
+export namespace Expr {
   /**
    * Given an instance of type Expr, map that value depending on the
    * specific underlying node type
@@ -2477,23 +2019,24 @@ namespace Expr {
 exports[`Test sample AST specifications should generate proper output for kitchen.yaml using json 1`] = `
 Object {
   "bases": Map {},
+  "externs": Set {},
   "leaves": Map {
     "FunctionDef" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "name" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
         "args" => Object {
           "struct": "array",
           "type": Object {
-            "kind": "node",
+            "kind": "nodetype",
             "types": Array [
               "Argument",
             ],
@@ -2502,227 +2045,167 @@ Object {
         "body" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "node",
+            "kind": "nodetype",
             "types": Array [
               "Body",
             ],
           },
         },
       },
+      "kind": "astleaftype",
       "name": "FunctionDef",
-      "parentUnion": Object {
-        "name": "Node",
-        "subtypes": Array [
-          "FunctionDef",
-          "Declaration",
-          "Argument",
-          "Body",
-          "Statement",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "Node",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "functiondef",
-      "type": "leaf",
     },
     "Declaration" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "name" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
         "type" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
         "init" => Object {
           "struct": "optional",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "number",
-            ],
+            },
           },
         },
       },
+      "kind": "astleaftype",
       "name": "Declaration",
-      "parentUnion": Object {
-        "name": "Node",
-        "subtypes": Array [
-          "FunctionDef",
-          "Declaration",
-          "Argument",
-          "Body",
-          "Statement",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "Node",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "declaration",
-      "type": "leaf",
     },
     "Argument" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "name" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
         "type" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
       },
+      "kind": "astleaftype",
       "name": "Argument",
-      "parentUnion": Object {
-        "name": "Node",
-        "subtypes": Array [
-          "FunctionDef",
-          "Declaration",
-          "Argument",
-          "Body",
-          "Statement",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "Node",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "argument",
-      "type": "leaf",
     },
     "Body" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "statement" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "node",
+            "kind": "nodetype",
             "types": Array [
               "Statement",
             ],
           },
         },
       },
+      "kind": "astleaftype",
       "name": "Body",
-      "parentUnion": Object {
-        "name": "Node",
-        "subtypes": Array [
-          "FunctionDef",
-          "Declaration",
-          "Argument",
-          "Body",
-          "Statement",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "Node",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "body",
-      "type": "leaf",
     },
     "AssignmentStatement" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "name" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
         "init" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "number",
-            ],
+            },
           },
         },
       },
+      "kind": "astleaftype",
       "name": "AssignmentStatement",
-      "parentUnion": Object {
-        "name": "Statement",
-        "subtypes": Array [
-          "AssignmentStatement",
-          "DeclarationStatement",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "Node",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "assignmentstatement",
-      "type": "leaf",
     },
     "DeclarationStatement" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "name" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
       },
+      "kind": "astleaftype",
       "name": "DeclarationStatement",
-      "parentUnion": Object {
-        "name": "Statement",
-        "subtypes": Array [
-          "AssignmentStatement",
-          "DeclarationStatement",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "Node",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "declarationstatement",
-      "type": "leaf",
     },
   },
   "names": Set {
@@ -2743,14 +2226,15 @@ Object {
   },
   "unions": Map {
     "Statement" => Object {
+      "kind": "astuniontype",
       "name": "Statement",
       "subtypes": Array [
         "AssignmentStatement",
         "DeclarationStatement",
       ],
-      "type": "union",
     },
     "Node" => Object {
+      "kind": "astuniontype",
       "name": "Node",
       "subtypes": Array [
         "FunctionDef",
@@ -2759,7 +2243,6 @@ Object {
         "Body",
         "Statement",
       ],
-      "type": "union",
     },
   },
 }
@@ -2991,7 +2474,7 @@ export function declarationStatement(name: string): DeclarationStatement {
  * the union type Statement.
  **/
 export type Statement = AssignmentStatement | DeclarationStatement;
-namespace Statement {
+export namespace Statement {
   /**
    * Given an instance of type Statement, map that value depending on the
    * specific underlying node type
@@ -3085,7 +2568,7 @@ namespace Statement {
  * the union type Node.
  **/
 export type Node = FunctionDef | Declaration | Argument | Body | Statement;
-namespace Node {
+export namespace Node {
   /**
    * Given an instance of type Node, map that value depending on the
    * specific underlying node type
@@ -3217,23 +2700,24 @@ namespace Node {
 exports[`Test sample AST specifications should generate proper output for kitchen.yaml using purify 1`] = `
 Object {
   "bases": Map {},
+  "externs": Set {},
   "leaves": Map {
     "FunctionDef" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "name" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
         "args" => Object {
           "struct": "array",
           "type": Object {
-            "kind": "node",
+            "kind": "nodetype",
             "types": Array [
               "Argument",
             ],
@@ -3242,227 +2726,167 @@ Object {
         "body" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "node",
+            "kind": "nodetype",
             "types": Array [
               "Body",
             ],
           },
         },
       },
+      "kind": "astleaftype",
       "name": "FunctionDef",
-      "parentUnion": Object {
-        "name": "Node",
-        "subtypes": Array [
-          "FunctionDef",
-          "Declaration",
-          "Argument",
-          "Body",
-          "Statement",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "Node",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "functiondef",
-      "type": "leaf",
     },
     "Declaration" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "name" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
         "type" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
         "init" => Object {
           "struct": "optional",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "number",
-            ],
+            },
           },
         },
       },
+      "kind": "astleaftype",
       "name": "Declaration",
-      "parentUnion": Object {
-        "name": "Node",
-        "subtypes": Array [
-          "FunctionDef",
-          "Declaration",
-          "Argument",
-          "Body",
-          "Statement",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "Node",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "declaration",
-      "type": "leaf",
     },
     "Argument" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "name" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
         "type" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
       },
+      "kind": "astleaftype",
       "name": "Argument",
-      "parentUnion": Object {
-        "name": "Node",
-        "subtypes": Array [
-          "FunctionDef",
-          "Declaration",
-          "Argument",
-          "Body",
-          "Statement",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "Node",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "argument",
-      "type": "leaf",
     },
     "Body" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "statement" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "node",
+            "kind": "nodetype",
             "types": Array [
               "Statement",
             ],
           },
         },
       },
+      "kind": "astleaftype",
       "name": "Body",
-      "parentUnion": Object {
-        "name": "Node",
-        "subtypes": Array [
-          "FunctionDef",
-          "Declaration",
-          "Argument",
-          "Body",
-          "Statement",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "Node",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "body",
-      "type": "leaf",
     },
     "AssignmentStatement" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "name" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
         "init" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "number",
-            ],
+            },
           },
         },
       },
+      "kind": "astleaftype",
       "name": "AssignmentStatement",
-      "parentUnion": Object {
-        "name": "Statement",
-        "subtypes": Array [
-          "AssignmentStatement",
-          "DeclarationStatement",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "Node",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "assignmentstatement",
-      "type": "leaf",
     },
     "DeclarationStatement" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "name" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "string",
-            ],
+            },
           },
         },
       },
+      "kind": "astleaftype",
       "name": "DeclarationStatement",
-      "parentUnion": Object {
-        "name": "Statement",
-        "subtypes": Array [
-          "AssignmentStatement",
-          "DeclarationStatement",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "Node",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "declarationstatement",
-      "type": "leaf",
     },
   },
   "names": Set {
@@ -3483,14 +2907,15 @@ Object {
   },
   "unions": Map {
     "Statement" => Object {
+      "kind": "astuniontype",
       "name": "Statement",
       "subtypes": Array [
         "AssignmentStatement",
         "DeclarationStatement",
       ],
-      "type": "union",
     },
     "Node" => Object {
+      "kind": "astuniontype",
       "name": "Node",
       "subtypes": Array [
         "FunctionDef",
@@ -3499,7 +2924,6 @@ Object {
         "Body",
         "Statement",
       ],
-      "type": "union",
     },
   },
 }
@@ -3732,7 +3156,7 @@ export function declarationStatement(name: string): DeclarationStatement {
  * the union type Statement.
  **/
 export type Statement = AssignmentStatement | DeclarationStatement;
-namespace Statement {
+export namespace Statement {
   /**
    * Given an instance of type Statement, map that value depending on the
    * specific underlying node type
@@ -3826,7 +3250,7 @@ namespace Statement {
  * the union type Node.
  **/
 export type Node = FunctionDef | Declaration | Argument | Body | Statement;
-namespace Node {
+export namespace Node {
   /**
    * Given an instance of type Node, map that value depending on the
    * specific underlying node type
@@ -3958,14 +3382,15 @@ namespace Node {
 exports[`Test sample AST specifications should generate proper output for repmin.yaml using json 1`] = `
 Object {
   "bases": Map {},
+  "externs": Set {},
   "leaves": Map {
     "Fork" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "left" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "node",
+            "kind": "nodetype",
             "types": Array [
               "Tree",
             ],
@@ -3974,59 +3399,43 @@ Object {
         "right" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "node",
+            "kind": "nodetype",
             "types": Array [
               "Tree",
             ],
           },
         },
       },
+      "kind": "astleaftype",
       "name": "Fork",
-      "parentUnion": Object {
-        "name": "Tree",
-        "subtypes": Array [
-          "Fork",
-          "Leaf",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "Tree",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "fork",
-      "type": "leaf",
     },
     "Leaf" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "value" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "number",
-            ],
+            },
           },
         },
       },
+      "kind": "astleaftype",
       "name": "Leaf",
-      "parentUnion": Object {
-        "name": "Tree",
-        "subtypes": Array [
-          "Fork",
-          "Leaf",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "Tree",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "leaf",
-      "type": "leaf",
     },
   },
   "names": Set {
@@ -4042,12 +3451,12 @@ Object {
   },
   "unions": Map {
     "Tree" => Object {
+      "kind": "astuniontype",
       "name": "Tree",
       "subtypes": Array [
         "Fork",
         "Leaf",
       ],
-      "type": "union",
     },
   },
 }
@@ -4131,7 +3540,7 @@ export function leaf(value: number): Leaf {
  * the union type Tree.
  **/
 export type Tree = Fork | Leaf;
-namespace Tree {
+export namespace Tree {
   /**
    * Given an instance of type Tree, map that value depending on the
    * specific underlying node type
@@ -4219,14 +3628,15 @@ namespace Tree {
 exports[`Test sample AST specifications should generate proper output for repmin.yaml using purify 1`] = `
 Object {
   "bases": Map {},
+  "externs": Set {},
   "leaves": Map {
     "Fork" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "left" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "node",
+            "kind": "nodetype",
             "types": Array [
               "Tree",
             ],
@@ -4235,59 +3645,43 @@ Object {
         "right" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "node",
+            "kind": "nodetype",
             "types": Array [
               "Tree",
             ],
           },
         },
       },
+      "kind": "astleaftype",
       "name": "Fork",
-      "parentUnion": Object {
-        "name": "Tree",
-        "subtypes": Array [
-          "Fork",
-          "Leaf",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "Tree",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "fork",
-      "type": "leaf",
     },
     "Leaf" => Object {
-      "extends": Array [],
+      "bases": Array [],
       "fields": Map {
         "value" => Object {
           "struct": "scalar",
           "type": Object {
-            "kind": "builtin",
-            "types": Array [
+            "kind": "builtintype",
+            "types": Set {
               "number",
-            ],
+            },
           },
         },
       },
+      "kind": "astleaftype",
       "name": "Leaf",
-      "parentUnion": Object {
-        "name": "Tree",
-        "subtypes": Array [
-          "Fork",
-          "Leaf",
-        ],
-        "type": "union",
-      },
       "rootUnion": Object {
+        "kind": "astuniontype",
         "name": "Tree",
         "subtypes": Array [],
-        "type": "union",
       },
       "tag": "leaf",
-      "type": "leaf",
     },
   },
   "names": Set {
@@ -4303,12 +3697,12 @@ Object {
   },
   "unions": Map {
     "Tree" => Object {
+      "kind": "astuniontype",
       "name": "Tree",
       "subtypes": Array [
         "Fork",
         "Leaf",
       ],
-      "type": "union",
     },
   },
 }
@@ -4392,7 +3786,7 @@ export function leaf(value: number): Leaf {
  * the union type Tree.
  **/
 export type Tree = Fork | Leaf;
-namespace Tree {
+export namespace Tree {
   /**
    * Given an instance of type Tree, map that value depending on the
    * specific underlying node type
