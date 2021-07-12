@@ -3,7 +3,24 @@
  * edit the upstream AST specification and regenerate this file
  **/
 
-import { Field } from "./fields";
+/**
+ * This code implements the types and functions associated with
+ * the base type ASTBaseType.
+ **/
+export interface ASTBaseType {
+  name: string;
+  bases: string[];
+  fields: Map<string, Field>;
+}
+
+/**
+ * This code implements the types and functions associated with
+ * the base type Field.
+ **/
+export interface Field {
+  type: FieldType;
+  struct: "scalar" | "optional" | "map" | "array" | "set";
+}
 
 /**
  * This code implements the types and functions associated with
@@ -367,9 +384,4 @@ export namespace ASTTree {
     if (n.kind === "astleaftype" && f.ASTLeafType) return f.ASTLeafType(n);
     if (orElse) return orElse(n);
   };
-}
-export interface ASTBaseType {
-  name: string;
-  bases: string[];
-  fields: Map<string, Field>;
 }

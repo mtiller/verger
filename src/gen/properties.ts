@@ -4,7 +4,6 @@ import {
   ASTSpec,
   ASTUnionType,
   Field,
-  FieldStruct,
   FieldType,
   isNodeField,
   isNodeFieldEntry,
@@ -75,7 +74,7 @@ export function fieldTypeName(x: FieldType, spec: ASTSpec): string {
  * underlying type stored in the structure).
  */
 export function fieldStruct(
-  struct: FieldStruct,
+  struct: Field["struct"],
   typename: string,
   arg: boolean,
   spec: ASTSpec

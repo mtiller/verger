@@ -1,4 +1,4 @@
-import { parseField, Field, FieldStruct } from "./fields";
+import { parseField } from "./fields";
 import {
   ASTBaseType,
   astLeafType,
@@ -6,6 +6,7 @@ import {
   astUnionType,
   ASTUnionType,
   enumType,
+  Field,
 } from "./nodes";
 import { ASTSpec } from "./specification";
 
@@ -151,7 +152,7 @@ function walkFields(
       /** Ensure each element in the array is actually a string */
       if (type.every((x) => typeof x === "string")) {
         /** If so, add a new enum field. */
-        const struct: FieldStruct = "scalar";
+        const struct: Field["struct"] = "scalar";
         fields.set(fieldName, {
           type: enumType(type),
           struct,

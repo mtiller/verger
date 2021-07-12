@@ -1,16 +1,17 @@
-import { builtinType, enumType, FieldType, nodeType, NodeType } from "./nodes";
+import {
+  builtinType,
+  enumType,
+  Field,
+  FieldType,
+  nodeType,
+  NodeType,
+} from "./nodes";
 import { ASTSpec } from "./specification";
 import { validName, validType } from "./walk";
-
-export type FieldStruct = "scalar" | "optional" | "map" | "array" | "set";
 
 export type BuiltinTypes = "string" | "number" | "boolean";
 export function isBuiltinType(x: string): x is BuiltinTypes {
   return x === "string" || x === "number" || x === "boolean";
-}
-export interface Field {
-  type: FieldType;
-  struct: FieldStruct;
 }
 
 /**
@@ -19,7 +20,7 @@ export interface Field {
  */
 export type NodeField = {
   type: NodeType;
-  struct: FieldStruct;
+  struct: Field["struct"];
 };
 
 /** Predicate for identifying a NodeField */
