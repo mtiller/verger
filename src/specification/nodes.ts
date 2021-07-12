@@ -11,7 +11,7 @@ import { Field } from "./fields";
  **/
 export interface BuiltinType {
   kind: "builtintype";
-  types: Set<"string" | "number" | "boolean">;
+  types: Set<string>;
 }
 export class BuiltinType {
   /**
@@ -34,9 +34,7 @@ export class BuiltinType {
 /**
  * This function can be invoked to create a new instance of BuiltinType
  **/
-export function builtinType(
-  types: Set<"string" | "number" | "boolean">
-): BuiltinType {
+export function builtinType(types: Set<string>): BuiltinType {
   return { kind: "builtintype", types };
 }
 
@@ -136,7 +134,7 @@ export class ASTUnionType {
 /**
  * This function can be invoked to create a new instance of ASTUnionType
  **/
-export function aSTUnionType(name: string, subtypes: string[]): ASTUnionType {
+export function astUnionType(name: string, subtypes: string[]): ASTUnionType {
   return { kind: "astuniontype", name, subtypes };
 }
 
@@ -163,7 +161,7 @@ export class ASTLeafType {
    * Given an instance of ASTLeafType, determine all children that are instances of ASTTree
    **/
   static children = (x: ASTLeafType) => {
-    return [] as const;
+    return [x.rootUnion, ...Object.entries(x.fields).map((x) => x[1])] as const;
   };
   /**
    * Although generally not necessary, this tag can be used to identify instances of ASTLeafType
@@ -173,7 +171,7 @@ export class ASTLeafType {
 /**
  * This function can be invoked to create a new instance of ASTLeafType
  **/
-export function aSTLeafType(
+export function astLeafType(
   tag: string,
   rootUnion: ASTUnionType,
   name: string,
@@ -288,7 +286,7 @@ export namespace FieldType {
  * the union type ASTTree.
  **/
 export type ASTTree = ASTUnionType | ASTLeafType;
-namespace ASTTree {
+export namespace ASTTree {
   /**
    * Given an instance of type ASTTree, map that value depending on the
    * specific underlying node type
@@ -370,7 +368,6 @@ namespace ASTTree {
     if (orElse) return orElse(n);
   };
 }
-
 export interface ASTBaseType {
   name: string;
   bases: string[];

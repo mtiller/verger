@@ -1,9 +1,9 @@
 import { parseField, Field, FieldStruct } from "./fields";
 import {
   ASTBaseType,
-  aSTLeafType,
+  astLeafType,
   ASTTree,
-  aSTUnionType,
+  astUnionType,
   ASTUnionType,
   enumType,
 } from "./nodes";
@@ -25,7 +25,7 @@ export function walkNode(
    * array is the set of fields.
    */
   if (Array.isArray(content)) {
-    const ret = aSTLeafType(n.toLowerCase(), rootUnion, n, [], new Map());
+    const ret = astLeafType(n.toLowerCase(), rootUnion, n, [], new Map());
 
     /** Walk the specified fields end "decode" what you find. */
     walkFields(ret.name, content, ret.bases, ret.fields, types);
@@ -40,7 +40,7 @@ export function walkNode(
      * If we get here, then we assume the contents are nested nodes
      * and the current node is a union of those nested nodes.
      */
-    const ret = aSTUnionType(n, []);
+    const ret = astUnionType(n, []);
     /**
      * Loop over each "subtype" node listed under our union node
      */
