@@ -7,17 +7,22 @@ nodes:
     NodeType:
       - types: string[]
   ASTTree:
+    Field:
+      - type: FieldType
+      - struct: .scalar|.optional|.map|.array|.set
     ASTUnionType:
       - name: string
       - subtypes: string[]
+    ASTBaseType:
+      - name: string
+      - bases: string[]
+      - fields: Field{}
     ASTLeafType:
       - tag: string
       - rootUnion: ASTUnionType
       - name: string
       - bases: string[]
       - fields: Field{}
-externs:
-  - Field
 
 options:
   tagName: kind

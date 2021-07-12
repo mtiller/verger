@@ -119,7 +119,7 @@ export function parseField(str: string, spec: ASTSpec): Field {
     };
   }
   /** If what is left is a valid Javascript identifier, then assume it is a scalar */
-  if (validName(str)) {
+  if (str.startsWith(".") || validName(str)) {
     return {
       struct: "scalar",
       type: parseType(str, spec),

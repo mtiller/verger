@@ -186,7 +186,7 @@ export function walkNames(a: any, spec: ASTSpec) {
         spec.names.add(name);
         walkNames(content, spec);
       } else {
-        throw new Error(`Invalid name ${name}`);
+        throw new Error(`Invalid name '${name}'`);
       }
     }
   }
