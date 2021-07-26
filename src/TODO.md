@@ -1,3 +1,3 @@
-- Top level "leaves" can replace bases
+- Union is function
 - Union children function (just for that union tree, ignore others)
 - Custom Visitor Interface?

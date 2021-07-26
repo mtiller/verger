@@ -1,4 +1,7 @@
 nodes:
+  BinaryOp:
+    - left: Expr
+    - right: Expr
   Expr:
     Literal:
       - value: number
@@ -11,11 +14,6 @@ nodes:
     RelOp:
       - extends: BinaryOp
       - op: ["+", "-", "*", "/"]
-
-bases:
-  BinaryOp:
-    - left: Expr
-    - right: Expr
 
 options:
   optional: expnull

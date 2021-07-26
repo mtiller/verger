@@ -28,19 +28,18 @@ export function loadSpec(ydata: any): ASTSpec {
   }
 
   /** Create the nodes for bases (base class types) and nodes  */
-  const bases: any = ydata["bases"] ?? {};
   const externs: any = ydata["externs"] ?? [];
-  const root: any = ydata["nodes"];
+  const nodes: any = ydata["nodes"];
 
   /** If no nodes are specified, this is an error */
-  if (root === undefined) {
+  if (nodes === undefined) {
     throw new Error("Missing nodes field");
   }
 
   /** First pass...just grab names */
-  walkNames(root, types);
-  walkNames(bases, types);
+  walkNames(nodes, types);
 
+  /** Collect names for any "external" types. */
   if (Array.isArray(externs)) {
     for (const extern of externs) {
       if (typeof extern === "string") {
@@ -57,18 +56,18 @@ export function loadSpec(ydata: any): ASTSpec {
   }
 
   /** Second pass, extract structure of types */
-  for (const [name, content] of Object.entries(bases)) {
-    walksBase(name, content, types);
-  }
+  for (const [name, content] of Object.entries(nodes)) {
+    if (Array.isArray(content)) {
+      walksBase(name, content, types);
+    } else {
+      /**
+       * If we get here, then we assume the contents are nested nodes
+       * and the current node is a union of those nested nodes.
+       */
+      const rootUnion: ASTUnionType = astUnionType(name, []);
 
-  for (const [name, content] of Object.entries(root)) {
-    /**
-     * If we get here, then we assume the contents are nested nodes
-     * and the current node is a union of those nested nodes.
-     */
-    const rootUnion: ASTUnionType = astUnionType(name, []);
-
-    walkNode(name, rootUnion, rootUnion, content, types);
+      walkNode(name, rootUnion, rootUnion, content, types);
+    }
   }
 
   /** Return the resulting specification */

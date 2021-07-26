@@ -141,12 +141,12 @@ Object {
     },
   },
   "names": Set {
+    "BinaryOp",
     "Expr",
     "Literal",
     "ArithmeticOp",
     "UnaryOp",
     "RelOp",
-    "BinaryOp",
   },
   "options": Object {
     "constructor": "inline",
@@ -576,12 +576,12 @@ Object {
     },
   },
   "names": Set {
+    "BinaryOp",
     "Expr",
     "Literal",
     "ArithmeticOp",
     "UnaryOp",
     "RelOp",
-    "BinaryOp",
   },
   "options": Object {
     "constructor": "inline",

@@ -23,6 +23,10 @@ export function leafCode(a: ASTLeafType, spec: ASTSpec): string {
   /** Now generate the class definition associated with this leaf node. */
   const nodeClass = [
     `export class ${a.name} {`,
+    // comment(
+    //   `A predicate function that take an instance of \`any\` and determines if it is an instance of ${a.name}`
+    // ),
+    // `    static anyIs = (x: ${a.rootUnion.name}): x is ${a.name} => { return x.${spec.options.tagName}==="${a.tag}" }`,
     comment(
       `A predicate function that take an instance of type ${a.rootUnion.name} and determines if it is an instance of ${a.name}`
     ),

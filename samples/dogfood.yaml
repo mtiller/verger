@@ -1,4 +1,11 @@
 nodes:
+  ASTBaseType:
+    - name: string
+    - bases: string[]
+    - fields: Field{}
+  Field:
+    - type: FieldType
+    - struct: .scalar|.optional|.map|.array|.set
   FieldType:
     BuiltinType:
       - types: <string>
@@ -16,15 +23,6 @@ nodes:
       - name: string
       - bases: string[]
       - fields: Field{}
-
-bases:
-  ASTBaseType:
-    - name: string
-    - bases: string[]
-    - fields: Field{}
-  Field:
-    - type: FieldType
-    - struct: .scalar|.optional|.map|.array|.set
 
 options:
   tagName: kind
