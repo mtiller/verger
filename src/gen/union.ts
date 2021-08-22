@@ -1,5 +1,4 @@
 import { ASTLeafType, ASTSpec, ASTUnionType } from "../specification";
-import { leafCode } from "./leaf";
 import { unionLeaves } from "./properties";
 import { comment, lines } from "./utils";
 
@@ -11,21 +10,36 @@ export function unionCode(a: ASTUnionType, spec: ASTSpec): string {
   );
   const type = `export type ${a.name} = ${a.subtypes.join(" | ")};`;
   const leafNames = unionLeaves(a, spec);
-  const leaves = leafNames.map((leaf) => spec.leaves.get(leaf.name));
-
-  /** This isn't quite right (requires common root node type). */
-  const unionChildren = lines(
-    comment(`For a node of type ${a.name}, find all children`),
-    `export const children = (n: ${a.name}) => ${a.name}.map<readonly ${a.name}[]>(n, {`,
-    ...leaves.map((leaf) =>
-      leaf ? `${leaf.name}: (x) => ${leaf.name}.children(x),` : ""
-    ),
-    "})"
-  );
 
   const classDef = lines(
     `export namespace ${a.name} {`,
     lines(
+      comment(
+        `Given an instance of \`any\` determine it is an instance of any of the leaf types of ${a.name}`
+      ),
+      `  export const anyIs = (n: any): n is ${a.name} => {
+        ${leafNames
+          .map((leafName) => `if (${leafName.name}.anyIs(n)) return true;`)
+          .join("\n")}
+        return false;
+}`,
+      /**
+       * NB - the `.map(x => x as any).filter(anyIs)` here is a way of identifying only those children
+       * that are instances of the root union here.  Unfortunately, this implementation is making this
+       * determination at **runtime**.  It should be possible to refactor this code and **statically**
+       * determine what fields to include.  This is a potential future enhancement.
+       *
+       * TODO - Determine appropriately typed children statically
+       */
+      comment(`Given an instance of ${a.name}, return a list of all children`),
+      `  export const children = (n: ${a.name}): readonly ${
+        a.name
+      }[] => map(n, {${leafNames
+        .map(
+          (leafName) =>
+            `${leafName.name}: (c): readonly ${a.name}[] => ${leafName.name}.children(c).map(x => x as any).filter(anyIs)`
+        )
+        .join(",")}})`,
       comment(
         `Given an instance of type ${a.name}, map that value depending on the`,
         "specific underlying node type"

@@ -17,7 +17,7 @@ export function baseCode(
 ): string {
   const header = comment(
     "This code implements the types and functions associated with",
-    `the ${tag.map(() => "leaf").orDefault("base")} type ${a.name}.`
+    `the ${tag.map(() => "leaf").orDefault("interface")} type ${a.name}.`
   );
 
   /** Generate declarations for all fields. */

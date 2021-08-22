@@ -122,10 +122,11 @@ Object {
           "type": Object {
             "kind": "enumtype",
             "tags": Array [
-              "+",
-              "-",
-              "*",
-              "/",
+              ">",
+              "<",
+              ">=",
+              "<=",
+              "==",
             ],
           },
         },
@@ -177,7 +178,7 @@ exports[`Test sample AST specifications should generate proper output for expr.y
 
 /**
  * This code implements the types and functions associated with
- * the base type BinaryOp.
+ * the interface type BinaryOp.
  **/
 export interface BinaryOp {
   left: Expr;
@@ -193,6 +194,18 @@ export interface Literal {
   value: number;
 }
 export class Literal {
+  /**
+   * A predicate function that take an instance of \`any\` and determines if it is an instance of Literal
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is Literal => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== \\"object\\") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 2) return false;
+    if (!keys.includes(\\"value\\")) return false;
+    if (!keys.includes(\\"tag\\")) return false;
+    return x.tag === \\"literal\\";
+  };
   /**
    * A predicate function that take an instance of type Expr and determines if it is an instance of Literal
    **/
@@ -226,6 +239,18 @@ export interface ArithmeticOp extends BinaryOp {
   op: \\"+\\" | \\"-\\" | \\"*\\" | \\"/\\";
 }
 export class ArithmeticOp {
+  /**
+   * A predicate function that take an instance of \`any\` and determines if it is an instance of ArithmeticOp
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is ArithmeticOp => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== \\"object\\") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 2) return false;
+    if (!keys.includes(\\"op\\")) return false;
+    if (!keys.includes(\\"tag\\")) return false;
+    return x.tag === \\"arithmeticop\\";
+  };
   /**
    * A predicate function that take an instance of type Expr and determines if it is an instance of ArithmeticOp
    **/
@@ -265,6 +290,19 @@ export interface UnaryOp {
 }
 export class UnaryOp {
   /**
+   * A predicate function that take an instance of \`any\` and determines if it is an instance of UnaryOp
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is UnaryOp => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== \\"object\\") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 3) return false;
+    if (!keys.includes(\\"expr\\")) return false;
+    if (!keys.includes(\\"op\\")) return false;
+    if (!keys.includes(\\"tag\\")) return false;
+    return x.tag === \\"unaryop\\";
+  };
+  /**
    * A predicate function that take an instance of type Expr and determines if it is an instance of UnaryOp
    **/
   static is = (x: Expr): x is UnaryOp => {
@@ -294,9 +332,21 @@ export function unaryOp(expr: Expr, op: \\"()\\" | \\"+\\" | \\"-\\"): UnaryOp {
  **/
 export interface RelOp extends BinaryOp {
   tag: \\"relop\\";
-  op: \\"+\\" | \\"-\\" | \\"*\\" | \\"/\\";
+  op: \\">\\" | \\"<\\" | \\">=\\" | \\"<=\\" | \\"==\\";
 }
 export class RelOp {
+  /**
+   * A predicate function that take an instance of \`any\` and determines if it is an instance of RelOp
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is RelOp => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== \\"object\\") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 2) return false;
+    if (!keys.includes(\\"op\\")) return false;
+    if (!keys.includes(\\"tag\\")) return false;
+    return x.tag === \\"relop\\";
+  };
   /**
    * A predicate function that take an instance of type Expr and determines if it is an instance of RelOp
    **/
@@ -320,7 +370,7 @@ export class RelOp {
 export function relOp(
   left: Expr,
   right: Expr,
-  op: \\"+\\" | \\"-\\" | \\"*\\" | \\"/\\"
+  op: \\">\\" | \\"<\\" | \\">=\\" | \\"<=\\" | \\"==\\"
 ): RelOp {
   return { tag: \\"relop\\", left, right, op };
 }
@@ -331,6 +381,38 @@ export function relOp(
  **/
 export type Expr = Literal | ArithmeticOp | UnaryOp | RelOp;
 export namespace Expr {
+  /**
+   * Given an instance of \`any\` determine it is an instance of any of the leaf types of Expr
+   **/
+  export const anyIs = (n: any): n is Expr => {
+    if (Literal.anyIs(n)) return true;
+    if (ArithmeticOp.anyIs(n)) return true;
+    if (UnaryOp.anyIs(n)) return true;
+    if (RelOp.anyIs(n)) return true;
+    return false;
+  };
+  /**
+   * Given an instance of Expr, return a list of all children
+   **/
+  export const children = (n: Expr): readonly Expr[] =>
+    map(n, {
+      Literal: (c): readonly Expr[] =>
+        Literal.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+      ArithmeticOp: (c): readonly Expr[] =>
+        ArithmeticOp.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+      UnaryOp: (c): readonly Expr[] =>
+        UnaryOp.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+      RelOp: (c): readonly Expr[] =>
+        RelOp.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+    });
   /**
    * Given an instance of type Expr, map that value depending on the
    * specific underlying node type
@@ -557,10 +639,11 @@ Object {
           "type": Object {
             "kind": "enumtype",
             "tags": Array [
-              "+",
-              "-",
-              "*",
-              "/",
+              ">",
+              "<",
+              ">=",
+              "<=",
+              "==",
             ],
           },
         },
@@ -612,7 +695,7 @@ exports[`Test sample AST specifications should generate proper output for expr.y
 
 /**
  * This code implements the types and functions associated with
- * the base type BinaryOp.
+ * the interface type BinaryOp.
  **/
 export interface BinaryOp {
   left: Expr;
@@ -628,6 +711,18 @@ export interface Literal {
   value: number;
 }
 export class Literal {
+  /**
+   * A predicate function that take an instance of \`any\` and determines if it is an instance of Literal
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is Literal => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== \\"object\\") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 2) return false;
+    if (!keys.includes(\\"value\\")) return false;
+    if (!keys.includes(\\"tag\\")) return false;
+    return x.tag === \\"literal\\";
+  };
   /**
    * A predicate function that take an instance of type Expr and determines if it is an instance of Literal
    **/
@@ -661,6 +756,18 @@ export interface ArithmeticOp extends BinaryOp {
   op: \\"+\\" | \\"-\\" | \\"*\\" | \\"/\\";
 }
 export class ArithmeticOp {
+  /**
+   * A predicate function that take an instance of \`any\` and determines if it is an instance of ArithmeticOp
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is ArithmeticOp => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== \\"object\\") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 2) return false;
+    if (!keys.includes(\\"op\\")) return false;
+    if (!keys.includes(\\"tag\\")) return false;
+    return x.tag === \\"arithmeticop\\";
+  };
   /**
    * A predicate function that take an instance of type Expr and determines if it is an instance of ArithmeticOp
    **/
@@ -700,6 +807,19 @@ export interface UnaryOp {
 }
 export class UnaryOp {
   /**
+   * A predicate function that take an instance of \`any\` and determines if it is an instance of UnaryOp
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is UnaryOp => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== \\"object\\") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 3) return false;
+    if (!keys.includes(\\"expr\\")) return false;
+    if (!keys.includes(\\"op\\")) return false;
+    if (!keys.includes(\\"tag\\")) return false;
+    return x.tag === \\"unaryop\\";
+  };
+  /**
    * A predicate function that take an instance of type Expr and determines if it is an instance of UnaryOp
    **/
   static is = (x: Expr): x is UnaryOp => {
@@ -729,9 +849,21 @@ export function unaryOp(expr: Expr, op: \\"()\\" | \\"+\\" | \\"-\\"): UnaryOp {
  **/
 export interface RelOp extends BinaryOp {
   tag: \\"relop\\";
-  op: \\"+\\" | \\"-\\" | \\"*\\" | \\"/\\";
+  op: \\">\\" | \\"<\\" | \\">=\\" | \\"<=\\" | \\"==\\";
 }
 export class RelOp {
+  /**
+   * A predicate function that take an instance of \`any\` and determines if it is an instance of RelOp
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is RelOp => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== \\"object\\") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 2) return false;
+    if (!keys.includes(\\"op\\")) return false;
+    if (!keys.includes(\\"tag\\")) return false;
+    return x.tag === \\"relop\\";
+  };
   /**
    * A predicate function that take an instance of type Expr and determines if it is an instance of RelOp
    **/
@@ -755,7 +887,7 @@ export class RelOp {
 export function relOp(
   left: Expr,
   right: Expr,
-  op: \\"+\\" | \\"-\\" | \\"*\\" | \\"/\\"
+  op: \\">\\" | \\"<\\" | \\">=\\" | \\"<=\\" | \\"==\\"
 ): RelOp {
   return { tag: \\"relop\\", left, right, op };
 }
@@ -766,6 +898,38 @@ export function relOp(
  **/
 export type Expr = Literal | ArithmeticOp | UnaryOp | RelOp;
 export namespace Expr {
+  /**
+   * Given an instance of \`any\` determine it is an instance of any of the leaf types of Expr
+   **/
+  export const anyIs = (n: any): n is Expr => {
+    if (Literal.anyIs(n)) return true;
+    if (ArithmeticOp.anyIs(n)) return true;
+    if (UnaryOp.anyIs(n)) return true;
+    if (RelOp.anyIs(n)) return true;
+    return false;
+  };
+  /**
+   * Given an instance of Expr, return a list of all children
+   **/
+  export const children = (n: Expr): readonly Expr[] =>
+    map(n, {
+      Literal: (c): readonly Expr[] =>
+        Literal.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+      ArithmeticOp: (c): readonly Expr[] =>
+        ArithmeticOp.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+      UnaryOp: (c): readonly Expr[] =>
+        UnaryOp.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+      RelOp: (c): readonly Expr[] =>
+        RelOp.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+    });
   /**
    * Given an instance of type Expr, map that value depending on the
    * specific underlying node type
@@ -1120,6 +1284,20 @@ export interface FunctionDef {
 }
 export class FunctionDef {
   /**
+   * A predicate function that take an instance of \`any\` and determines if it is an instance of FunctionDef
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is FunctionDef => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== \\"object\\") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 4) return false;
+    if (!keys.includes(\\"name\\")) return false;
+    if (!keys.includes(\\"args\\")) return false;
+    if (!keys.includes(\\"body\\")) return false;
+    if (!keys.includes(\\"tag\\")) return false;
+    return x.tag === \\"functiondef\\";
+  };
+  /**
    * A predicate function that take an instance of type Node and determines if it is an instance of FunctionDef
    **/
   static is = (x: Node): x is FunctionDef => {
@@ -1159,6 +1337,20 @@ export interface Declaration {
 }
 export class Declaration {
   /**
+   * A predicate function that take an instance of \`any\` and determines if it is an instance of Declaration
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is Declaration => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== \\"object\\") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 4) return false;
+    if (!keys.includes(\\"name\\")) return false;
+    if (!keys.includes(\\"type\\")) return false;
+    if (!keys.includes(\\"init\\")) return false;
+    if (!keys.includes(\\"tag\\")) return false;
+    return x.tag === \\"declaration\\";
+  };
+  /**
    * A predicate function that take an instance of type Node and determines if it is an instance of Declaration
    **/
   static is = (x: Node): x is Declaration => {
@@ -1197,6 +1389,19 @@ export interface Argument {
 }
 export class Argument {
   /**
+   * A predicate function that take an instance of \`any\` and determines if it is an instance of Argument
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is Argument => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== \\"object\\") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 3) return false;
+    if (!keys.includes(\\"name\\")) return false;
+    if (!keys.includes(\\"type\\")) return false;
+    if (!keys.includes(\\"tag\\")) return false;
+    return x.tag === \\"argument\\";
+  };
+  /**
    * A predicate function that take an instance of type Node and determines if it is an instance of Argument
    **/
   static is = (x: Node): x is Argument => {
@@ -1229,6 +1434,18 @@ export interface Body {
   statement: Statement;
 }
 export class Body {
+  /**
+   * A predicate function that take an instance of \`any\` and determines if it is an instance of Body
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is Body => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== \\"object\\") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 2) return false;
+    if (!keys.includes(\\"statement\\")) return false;
+    if (!keys.includes(\\"tag\\")) return false;
+    return x.tag === \\"body\\";
+  };
   /**
    * A predicate function that take an instance of type Node and determines if it is an instance of Body
    **/
@@ -1263,6 +1480,22 @@ export interface AssignmentStatement {
   init: number;
 }
 export class AssignmentStatement {
+  /**
+   * A predicate function that take an instance of \`any\` and determines if it is an instance of AssignmentStatement
+   **/
+  static anyIs = (
+    x: any,
+    allowExtra: boolean = false
+  ): x is AssignmentStatement => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== \\"object\\") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 3) return false;
+    if (!keys.includes(\\"name\\")) return false;
+    if (!keys.includes(\\"init\\")) return false;
+    if (!keys.includes(\\"tag\\")) return false;
+    return x.tag === \\"assignmentstatement\\";
+  };
   /**
    * A predicate function that take an instance of type Node and determines if it is an instance of AssignmentStatement
    **/
@@ -1300,6 +1533,21 @@ export interface DeclarationStatement {
 }
 export class DeclarationStatement {
   /**
+   * A predicate function that take an instance of \`any\` and determines if it is an instance of DeclarationStatement
+   **/
+  static anyIs = (
+    x: any,
+    allowExtra: boolean = false
+  ): x is DeclarationStatement => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== \\"object\\") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 2) return false;
+    if (!keys.includes(\\"name\\")) return false;
+    if (!keys.includes(\\"tag\\")) return false;
+    return x.tag === \\"declarationstatement\\";
+  };
+  /**
    * A predicate function that take an instance of type Node and determines if it is an instance of DeclarationStatement
    **/
   static is = (x: Node): x is DeclarationStatement => {
@@ -1329,6 +1577,28 @@ export function declarationStatement(name: string): DeclarationStatement {
  **/
 export type Statement = AssignmentStatement | DeclarationStatement;
 export namespace Statement {
+  /**
+   * Given an instance of \`any\` determine it is an instance of any of the leaf types of Statement
+   **/
+  export const anyIs = (n: any): n is Statement => {
+    if (AssignmentStatement.anyIs(n)) return true;
+    if (DeclarationStatement.anyIs(n)) return true;
+    return false;
+  };
+  /**
+   * Given an instance of Statement, return a list of all children
+   **/
+  export const children = (n: Statement): readonly Statement[] =>
+    map(n, {
+      AssignmentStatement: (c): readonly Statement[] =>
+        AssignmentStatement.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+      DeclarationStatement: (c): readonly Statement[] =>
+        DeclarationStatement.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+    });
   /**
    * Given an instance of type Statement, map that value depending on the
    * specific underlying node type
@@ -1423,6 +1693,48 @@ export namespace Statement {
  **/
 export type Node = FunctionDef | Declaration | Argument | Body | Statement;
 export namespace Node {
+  /**
+   * Given an instance of \`any\` determine it is an instance of any of the leaf types of Node
+   **/
+  export const anyIs = (n: any): n is Node => {
+    if (FunctionDef.anyIs(n)) return true;
+    if (Declaration.anyIs(n)) return true;
+    if (Argument.anyIs(n)) return true;
+    if (Body.anyIs(n)) return true;
+    if (AssignmentStatement.anyIs(n)) return true;
+    if (DeclarationStatement.anyIs(n)) return true;
+    return false;
+  };
+  /**
+   * Given an instance of Node, return a list of all children
+   **/
+  export const children = (n: Node): readonly Node[] =>
+    map(n, {
+      FunctionDef: (c): readonly Node[] =>
+        FunctionDef.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+      Declaration: (c): readonly Node[] =>
+        Declaration.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+      Argument: (c): readonly Node[] =>
+        Argument.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+      Body: (c): readonly Node[] =>
+        Body.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+      AssignmentStatement: (c): readonly Node[] =>
+        AssignmentStatement.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+      DeclarationStatement: (c): readonly Node[] =>
+        DeclarationStatement.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+    });
   /**
    * Given an instance of type Node, map that value depending on the
    * specific underlying node type
@@ -1802,6 +2114,20 @@ export interface FunctionDef {
 }
 export class FunctionDef {
   /**
+   * A predicate function that take an instance of \`any\` and determines if it is an instance of FunctionDef
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is FunctionDef => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== \\"object\\") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 4) return false;
+    if (!keys.includes(\\"name\\")) return false;
+    if (!keys.includes(\\"args\\")) return false;
+    if (!keys.includes(\\"body\\")) return false;
+    if (!keys.includes(\\"tag\\")) return false;
+    return x.tag === \\"functiondef\\";
+  };
+  /**
    * A predicate function that take an instance of type Node and determines if it is an instance of FunctionDef
    **/
   static is = (x: Node): x is FunctionDef => {
@@ -1841,6 +2167,20 @@ export interface Declaration {
 }
 export class Declaration {
   /**
+   * A predicate function that take an instance of \`any\` and determines if it is an instance of Declaration
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is Declaration => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== \\"object\\") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 4) return false;
+    if (!keys.includes(\\"name\\")) return false;
+    if (!keys.includes(\\"type\\")) return false;
+    if (!keys.includes(\\"init\\")) return false;
+    if (!keys.includes(\\"tag\\")) return false;
+    return x.tag === \\"declaration\\";
+  };
+  /**
    * A predicate function that take an instance of type Node and determines if it is an instance of Declaration
    **/
   static is = (x: Node): x is Declaration => {
@@ -1879,6 +2219,19 @@ export interface Argument {
 }
 export class Argument {
   /**
+   * A predicate function that take an instance of \`any\` and determines if it is an instance of Argument
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is Argument => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== \\"object\\") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 3) return false;
+    if (!keys.includes(\\"name\\")) return false;
+    if (!keys.includes(\\"type\\")) return false;
+    if (!keys.includes(\\"tag\\")) return false;
+    return x.tag === \\"argument\\";
+  };
+  /**
    * A predicate function that take an instance of type Node and determines if it is an instance of Argument
    **/
   static is = (x: Node): x is Argument => {
@@ -1911,6 +2264,18 @@ export interface Body {
   statement: Statement;
 }
 export class Body {
+  /**
+   * A predicate function that take an instance of \`any\` and determines if it is an instance of Body
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is Body => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== \\"object\\") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 2) return false;
+    if (!keys.includes(\\"statement\\")) return false;
+    if (!keys.includes(\\"tag\\")) return false;
+    return x.tag === \\"body\\";
+  };
   /**
    * A predicate function that take an instance of type Node and determines if it is an instance of Body
    **/
@@ -1945,6 +2310,22 @@ export interface AssignmentStatement {
   init: number;
 }
 export class AssignmentStatement {
+  /**
+   * A predicate function that take an instance of \`any\` and determines if it is an instance of AssignmentStatement
+   **/
+  static anyIs = (
+    x: any,
+    allowExtra: boolean = false
+  ): x is AssignmentStatement => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== \\"object\\") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 3) return false;
+    if (!keys.includes(\\"name\\")) return false;
+    if (!keys.includes(\\"init\\")) return false;
+    if (!keys.includes(\\"tag\\")) return false;
+    return x.tag === \\"assignmentstatement\\";
+  };
   /**
    * A predicate function that take an instance of type Node and determines if it is an instance of AssignmentStatement
    **/
@@ -1982,6 +2363,21 @@ export interface DeclarationStatement {
 }
 export class DeclarationStatement {
   /**
+   * A predicate function that take an instance of \`any\` and determines if it is an instance of DeclarationStatement
+   **/
+  static anyIs = (
+    x: any,
+    allowExtra: boolean = false
+  ): x is DeclarationStatement => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== \\"object\\") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 2) return false;
+    if (!keys.includes(\\"name\\")) return false;
+    if (!keys.includes(\\"tag\\")) return false;
+    return x.tag === \\"declarationstatement\\";
+  };
+  /**
    * A predicate function that take an instance of type Node and determines if it is an instance of DeclarationStatement
    **/
   static is = (x: Node): x is DeclarationStatement => {
@@ -2011,6 +2407,28 @@ export function declarationStatement(name: string): DeclarationStatement {
  **/
 export type Statement = AssignmentStatement | DeclarationStatement;
 export namespace Statement {
+  /**
+   * Given an instance of \`any\` determine it is an instance of any of the leaf types of Statement
+   **/
+  export const anyIs = (n: any): n is Statement => {
+    if (AssignmentStatement.anyIs(n)) return true;
+    if (DeclarationStatement.anyIs(n)) return true;
+    return false;
+  };
+  /**
+   * Given an instance of Statement, return a list of all children
+   **/
+  export const children = (n: Statement): readonly Statement[] =>
+    map(n, {
+      AssignmentStatement: (c): readonly Statement[] =>
+        AssignmentStatement.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+      DeclarationStatement: (c): readonly Statement[] =>
+        DeclarationStatement.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+    });
   /**
    * Given an instance of type Statement, map that value depending on the
    * specific underlying node type
@@ -2105,6 +2523,48 @@ export namespace Statement {
  **/
 export type Node = FunctionDef | Declaration | Argument | Body | Statement;
 export namespace Node {
+  /**
+   * Given an instance of \`any\` determine it is an instance of any of the leaf types of Node
+   **/
+  export const anyIs = (n: any): n is Node => {
+    if (FunctionDef.anyIs(n)) return true;
+    if (Declaration.anyIs(n)) return true;
+    if (Argument.anyIs(n)) return true;
+    if (Body.anyIs(n)) return true;
+    if (AssignmentStatement.anyIs(n)) return true;
+    if (DeclarationStatement.anyIs(n)) return true;
+    return false;
+  };
+  /**
+   * Given an instance of Node, return a list of all children
+   **/
+  export const children = (n: Node): readonly Node[] =>
+    map(n, {
+      FunctionDef: (c): readonly Node[] =>
+        FunctionDef.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+      Declaration: (c): readonly Node[] =>
+        Declaration.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+      Argument: (c): readonly Node[] =>
+        Argument.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+      Body: (c): readonly Node[] =>
+        Body.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+      AssignmentStatement: (c): readonly Node[] =>
+        AssignmentStatement.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+      DeclarationStatement: (c): readonly Node[] =>
+        DeclarationStatement.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+    });
   /**
    * Given an instance of type Node, map that value depending on the
    * specific underlying node type
@@ -2333,6 +2793,19 @@ export interface Fork {
 }
 export class Fork {
   /**
+   * A predicate function that take an instance of \`any\` and determines if it is an instance of Fork
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is Fork => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== \\"object\\") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 3) return false;
+    if (!keys.includes(\\"left\\")) return false;
+    if (!keys.includes(\\"right\\")) return false;
+    if (!keys.includes(\\"tag\\")) return false;
+    return x.tag === \\"fork\\";
+  };
+  /**
    * A predicate function that take an instance of type Tree and determines if it is an instance of Fork
    **/
   static is = (x: Tree): x is Fork => {
@@ -2366,6 +2839,18 @@ export interface Leaf {
 }
 export class Leaf {
   /**
+   * A predicate function that take an instance of \`any\` and determines if it is an instance of Leaf
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is Leaf => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== \\"object\\") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 2) return false;
+    if (!keys.includes(\\"value\\")) return false;
+    if (!keys.includes(\\"tag\\")) return false;
+    return x.tag === \\"leaf\\";
+  };
+  /**
    * A predicate function that take an instance of type Tree and determines if it is an instance of Leaf
    **/
   static is = (x: Tree): x is Leaf => {
@@ -2395,6 +2880,28 @@ export function leaf(value: number): Leaf {
  **/
 export type Tree = Fork | Leaf;
 export namespace Tree {
+  /**
+   * Given an instance of \`any\` determine it is an instance of any of the leaf types of Tree
+   **/
+  export const anyIs = (n: any): n is Tree => {
+    if (Fork.anyIs(n)) return true;
+    if (Leaf.anyIs(n)) return true;
+    return false;
+  };
+  /**
+   * Given an instance of Tree, return a list of all children
+   **/
+  export const children = (n: Tree): readonly Tree[] =>
+    map(n, {
+      Fork: (c): readonly Tree[] =>
+        Fork.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+      Leaf: (c): readonly Tree[] =>
+        Leaf.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+    });
   /**
    * Given an instance of type Tree, map that value depending on the
    * specific underlying node type
@@ -2579,6 +3086,19 @@ export interface Fork {
 }
 export class Fork {
   /**
+   * A predicate function that take an instance of \`any\` and determines if it is an instance of Fork
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is Fork => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== \\"object\\") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 3) return false;
+    if (!keys.includes(\\"left\\")) return false;
+    if (!keys.includes(\\"right\\")) return false;
+    if (!keys.includes(\\"tag\\")) return false;
+    return x.tag === \\"fork\\";
+  };
+  /**
    * A predicate function that take an instance of type Tree and determines if it is an instance of Fork
    **/
   static is = (x: Tree): x is Fork => {
@@ -2612,6 +3132,18 @@ export interface Leaf {
 }
 export class Leaf {
   /**
+   * A predicate function that take an instance of \`any\` and determines if it is an instance of Leaf
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is Leaf => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== \\"object\\") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 2) return false;
+    if (!keys.includes(\\"value\\")) return false;
+    if (!keys.includes(\\"tag\\")) return false;
+    return x.tag === \\"leaf\\";
+  };
+  /**
    * A predicate function that take an instance of type Tree and determines if it is an instance of Leaf
    **/
   static is = (x: Tree): x is Leaf => {
@@ -2641,6 +3173,28 @@ export function leaf(value: number): Leaf {
  **/
 export type Tree = Fork | Leaf;
 export namespace Tree {
+  /**
+   * Given an instance of \`any\` determine it is an instance of any of the leaf types of Tree
+   **/
+  export const anyIs = (n: any): n is Tree => {
+    if (Fork.anyIs(n)) return true;
+    if (Leaf.anyIs(n)) return true;
+    return false;
+  };
+  /**
+   * Given an instance of Tree, return a list of all children
+   **/
+  export const children = (n: Tree): readonly Tree[] =>
+    map(n, {
+      Fork: (c): readonly Tree[] =>
+        Fork.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+      Leaf: (c): readonly Tree[] =>
+        Leaf.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+    });
   /**
    * Given an instance of type Tree, map that value depending on the
    * specific underlying node type

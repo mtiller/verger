@@ -1,7 +1,12 @@
 import { Just } from "purify-ts/Maybe";
 import { ASTLeafType, ASTSpec, Field, NodeField } from "../specification";
 import { baseCode } from "./base";
-import { allFieldEntries, childFieldEntries, fieldType } from "./properties";
+import {
+  allFieldEntries,
+  childFieldEntries,
+  fieldType,
+  fieldTypeName,
+} from "./properties";
 import { comment, lines } from "./utils";
 
 /** Generate code for a leaf node */
@@ -23,10 +28,22 @@ export function leafCode(a: ASTLeafType, spec: ASTSpec): string {
   /** Now generate the class definition associated with this leaf node. */
   const nodeClass = [
     `export class ${a.name} {`,
-    // comment(
-    //   `A predicate function that take an instance of \`any\` and determines if it is an instance of ${a.name}`
-    // ),
-    // `    static anyIs = (x: ${a.rootUnion.name}): x is ${a.name} => { return x.${spec.options.tagName}==="${a.tag}" }`,
+    comment(
+      `A predicate function that take an instance of \`any\` and determines if it is an instance of ${a.name}`
+    ),
+    `    static anyIs = (x: any, allowExtra: boolean = false): x is ${
+      a.name
+    } => { 
+      if (x===null || x===undefined) return false;
+      if (typeof x!=="object") return false;
+      const keys = Object.keys(x);
+      if (!allowExtra && keys.length!==${a.fields.size + 1}) return false;
+      ${[...a.fields.entries()]
+        .map((v) => `if (!keys.includes("${v[0]}")) return false;`)
+        .join("\n")}
+      if (!keys.includes("${spec.options.tagName}")) return false;
+      return x.${spec.options.tagName}==="${a.tag}"
+}`,
     comment(
       `A predicate function that take an instance of type ${a.rootUnion.name} and determines if it is an instance of ${a.name}`
     ),
@@ -115,7 +132,10 @@ function fieldChildren(
     case "set":
       return `...${v}.${field}`;
     case "map":
-      return `...Object.entries(${v}.${field}).map(x => x[1])`;
+      return `...Object.entries(${v}.${field}).map(x => x[1] as ${fieldTypeName(
+        f.type,
+        spec
+      )})`;
     case "optional":
       switch (spec.options.optional) {
         case "json":
@@ -124,7 +144,6 @@ function fieldChildren(
         case "purify":
           return `...${v}.${field}.map( x => [x]).orDefault([])`;
       }
-    // TODO: map
     default: {
       throw new Error(`Unknown data structure: '${f.struct}'`);
     }
