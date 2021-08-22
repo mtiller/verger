@@ -131,13 +131,13 @@ nodes:
     Literal:
       - value: number
     ArithmeticOp:
-      - extends: BinaryOp
+      - ^: BinaryOp
       - op: ["+", "-", "*", "/"]
     UnaryOp:
       - expr: Expr
       - op: ["()", "+", "-"]
     RelOp:
-      - extends: BinaryOp
+      - ^: BinaryOp
       - op: [">", "<", ">=", "<=", "=="]
 ```
 
@@ -146,7 +146,7 @@ What is different here is that we introduced another type `BinaryOp` under our
 resolved to a TypeScript leaf type (that doesn't belong to any union type). But
 with that leaf type defined, we can extend from that type. We see this done in
 both the `ArithmeticOp` and `RelOp` types. If a leaf type node includes any
-fields named `extends`, we don't treat them as fields but instead treat them
+fields named `^`, we don't treat them as fields but instead treat them
 as identifying interfaces that this leaf (interface) extends from.
 
 So, the specification of `RelOp` in this case will look something like this in

@@ -6,13 +6,13 @@ nodes:
     Literal:
       - value: number
     ArithmeticOp:
-      - extends: BinaryOp
+      - ^: BinaryOp
       - op: ["+", "-", "*", "/"]
     UnaryOp:
       - expr: Expr
       - op: ["()", "+", "-"]
     RelOp:
-      - extends: BinaryOp
+      - ^: BinaryOp
       - op: [">", "<", ">=", "<=", "=="]
 
 options:

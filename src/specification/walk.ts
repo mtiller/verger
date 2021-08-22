@@ -10,6 +10,8 @@ import {
 } from "./nodes";
 import { ASTSpec } from "./specification";
 
+const extendsKeyword = "^";
+
 /** This function walks the `node` part of the specification */
 export function walkNode(
   n: string,
@@ -127,7 +129,7 @@ function walkFields(
     /** If the value is a string, then it is a type name */
     if (typeof type === "string") {
       /** If the field name is "extends" then this type name is actually a base class. */
-      if (fieldName === "extends") {
+      if (fieldName === extendsKeyword) {
         /** Verify there is such a base class in the spec */
         const base = spec.bases.get(type);
         if (base === undefined) {
