@@ -147,15 +147,14 @@ export interface RelOp extends BinaryOp {
 
 Here is a "cheatsheet" of how field values are translated into TypeScript types:
 
-| Field Spec                     | Meaing                    | TypeScript                      |
-| ------------------------------ | ------------------------- | ------------------------------- | ---------------- | ----------------- | ---------- | ------ |
-| `name: string`                 | Simple field              | `name: string `                 |
-| `bases: string[]`              | Array                     | `bases: string[]`               |
-| `fields: Field{}`              | Map/Object (configurable) | `fields: Map<string, Field>` or |
-| `fields:Record<string, Field>` |
-| `struct: .scalar               | .optional                 | .map`                           | Union of strings | `struct: "scalar" | "optional" | "map"` |
-| `types: <string>`              | Set                       | `types: Set<string>`            |
-| `else: Expr?`                  | Optional                  | `else?: Expr`                   |
+| Field Spec                         | Meaing                    | TypeScript                                                     |
+| ---------------------------------- | ------------------------- | -------------------------------------------------------------- |
+| `name: string`                     | Simple field              | `name: string `                                                |
+| `bases: string[]`                  | Array                     | `bases: string[]`                                              |
+| `fields: Field{}`                  | Map/Object (configurable) | `fields: Map<string, Field>` or `fields:Record<string, Field>` |
+| `struct: .scalar\|.optional\|.map` | Union of strings          | `struct: "scalar" \| "optional" \| "map"`                      |
+| `types: <string>`                  | Set                       | `types: Set<string>`                                           |
+| `else: Expr?`                      | Optional                  | `else?: Expr`                                                  |
 
 This shorthand syntax not only allows for a succint way of specifying the types,
 it provides a complete specification of the types that we will use later as well.
