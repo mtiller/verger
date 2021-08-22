@@ -81,23 +81,8 @@ another object with a key of `op` and the `op` key has a value that is an array.
 There are many possible variations for field specifications. Fields are always
 specified as an array of objects. Each of those objects must have a **single
 key**. That single key is the name of the field. The value of the field
-specifies the field type. But there are many different variations for
-specifying a field type. The following is a guide for interpreting the types
-
-- If the value is a purely alphanumeric strings (_e.g.,_ `number`) it maps directly to a type name.
-- If the value is an array of values (_e.g.,_ `[string, number]`), then it is a
-  union of possible types.
-- If the value is a string followed by `[]`, then the field is an array of
-  whatever type is specified by the preceding string.
-- If the value is a string followed by `{}`, then the field is a map/object of
-  string keys and values of whatever type is specified by the preceding string.
-
-It is important to understand that a literal string is a type. For example, a
-field value of `[number, string]` maps to `number | string` in TypeScript while
-a field value of `["+" | "-"]` maps to `"+" | "-"` in TypeScript.
-
-This shorthand syntax not only allows for a succint way of specifying the types,
-it provides a complete specification of the types that we will use later as well.
+specifies the field type. But, as shown in [#field-types], there are many different variations for
+specifying a field type.
 
 ### What is the point?
 
@@ -157,3 +142,19 @@ export interface RelOp extends BinaryOp {
   op: ">" | "<" | ">=" | "<=" | "==";
 }
 ```
+
+### Field Types
+
+Here is a "cheatsheet" of how field values are translated into TypeScript types:
+
+| Field Spec | Meaing | TypeScript |
+| `name: string` | Simple field | `name: string ` |
+| `bases: string[]` | Array | `bases: string[]` |
+| `fields: Field{}` | Map/Object (configurable) | `fields: Map<string, Field>` or
+`fields:Record<string, Field>` |
+| `struct: .scalar|.optional|.map` | Union of strings | `struct: "scalar" | "optional" | "map"` |
+| `types: <string>` | Set | `types: Set<string>` |
+| `else: Expr?` | Optional | `else?: Expr` |
+
+This shorthand syntax not only allows for a succint way of specifying the types,
+it provides a complete specification of the types that we will use later as well.
