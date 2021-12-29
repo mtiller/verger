@@ -5,7 +5,7 @@
 
 /**
  * This code implements the types and functions associated with
- * the base type ASTBaseType.
+ * the interface type ASTBaseType.
  **/
 export interface ASTBaseType {
   name: string;
@@ -15,11 +15,35 @@ export interface ASTBaseType {
 
 /**
  * This code implements the types and functions associated with
- * the base type Field.
+ * the interface type Field.
  **/
 export interface Field {
   type: FieldType;
   struct: "scalar" | "optional" | "map" | "array" | "set";
+}
+
+/**
+ * This code implements the types and functions associated with
+ * the interface type Options.
+ **/
+export interface Options {
+  tagName: string;
+  optional: "json" | "expnull" | "purify";
+  maps: "json" | "map";
+  constructor: "inline" | "obj";
+}
+
+/**
+ * This code implements the types and functions associated with
+ * the interface type ASTSpec2.
+ **/
+export interface ASTSpec {
+  names: Set<string>;
+  unions: Map<string, ASTUnionType>;
+  bases: Map<string, ASTBaseType>;
+  leaves: Map<string, ASTLeafType>;
+  externs: Set<string>;
+  options: Options;
 }
 
 /**
@@ -31,6 +55,18 @@ export interface BuiltinType {
   types: Set<string>;
 }
 export class BuiltinType {
+  /**
+   * A predicate function that take an instance of `any` and determines if it is an instance of BuiltinType
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is BuiltinType => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== "object") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 2) return false;
+    if (!keys.includes("types")) return false;
+    if (!keys.includes("kind")) return false;
+    return x.kind === "builtintype";
+  };
   /**
    * A predicate function that take an instance of type FieldType and determines if it is an instance of BuiltinType
    **/
@@ -65,6 +101,18 @@ export interface EnumType {
 }
 export class EnumType {
   /**
+   * A predicate function that take an instance of `any` and determines if it is an instance of EnumType
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is EnumType => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== "object") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 2) return false;
+    if (!keys.includes("tags")) return false;
+    if (!keys.includes("kind")) return false;
+    return x.kind === "enumtype";
+  };
+  /**
    * A predicate function that take an instance of type FieldType and determines if it is an instance of EnumType
    **/
   static is = (x: FieldType): x is EnumType => {
@@ -97,6 +145,18 @@ export interface NodeType {
   types: string[];
 }
 export class NodeType {
+  /**
+   * A predicate function that take an instance of `any` and determines if it is an instance of NodeType
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is NodeType => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== "object") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 2) return false;
+    if (!keys.includes("types")) return false;
+    if (!keys.includes("kind")) return false;
+    return x.kind === "nodetype";
+  };
   /**
    * A predicate function that take an instance of type FieldType and determines if it is an instance of NodeType
    **/
@@ -131,6 +191,19 @@ export interface ASTUnionType {
   subtypes: string[];
 }
 export class ASTUnionType {
+  /**
+   * A predicate function that take an instance of `any` and determines if it is an instance of ASTUnionType
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is ASTUnionType => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== "object") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 3) return false;
+    if (!keys.includes("name")) return false;
+    if (!keys.includes("subtypes")) return false;
+    if (!keys.includes("kind")) return false;
+    return x.kind === "astuniontype";
+  };
   /**
    * A predicate function that take an instance of type ASTTree and determines if it is an instance of ASTUnionType
    **/
@@ -169,6 +242,22 @@ export interface ASTLeafType {
 }
 export class ASTLeafType {
   /**
+   * A predicate function that take an instance of `any` and determines if it is an instance of ASTLeafType
+   **/
+  static anyIs = (x: any, allowExtra: boolean = false): x is ASTLeafType => {
+    if (x === null || x === undefined) return false;
+    if (typeof x !== "object") return false;
+    const keys = Object.keys(x);
+    if (!allowExtra && keys.length !== 6) return false;
+    if (!keys.includes("tag")) return false;
+    if (!keys.includes("rootUnion")) return false;
+    if (!keys.includes("name")) return false;
+    if (!keys.includes("bases")) return false;
+    if (!keys.includes("fields")) return false;
+    if (!keys.includes("kind")) return false;
+    return x.kind === "astleaftype";
+  };
+  /**
    * A predicate function that take an instance of type ASTTree and determines if it is an instance of ASTLeafType
    **/
   static is = (x: ASTTree): x is ASTLeafType => {
@@ -178,7 +267,10 @@ export class ASTLeafType {
    * Given an instance of ASTLeafType, determine all children that are instances of ASTTree
    **/
   static children = (x: ASTLeafType) => {
-    return [x.rootUnion, ...Object.entries(x.fields).map((x) => x[1])] as const;
+    return [
+      x.rootUnion,
+      ...Object.entries(x.fields).map((x) => x[1] as Field),
+    ] as const;
   };
   /**
    * Although generally not necessary, this tag can be used to identify instances of ASTLeafType
@@ -204,6 +296,33 @@ export function astLeafType(
  **/
 export type FieldType = BuiltinType | EnumType | NodeType;
 export namespace FieldType {
+  /**
+   * Given an instance of `any` determine it is an instance of any of the leaf types of FieldType
+   **/
+  export const anyIs = (n: any): n is FieldType => {
+    if (BuiltinType.anyIs(n)) return true;
+    if (EnumType.anyIs(n)) return true;
+    if (NodeType.anyIs(n)) return true;
+    return false;
+  };
+  /**
+   * Given an instance of FieldType, return a list of all children
+   **/
+  export const children = (n: FieldType): readonly FieldType[] =>
+    map(n, {
+      BuiltinType: (c): readonly FieldType[] =>
+        BuiltinType.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+      EnumType: (c): readonly FieldType[] =>
+        EnumType.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+      NodeType: (c): readonly FieldType[] =>
+        NodeType.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+    });
   /**
    * Given an instance of type FieldType, map that value depending on the
    * specific underlying node type
@@ -304,6 +423,28 @@ export namespace FieldType {
  **/
 export type ASTTree = ASTUnionType | ASTLeafType;
 export namespace ASTTree {
+  /**
+   * Given an instance of `any` determine it is an instance of any of the leaf types of ASTTree
+   **/
+  export const anyIs = (n: any): n is ASTTree => {
+    if (ASTUnionType.anyIs(n)) return true;
+    if (ASTLeafType.anyIs(n)) return true;
+    return false;
+  };
+  /**
+   * Given an instance of ASTTree, return a list of all children
+   **/
+  export const children = (n: ASTTree): readonly ASTTree[] =>
+    map(n, {
+      ASTUnionType: (c): readonly ASTTree[] =>
+        ASTUnionType.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+      ASTLeafType: (c): readonly ASTTree[] =>
+        ASTLeafType.children(c)
+          .map((x) => x as any)
+          .filter(anyIs),
+    });
   /**
    * Given an instance of type ASTTree, map that value depending on the
    * specific underlying node type

@@ -10,6 +10,7 @@
     "sample:repmin": "ts-node scripts/verger.ts samples/repmin.yaml samples/repmin.ts",
     "sample:kitchen": "ts-node scripts/verger.ts samples/kitchen.yaml samples/kitchen.ts",
     "sample:dogfood": "ts-node scripts/verger.ts samples/dogfood.yaml samples/dogfood.ts",
+    "regen": "ts-node scripts/verger.ts samples/dogfood.yaml src/specification/nodes.ts",
     "build": "tsc",
     "test": "jest"
   },

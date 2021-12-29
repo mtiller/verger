@@ -23,6 +23,18 @@ nodes:
       - name: string
       - bases: string[]
       - fields: Field{}
+  Options:
+    - tagName: string
+    - optional: .json|.expnull|.purify
+    - maps: .json|.map
+    - constructor: .inline|.obj
+  ASTSpec:
+    - names: <string>
+    - unions: ASTUnionType{}
+    - bases: ASTBaseType{}
+    - leaves: ASTLeafType{}
+    - externs: <string>
+    - options: Options
 
 options:
   tagName: kind

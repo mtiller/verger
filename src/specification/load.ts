@@ -1,5 +1,4 @@
-import { astUnionType, ASTUnionType } from "./nodes";
-import { ASTSpec } from "./specification";
+import { astUnionType, ASTUnionType, ASTSpec } from "./nodes";
 import { validName, walkNames, walkNode, walksBase } from "./walk";
 
 /**

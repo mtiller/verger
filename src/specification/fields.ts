@@ -6,8 +6,8 @@ import {
   nodeType,
   NodeType,
 } from "./nodes";
-import { ASTSpec } from "./specification";
-import { validName, validType } from "./walk";
+import { ASTSpec } from "./nodes";
+import { validName } from "./walk";
 
 export type BuiltinTypes = "string" | "number" | "boolean";
 export function isBuiltinType(x: string): x is BuiltinTypes {

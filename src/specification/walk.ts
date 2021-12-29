@@ -8,7 +8,7 @@ import {
   enumType,
   Field,
 } from "./nodes";
-import { ASTSpec } from "./specification";
+import { ASTSpec } from "./nodes";
 
 const extendsKeyword = "^";
 
