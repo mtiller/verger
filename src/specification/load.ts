@@ -1,5 +1,6 @@
+import { validName } from "../utils";
 import { astUnionType, ASTUnionType, ASTSpec } from "./nodes";
-import { validName, walkNames, walkNode, walksBase } from "./walk";
+import { walkNames, walkNode, walksBase } from "./walk";
 
 /**
  * Load an AST specification by traversing data provided
@@ -100,13 +101,11 @@ function assertOptions<K extends string>(
 export function loadOptions(options: any, spec: ASTSpec) {
   const map = new Map<string, string>();
   for (const [name, content] of Object.entries(options)) {
-    if (typeof content === "string") {
-      map.set(name, content);
-    } else {
+    if (typeof content !== "string")
       throw new Error(
         `Expected option ${name} to be a string, but it was '${typeof content}'`
       );
-    }
+    map.set(name, content);
   }
   for (const [key, val] of map.entries()) {
     switch (key) {

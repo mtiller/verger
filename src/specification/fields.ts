@@ -7,7 +7,7 @@ import {
   NodeType,
 } from "./nodes";
 import { ASTSpec } from "./nodes";
-import { validName } from "./walk";
+import { validName } from "../utils";
 
 export type BuiltinTypes = "string" | "number" | "boolean";
 export function isBuiltinType(x: string): x is BuiltinTypes {
@@ -24,7 +24,7 @@ export type NodeField = {
 };
 
 /** Predicate for identifying a NodeField */
-export const isNodeField = (x: Field): x is NodeField => {
+const isNodeField = (x: Field): x is NodeField => {
   return NodeType.is(x.type);
 };
 /** Another predicate for identifying an entry with a NodeField value */
@@ -33,17 +33,6 @@ export const isNodeFieldEntry = (
 ): x is [string, NodeField] => {
   return isNodeField(x[1]);
 };
-
-/** Predicate to determine if a string is one of the builtin types */
-function isBuiltin(x: string): x is BuiltinTypes {
-  switch (x) {
-    case "string":
-    case "boolean":
-    case "number":
-      return true;
-  }
-  return false;
-}
 
 /**
  * Parses a string and formulates the FieldType.  This has to
@@ -61,7 +50,7 @@ export function parseType(str: string, spec: ASTSpec): FieldType {
     types.every((x) => (x[0] === "." ? validName(x.slice(1)) : validName(x)))
   ) {
     /** If they are all builtins, then this is a builtin node */
-    if (types.every(isBuiltin)) {
+    if (types.every(isBuiltinType)) {
       return builtinType(new Set(types.filter(isBuiltinType)));
     }
     /** If they are all names of node types, then this is a "node" node */

@@ -5,9 +5,7 @@ import {
   ASTUnionType,
   Field,
   FieldType,
-  isNodeField,
   isNodeFieldEntry,
-  NodeField,
 } from "../specification";
 
 /**
