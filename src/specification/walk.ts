@@ -1,7 +1,5 @@
-import { validType } from "../utils";
 import { parseField } from "./fields";
 import {
-  ASTBaseType,
   astLeafType,
   ASTTree,
   astUnionType,
@@ -17,27 +15,23 @@ const extendsKeyword = "^";
 export function walkNode(
   n: string,
   rootUnion: ASTUnionType,
-  parentUnion: ASTUnionType,
-  content: any,
-  types: ASTSpec
+  children: any,
+  spec: ASTSpec
 ): ASTTree {
   /** If the content is empty, we this is an error */
-  if (content === null || content === undefined)
-    throw new Error(`Missing content for ${name}`);
+  if (children === null || children === undefined)
+    throw new Error(`Missing content for ${n}`);
   /**
    * If the content is an array, then this is a leaf and the
    * array is the set of fields.
    */
-  if (Array.isArray(content)) {
+  if (Array.isArray(children)) {
     const ret = astLeafType(n.toLowerCase(), rootUnion, n, [], new Map());
 
     /** Walk the specified fields end "decode" what you find. */
-    walkFields(ret.name, content, ret.bases, ret.fields, types);
-    if (!types.names.has(ret.name)) {
-      throw new Error(`Unknown name ${ret.name}`);
-    }
+    walkFields(children, ret.bases, ret.fields, spec);
     /** Add this leaf node to the set of leaves. */
-    types.leaves.set(ret.name, ret);
+    spec.leaves.set(ret.name, ret);
     return ret;
   } else {
     /**
@@ -48,61 +42,25 @@ export function walkNode(
     /**
      * Loop over each "subtype" node listed under our union node
      */
-    for (const [subtype, contents] of Object.entries(content)) {
-      /** Add this subtype to the list of subtypes associated with our union */
-      if (types.names.has(subtype)) {
-        ret.subtypes.push(subtype);
-      } else {
-        throw new Error(`Unrecognized name ${subtype}`);
-      }
+    for (const [subtype, contents] of Object.entries(children)) {
+      ret.subtypes.push(subtype);
       /** Now walk those subtype nodes and parse them */
-      walkNode(subtype, rootUnion, ret, contents, types);
-    }
-    if (!types.names.has(ret.name)) {
-      throw new Error(`Unknown name ${ret.name}`);
+      walkNode(subtype, rootUnion, contents, spec);
     }
     /** Record this union node type */
-    types.unions.set(ret.name, ret);
+    spec.unions.set(ret.name, ret);
     return ret;
   }
 }
 
 /**
- * This function walks the base class specification
- * @param name
- * @param content
- * @param types
- */
-export function walksBase(name: string, content: unknown, types: ASTSpec) {
-  const base: ASTBaseType = {
-    name: name,
-    bases: [],
-    fields: new Map(),
-  };
-  /** Each base class must be a collection of fields (no nesting is allowed for base classes) */
-  if (Array.isArray(content)) {
-    walkFields(name, content, base.bases, base.fields, types);
-    if (!types.names.has(name)) {
-      throw new Error(`Unrecognized name ${name}`);
-    }
-    types.bases.set(name, base);
-  } else {
-    throw new Error(
-      `Expected contents of ${name} to be an array (of fields) but it wasn't`
-    );
-  }
-}
-
-/**
  * Walk the fields associated with a node.
- * @param className
  * @param content
  * @param supers
  * @param fields
  * @param spec
  */
 function walkFields(
-  className: string,
   content: any[],
   supers: string[],
   fields: Map<string, Field>,
@@ -131,13 +89,6 @@ function walkFields(
     if (typeof type === "string") {
       /** If the field name is "extends" then this type name is actually a base class. */
       if (fieldName === extendsKeyword) {
-        /** Verify there is such a base class in the spec */
-        const base = spec.bases.get(type);
-        if (base === undefined) {
-          throw new Error(
-            `Type ${className} cannot extend from unknown (not yet defined) base type ${type}`
-          );
-        }
         /** Add that base class to the set of super classes of this node */
         supers.push(type);
       } else {
@@ -165,33 +116,6 @@ function walkFields(
       throw new Error(
         `Unexpected value for field ${fieldName}: ${JSON.stringify(type)}}`
       );
-    }
-  }
-}
-
-/**
- * This is used durign a first pass of parsing the input
- * data to build a "symbol table" which, in this case, is
- * just a set of names that are defined in the specification.
- *
- * This function will be called once for the bases and once
- * for the nodes.
- * @param a
- * @param spec
- */
-export function walkNames(a: any, spec: ASTSpec) {
-  if (typeof a === "object" && !Array.isArray(a) && a !== null) {
-    for (const [name, content] of Object.entries(a)) {
-      if (spec.names.has(name)) {
-        throw new Error(`Name ${name} defined multiple times`);
-      }
-      if (validType(name)) {
-        /** If this is a valid name, add it and recurse. */
-        spec.names.add(name);
-        walkNames(content, spec);
-      } else {
-        throw new Error(`Invalid name '${name}'`);
-      }
     }
   }
 }

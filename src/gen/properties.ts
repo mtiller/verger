@@ -129,7 +129,7 @@ export function allFieldEntries(
   let ret: Array<[string, Field]> = [];
   /** We start by expanding contents of the base classes */
   a.bases.forEach((baseName) => {
-    const base = spec.bases.get(baseName);
+    const base = spec.leaves.get(baseName);
     if (base === undefined) throw new Error(`Unknown base type ${baseName}`);
     const entries = allFieldEntries(base, spec);
     ret = [...ret, ...entries];

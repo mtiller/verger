@@ -29,11 +29,9 @@ nodes:
     - maps: .json|.map
     - constructor: .inline|.obj
   ASTSpec:
-    - names: <string>
     - unions: ASTUnionType{}
-    - bases: ASTBaseType{}
     - leaves: ASTLeafType{}
-    - externs: <string>
+    - externs: string{}
     - options: Options
 
 options:

@@ -5,14 +5,17 @@
   "main": "lib/index.js",
   "scripts": {
     "prepublish": "tsc",
-    "sample": "yarn sample:expr && yarn sample:repmin && yarn sample:kitchen && yarn sample:dogfood",
+    "sample": "yarn sample:expr && yarn sample:repmin && yarn sample:kitchen && yarn sample:spec && yarn sample:ir",
     "sample:expr": "ts-node scripts/verger.ts samples/expr.yaml samples/expr.ts",
     "sample:repmin": "ts-node scripts/verger.ts samples/repmin.yaml samples/repmin.ts",
     "sample:kitchen": "ts-node scripts/verger.ts samples/kitchen.yaml samples/kitchen.ts",
-    "sample:dogfood": "ts-node scripts/verger.ts samples/dogfood.yaml samples/dogfood.ts",
-    "regen": "ts-node scripts/verger.ts samples/dogfood.yaml src/specification/nodes.ts",
+    "sample:spec": "ts-node scripts/verger.ts samples/spec.yaml samples/spec.ts",
+    "sample:ir": "ts-node scripts/verger.ts samples/ir.yaml samples/ir.ts",
+    "regen": "yarn regen:spec && yarn regen:ir",
+    "regen:spec": "ts-node scripts/verger.ts samples/spec.yaml src/specification/nodes.ts",
+    "regen:ir": "ts-node scripts/verger.ts samples/ir.yaml src/irepr/nodes.ts",
     "build": "tsc",
-    "test": "jest"
+    "test": "jest src"
   },
   "keywords": [
     "AST"

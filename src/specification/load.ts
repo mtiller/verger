@@ -1,6 +1,6 @@
 import { validName } from "../utils";
 import { astUnionType, ASTUnionType, ASTSpec } from "./nodes";
-import { walkNames, walkNode, walksBase } from "./walk";
+import { walkNode } from "./walk";
 
 /**
  * Load an AST specification by traversing data provided
@@ -8,12 +8,10 @@ import { walkNames, walkNode, walksBase } from "./walk";
  */
 export function loadSpec(ydata: any): ASTSpec {
   /** Create the spec we will return. */
-  const types: ASTSpec = {
-    names: new Set(),
+  const spec: ASTSpec = {
     unions: new Map(),
-    bases: new Map(),
     leaves: new Map(),
-    externs: new Set(),
+    externs: new Map(),
     options: {
       tagName: "tag",
       optional: "json",
@@ -24,11 +22,10 @@ export function loadSpec(ydata: any): ASTSpec {
 
   /** Parse any options first. */
   if (ydata.hasOwnProperty("options")) {
-    loadOptions(ydata["options"], types);
+    loadOptions(ydata["options"], spec);
   }
 
   /** Create the nodes for bases (base class types) and nodes  */
-  const externs: any = ydata["externs"] ?? [];
   const nodes: any = ydata["nodes"];
 
   /** If no nodes are specified, this is an error */
@@ -36,42 +33,15 @@ export function loadSpec(ydata: any): ASTSpec {
     throw new Error("Missing nodes field");
   }
 
-  /** First pass...just grab names */
-  walkNames(nodes, types);
-
-  /** Collect names for any "external" types. */
-  if (Array.isArray(externs)) {
-    for (const extern of externs) {
-      if (typeof extern === "string") {
-        types.names.add(extern);
-        types.externs.add(extern);
-      } else {
-        throw new Error(
-          `Expected string for external type, but got '${extern}' (${typeof extern})`
-        );
-      }
-    }
-  } else {
-    throw new Error(`External types should be a list`);
-  }
-
-  /** Second pass, extract structure of types */
+  /** Walk nodes */
   for (const [name, content] of Object.entries(nodes)) {
-    if (Array.isArray(content)) {
-      walksBase(name, content, types);
-    } else {
-      /**
-       * If we get here, then we assume the contents are nested nodes
-       * and the current node is a union of those nested nodes.
-       */
-      const rootUnion: ASTUnionType = astUnionType(name, []);
+    const rootUnion: ASTUnionType = astUnionType(name, []);
 
-      walkNode(name, rootUnion, rootUnion, content, types);
-    }
+    walkNode(name, rootUnion, content, spec);
   }
 
   /** Return the resulting specification */
-  return types;
+  return spec;
 }
 
 /**

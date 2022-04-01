@@ -42,7 +42,7 @@ export const isNodeFieldEntry = (
  * @param spec AST specification (used to validate type names)
  * @returns
  */
-export function parseType(str: string, spec: ASTSpec): FieldType {
+export function parseType(str: string): FieldType {
   /** If this expresses a union type, split it up */
   const types = str.split("|").map((x) => x.trim());
   /** Ensure every member of the union is a valid type name */
@@ -53,16 +53,12 @@ export function parseType(str: string, spec: ASTSpec): FieldType {
     if (types.every(isBuiltinType)) {
       return builtinType(new Set(types.filter(isBuiltinType)));
     }
-    /** If they are all names of node types, then this is a "node" node */
-    if (types.every((x) => spec.names.has(x))) {
-      return nodeType(types);
-    }
     /** If names start with a '.', assume these are string literals */
     if (types.every((x) => x.startsWith("."))) {
       const tags = types.map((x) => x.slice(1));
       return enumType(tags);
     }
-    throw new Error(`Unrecognized type name: '${str}'`);
+    return nodeType(types);
   } else {
     throw new Error(`${str} is not a valid type name`);
   }
@@ -81,7 +77,7 @@ export function parseField(str: string, spec: ASTSpec): Field {
     const type = str.slice(0, str.length - 1);
     return {
       struct: "optional",
-      type: parseType(type, spec),
+      type: parseType(type),
     };
   }
   /** If it ends with "[]" then it is an array */
@@ -89,7 +85,7 @@ export function parseField(str: string, spec: ASTSpec): Field {
     const type = str.slice(0, str.length - 2);
     return {
       struct: "array",
-      type: parseType(type, spec),
+      type: parseType(type),
     };
   }
   /** If it ends with "{}" then it is a map */
@@ -97,7 +93,7 @@ export function parseField(str: string, spec: ASTSpec): Field {
     const type = str.slice(0, str.length - 2);
     return {
       struct: "map",
-      type: parseType(type, spec),
+      type: parseType(type),
     };
   }
   /** Check if this is a set */
@@ -105,14 +101,14 @@ export function parseField(str: string, spec: ASTSpec): Field {
     const type = str.slice(1, str.length - 1);
     return {
       struct: "set",
-      type: parseType(type, spec),
+      type: parseType(type),
     };
   }
   /** If what is left is a valid Javascript identifier, then assume it is a scalar */
   if (str.startsWith(".") || validName(str)) {
     return {
       struct: "scalar",
-      type: parseType(str, spec),
+      type: parseType(str),
     };
   } else {
     throw new Error(`Unrecognized field syntax in '${str}'`);

@@ -13,10 +13,8 @@ import { imports } from "./imports";
 export function generate(spec: ASTSpec): string {
   const imps = imports(spec);
   const leaves = [...spec.leaves.values()];
-  const bases = [...spec.bases.values()];
   const unions = [...spec.unions.values()];
   const leafDefs = leaves.map((a) => leafCode(a, spec));
-  const baseDefs = bases.map((a) => baseCode(a, Nothing, spec));
   const unionDefs = unions.map((a) => unionCode(a, spec));
 
   const preamble = comment(
@@ -24,13 +22,7 @@ export function generate(spec: ASTSpec): string {
     "edit the upstream AST specification and regenerate this file"
   );
 
-  const file = lines(
-    imps,
-    preamble,
-    lines(...baseDefs),
-    lines(...leafDefs),
-    lines(...unionDefs)
-  );
+  const file = lines(imps, preamble, lines(...leafDefs), lines(...unionDefs));
 
   try {
     const pretty = prettier.format(file, { parser: "babel-ts" });

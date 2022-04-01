@@ -10,6 +10,8 @@ export function imports(spec: ASTSpec): string {
     }
   }
   if (optionals && spec.options.optional === "purify") {
+    // TODO: Ensure importNode gets generated
+    //inodes.push(importNode("purify-ts/Maybe", ["Maybe"]));
     imports.push("import { Maybe } from 'purify-ts/Maybe';");
   }
   return lines(...imports);

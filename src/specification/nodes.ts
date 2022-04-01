@@ -35,14 +35,12 @@ export interface Options {
 
 /**
  * This code implements the types and functions associated with
- * the interface type ASTSpec2.
+ * the interface type ASTSpec.
  **/
 export interface ASTSpec {
-  names: Set<string>;
   unions: Map<string, ASTUnionType>;
-  bases: Map<string, ASTBaseType>;
   leaves: Map<string, ASTLeafType>;
-  externs: Set<string>;
+  externs: Map<string, string>;
   options: Options;
 }
 

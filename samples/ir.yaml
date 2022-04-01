@@ -1,0 +1,19 @@
+nodes:
+  IRRoot:
+    - nodes: IRNode{}
+  IRNode:
+    LeafNode:
+      - bases: string[]
+      - fields: Field{}
+    BaseNode:
+      - fields: Field{}
+    UnionNode:
+      - members: string[]
+    ExternalNode:
+      - from: string
+      - symbol: string
+externs:
+  Field: "../specification/nodes"
+options:
+  tagName: kind
+  maps: map
