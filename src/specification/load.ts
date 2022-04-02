@@ -27,6 +27,7 @@ export function loadSpec(ydata: any): ASTSpec {
 
   /** Create the nodes for bases (base class types) and nodes  */
   const nodes: any = ydata["nodes"];
+  const externs: any = ydata["externs"];
 
   /** If no nodes are specified, this is an error */
   if (nodes === undefined) {
@@ -38,6 +39,24 @@ export function loadSpec(ydata: any): ASTSpec {
     const rootUnion: ASTUnionType = astUnionType(name, []);
 
     walkNode(name, rootUnion, content, spec);
+  }
+
+  /** Read in any external definitions */
+  if (externs) {
+    if (!Array.isArray(externs)) {
+      throw new Error(`exected 'externs' to be an array`);
+    }
+    for (const extern of externs) {
+      const keys = Object.keys(extern);
+      if (keys.length !== 1) {
+        throw new Error(
+          `Exected extern to have 1 key, instead got: ${JSON.stringify(keys)}`
+        );
+      }
+      const symbol = keys[0];
+      const from = extern[symbol];
+      spec.externs.set(symbol, from);
+    }
   }
 
   /** Return the resulting specification */

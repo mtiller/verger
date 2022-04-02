@@ -3,7 +3,7 @@
  * edit the upstream AST specification and regenerate this file
  **/
 
-import { Field } from "../specification/nodes";
+import { Field, Options } from "../specification/nodes";
 /**
  * This code implements the types and functions associated with
  * the leaf type IRRoot.
@@ -11,6 +11,7 @@ import { Field } from "../specification/nodes";
 export interface IRRoot {
   kind: "irroot";
   nodes: Map<string, IRNode>;
+  options: Options;
 }
 export class IRRoot {
   /**
@@ -45,8 +46,8 @@ export class IRRoot {
 /**
  * This function can be invoked to create a new instance of IRRoot
  **/
-export function irRoot(nodes: Map<string, IRNode>): IRRoot {
-  return { kind: "irroot", nodes };
+export function irRoot(nodes: Map<string, IRNode>, options: Options): IRRoot {
+  return { kind: "irroot", nodes, options };
 }
 
 /**
@@ -55,6 +56,8 @@ export function irRoot(nodes: Map<string, IRNode>): IRRoot {
  **/
 export interface LeafNode {
   kind: "leafnode";
+  tag: string;
+  name: string;
   bases: string[];
   fields: Map<string, Field>;
 }
@@ -93,10 +96,12 @@ export class LeafNode {
  * This function can be invoked to create a new instance of LeafNode
  **/
 export function leafNode(
+  tag: string,
+  name: string,
   bases: string[],
   fields: Map<string, Field>
 ): LeafNode {
-  return { kind: "leafnode", bases, fields };
+  return { kind: "leafnode", tag, name, bases, fields };
 }
 
 /**
@@ -150,6 +155,7 @@ export function baseNode(fields: Map<string, Field>): BaseNode {
  **/
 export interface UnionNode {
   kind: "unionnode";
+  name: string;
   members: string[];
 }
 export class UnionNode {
@@ -185,8 +191,8 @@ export class UnionNode {
 /**
  * This function can be invoked to create a new instance of UnionNode
  **/
-export function unionNode(members: string[]): UnionNode {
-  return { kind: "unionnode", members };
+export function unionNode(name: string, members: string[]): UnionNode {
+  return { kind: "unionnode", name, members };
 }
 
 /**

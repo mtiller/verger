@@ -27,7 +27,7 @@ export function buildIR(spec: ASTSpec): IRRoot {
 
   for (const [n, union] of spec.unions) {
     checkName(n, "union type");
-    nodes.set(n, unionNode(union.subtypes));
+    nodes.set(n, unionNode(n, union.subtypes));
   }
 
   const bases = new Set<string>();
@@ -39,12 +39,12 @@ export function buildIR(spec: ASTSpec): IRRoot {
     }
   }
 
-  for (const [n, leaves] of spec.leaves) {
+  for (const [n, leaf] of spec.leaves) {
     if (bases.has(n)) {
-      nodes.set(n, baseNode(leaves.fields));
+      nodes.set(n, baseNode(leaf.fields));
     } else {
-      nodes.set(n, leafNode(leaves.bases, leaves.fields));
+      nodes.set(n, leafNode(leaf.tag, leaf.name, leaf.bases, leaf.fields));
     }
   }
-  return irRoot(nodes);
+  return irRoot(nodes, spec.options);
 }
