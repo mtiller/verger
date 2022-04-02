@@ -41,9 +41,18 @@ export function buildIR(spec: ASTSpec): IRRoot {
 
   for (const [n, leaf] of spec.leaves) {
     if (bases.has(n)) {
-      nodes.set(n, baseNode(leaf.fields));
+      nodes.set(n, baseNode(leaf.bases, leaf.fields));
     } else {
-      nodes.set(n, leafNode(leaf.tag, leaf.name, leaf.bases, leaf.fields));
+      nodes.set(
+        n,
+        leafNode(
+          leaf.tag,
+          leaf.name,
+          leaf.rootUnion.name,
+          leaf.bases,
+          leaf.fields
+        )
+      );
     }
   }
   return irRoot(nodes, spec.options);

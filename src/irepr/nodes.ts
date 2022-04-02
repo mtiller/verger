@@ -58,6 +58,7 @@ export interface LeafNode {
   kind: "leafnode";
   tag: string;
   name: string;
+  rootUnion: string;
   bases: string[];
   fields: Map<string, Field>;
 }
@@ -98,10 +99,11 @@ export class LeafNode {
 export function leafNode(
   tag: string,
   name: string,
+  rootUnion: string,
   bases: string[],
   fields: Map<string, Field>
 ): LeafNode {
-  return { kind: "leafnode", tag, name, bases, fields };
+  return { kind: "leafnode", tag, name, rootUnion, bases, fields };
 }
 
 /**
@@ -110,6 +112,7 @@ export function leafNode(
  **/
 export interface BaseNode {
   kind: "basenode";
+  bases: string[];
   fields: Map<string, Field>;
 }
 export class BaseNode {
@@ -145,8 +148,11 @@ export class BaseNode {
 /**
  * This function can be invoked to create a new instance of BaseNode
  **/
-export function baseNode(fields: Map<string, Field>): BaseNode {
-  return { kind: "basenode", fields };
+export function baseNode(
+  bases: string[],
+  fields: Map<string, Field>
+): BaseNode {
+  return { kind: "basenode", bases, fields };
 }
 
 /**

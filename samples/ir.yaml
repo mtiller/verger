@@ -6,9 +6,12 @@ nodes:
     LeafNode:
       - tag: string
       - name: string
+      - parentUnion: string
+      - rootUnion: string
       - bases: string[]
       - fields: Field{}
     BaseNode:
+      - bases: string[]
       - fields: Field{}
     UnionNode:
       - name: string

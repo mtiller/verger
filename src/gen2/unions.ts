@@ -1,5 +1,4 @@
 import { IRRoot, LeafNode, UnionNode } from "../irepr/nodes";
-import { ASTLeafType } from "../specification/nodes";
 import { comment, lines } from "./utils";
 
 export function generateUnions(ir: IRRoot): string {
