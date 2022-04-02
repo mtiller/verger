@@ -11,6 +11,7 @@ nodes:
       - bases: string[]
       - fields: Field{}
     BaseNode:
+      - name: string
       - bases: string[]
       - fields: Field{}
     UnionNode:

@@ -9,6 +9,8 @@ import {
   fieldType,
 } from "./properties";
 import { NodeField } from "../specification/fields";
+import { generateBase } from "./base";
+import { Just } from "purify-ts/Maybe";
 
 export function generateLeaves(ir: IRRoot): string {
   const unions = [...ir.nodes.entries()].filter((x): x is [string, LeafNode] =>
@@ -20,7 +22,7 @@ export function generateLeaves(ir: IRRoot): string {
 
 function generateLeaf(ir: IRRoot, n: string, leaf: LeafNode): string {
   /** We start be generating the same interface we do for a base class */
-  const common = baseCode(leaf, Just(leaf.tag), ir);
+  const common = generateBase(leaf, Just(leaf.tag), ir);
 
   /** Now we write out a bunch of utility functions for leaf nodes */
 
